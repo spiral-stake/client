@@ -1,6 +1,6 @@
 import BigNumber from "bignumber.js";
 
-export const displayAmount = (amount, decimals = 3) => {
+export const displayAmount = (amount: BigNumber, decimals = 3) => {
   if (amount === undefined) return;
 
   if (amount.isZero()) return "0.00";

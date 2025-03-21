@@ -1,12 +1,12 @@
 import axios from "axios";
 import { chainConfig } from "../config/chainConfig";
-import { getTokens } from "./getTokens";
-import { addTokenToWallet } from "./addTokensToWallet";
+import { getTokens } from "./getTokens.ts";
+import { addTokenToWallet } from "./addTokensToWallet.ts";
 
 const amountYbt = "100";
 const amountBase = "100";
 
-export const onboard = async (chainId, userAddress) => {
+export const onboard = async (chainId: number, userAddress: string) => {
   const amountNative = chainConfig[chainId].onboard.amountNative;
 
   await axios.post(chainConfig[chainId].api + "/onboard", {

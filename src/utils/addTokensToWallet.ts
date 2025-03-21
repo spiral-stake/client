@@ -1,4 +1,6 @@
-export const addTokenToWallet = async (token) => {
+import { Token } from "../types/types";
+
+export const addTokenToWallet = async (token: Token) => {
   if (window.ethereum) {
     try {
       await window.ethereum.request({
@@ -8,7 +10,7 @@ export const addTokenToWallet = async (token) => {
           options: {
             address: token.address,
             symbol: token.symbol,
-            decimals: parseInt(token.decimals),
+            decimals: token.decimals,
             image: "", // Optional: Add a URL to the token’s image here
           },
         },

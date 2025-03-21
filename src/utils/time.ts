@@ -1,4 +1,4 @@
-export function getLocalTimeFromTimestamp(timestamp) {
+export function getLocalTimeFromTimestamp(timestamp: number) {
   // Ensure the timestamp is in milliseconds. If it's in seconds, convert it to milliseconds.
   if (timestamp.toString().length === 10) {
     timestamp *= 1000; // Convert seconds to milliseconds
@@ -26,7 +26,6 @@ export function getLocalTimeFromTimestamp(timestamp) {
   // Extract the date components
   const day = date.getDate().toString().padStart(2, "0");
   const month = monthNames[date.getMonth()]; // Get abbreviated month
-  const year = date.getFullYear();
 
   // Extract the time components
   const hours = date.getHours().toString().padStart(2, "0");
@@ -41,7 +40,7 @@ export function getLocalTimeFromTimestamp(timestamp) {
   return { formattedDate, formattedTime };
 }
 
-export function parseTime(time, unit) {
+export function parseTime(time: number, unit: string) {
   if (unit === "minutes") {
     return time * 60;
   }
@@ -63,7 +62,7 @@ export function getCurrentTimestampInSeconds() {
   return Math.floor(Date.now() / 1000);
 }
 
-export function formatTime(timeInSeconds) {
+export function formatTime(timeInSeconds: number) {
   const secondsInMinute = 60;
   const secondsInHour = secondsInMinute * 60;
   const secondsInDay = secondsInHour * 24;
@@ -102,7 +101,7 @@ export function formatTime(timeInSeconds) {
  * @param {number} totalSeconds - Total number of seconds to convert
  * @returns {string} - Formatted time string (e.g., "01:05:30:45")
  */
-export function countdown(totalSeconds) {
+export function countdown(totalSeconds: number) {
   // Handle invalid input
   if (typeof totalSeconds !== "number" || isNaN(totalSeconds) || totalSeconds < 0) {
     return "Invalid input";
@@ -124,10 +123,8 @@ export function countdown(totalSeconds) {
   return `${formattedDays}:${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
-export function wait(seconds) {
+export function wait(seconds: number): Promise<void> {
   return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, seconds * 1000);
+    setTimeout(resolve, seconds * 1000);
   });
 }

@@ -1,6 +1,6 @@
 import { defineChain } from "../../node_modules/viem/utils/chain/defineChain.ts";
 
-const fraxtalLocal = defineChain({
+const fraxtalLocal: any = defineChain({
   id: 31337,
   name: "Frax Local",
   nativeCurrency: {
@@ -21,28 +21,7 @@ const fraxtalLocal = defineChain({
   },
 });
 
-const arbitrumLocal = defineChain({
-  id: 31338,
-  name: "Arbitrum Local",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: {
-      http: ["http://127.0.0.1:8546"],
-      webSocket: ["ws://127.0.0.1:8546"],
-    },
-  },
-  logo: "/logo/arb-logo.png",
-  api: "http://localhost:5001",
-  onboard: {
-    amountNative: "1",
-  },
-});
-
-const fraxtalTestnet = defineChain({
+const fraxtalTestnet: any = defineChain({
   id: 2522,
   name: "Fraxtal Testnet",
   nativeCurrency: {
@@ -62,7 +41,7 @@ const fraxtalTestnet = defineChain({
   },
 });
 
-const arbitrumTestnet = defineChain({
+const arbitrumTestnet: any = defineChain({
   id: 421614,
   name: "Arbitrum Sepolia",
   nativeCurrency: {
@@ -96,31 +75,13 @@ const arbitrumTestnet = defineChain({
   },
 });
 
-const reyaTestnet = defineChain({
-  id: 89346162,
-  name: "Reya Cronos",
-  nativeCurrency: {
-    decimals: 18,
-    name: "Ether",
-    symbol: "ETH",
-  },
-  rpcUrls: {
-    default: {
-      http: ["https://rpc.reya-cronos.gelato.digital"],
-      webSocket: ["wss://ws.reya-cronos.gelato.digital"],
-    },
-  },
-  logo: "/logo/reya-logo.webp",
-  api: "https://api.spiralstake.xyz",
-  onboard: {
-    amountNative: "0.0001",
-  },
-});
+interface ChainConfigType {
+  [key: number]: any;
+}
 
-export const chainConfig = {
-  // 31337: fraxtalLocal,
+export const chainConfig: ChainConfigType = {
+  31337: fraxtalLocal,
   // 31338: arbitrumLocal,
   2522: fraxtalTestnet,
   421614: arbitrumTestnet,
-  // 89346162: reyaTestnet,
 };

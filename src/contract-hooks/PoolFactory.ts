@@ -1,13 +1,14 @@
 import { Base } from "./Base";
 import { abi as POOL_FACTORY_ABI } from "../abi/SpiralPoolFactory.sol/SpiralPoolFactory.json";
-import { parseUnits } from "../utils/formatUnits";
+import { parseUnits } from "../utils/formatUnits.ts";
+import { Token } from "../types/types";
 
 export default class PoolFactory extends Base {
-  constructor(poolFactoryAddress) {
+  constructor(poolFactoryAddress: string) {
     super(poolFactoryAddress, POOL_FACTORY_ABI);
   }
 
-  static async createInstance(chainId) {
+  static async createInstance(chainId: number) {
     const { spiralPoolFactory } = await import(`../addresses/${chainId}.json`);
     return new PoolFactory(spiralPoolFactory);
   }
@@ -17,13 +18,13 @@ export default class PoolFactory extends Base {
   /////////////////////////
 
   async createSpiralPool(
-    syToken,
-    baseToken,
-    amountCycle,
-    totalCycles,
-    cycleDuration,
-    cycleDepositAndBidDuration,
-    startInterval
+    syToken:Token,
+    baseToken: Token,
+    amountCycle: string,
+    totalCycles: string,
+    cycleDuration: string,
+    cycleDepositAndBidDuration: string,
+    startInterval: string
   ) {
     const receipt = await this.write("createSpiralPool", [
       syToken.address,
@@ -34,8 +35,8 @@ export default class PoolFactory extends Base {
       startInterval,
     ]);
 
-    const paddedAddress = receipt.logs[0].topics[1];
-    const newSpiralPoolAddress = "0x" + paddedAddress.slice(26);
+    const paddedAddress = receipt.logs[0].topics[1] as string;
+    const newSpiralPoolAddress = `0x${paddedAddress.slice(26)}`;
     return newSpiralPoolAddress;
   }
 
@@ -43,8 +44,8 @@ export default class PoolFactory extends Base {
   // READ FUNCTIONS
   /////////////////////////
 
-  async getSpiralPoolsForSYToken(syToken) {
-    const pools = await this.read("getSpiralPoolsForSYToken", [syToken.address]);
+  async getSpiralPoolsForSYToken(syToken: Token) {
+    const pools = await this.read("getSpiralPoolsForSYToken", [syToken.address]) as string[];
     return pools.reverse();
   }
 }
