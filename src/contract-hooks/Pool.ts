@@ -4,25 +4,8 @@ import { formatUnits, parseUnits } from "../utils/formatUnits.ts";
 import { readYbt } from "../config/contractsData";
 import ERC20 from "./ERC20";
 import { NATIVE_ADDRESS } from "../utils/NATIVE.ts";
-import { Token, Ybt } from "../types/types";
+import { Position, SpiralYield, Token, Ybt } from "../types/types";
 import BigNumber from "bignumber.js";
-
-
-interface SpiralYield {
-amountBase: BigNumber
-amountSy: BigNumber
-}
-
-interface Position {
-  id: number;
-  owner: string;
-  amountCollateral: BigNumber;
-  winningCycle: number;
-  spiralYield: SpiralYield
-  cyclesDeposited: boolean[]
-}
-
-
 
 export default class Pool extends Base {
   public chainId!: number;

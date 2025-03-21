@@ -1,10 +1,23 @@
+import { chainConfig } from "../config/chainConfig";
+import closeIcon from "../assets/images/close.svg";
+import { useChainId, useSwitchChain } from "wagmi";
 
-function AppNetworkOverlay() {
-  return (
-    <div>
-      <h1>this is AppNetworkOverlay componenet</h1>
-    </div>
-  )
-}
+const AppNetworkOverlay = ({ switchingNetwork, setSwitchingNetwork }: { switchingNetwork: boolean, setSwitchingNetwork: (value: boolean) => void }) => {
+    const chains = Object.values(chainConfig);
 
-export default AppNetworkOverlay
+    const { switchChain } = useSwitchChain();
+    const appChainId = useChainId();
+
+    const handleNetworkChange = async (chainId: number) => {
+        switchChain({ chainId });
+        setSwitchingNetwork(false);
+    };
+
+    return (
+        switchingNetwork && (
+            <>Unused</>
+        )
+    );
+};
+
+export default AppNetworkOverlay;

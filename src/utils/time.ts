@@ -40,22 +40,26 @@ export function getLocalTimeFromTimestamp(timestamp: number) {
   return { formattedDate, formattedTime };
 }
 
-export function parseTime(time: number, unit: string) {
+export function parseTime(time: string, unit: string) {
+  let _time = parseInt(time);
+
   if (unit === "minutes") {
-    return time * 60;
+    _time = _time * 60;
   }
 
   if (unit === "hours") {
-    return time * 3600;
+    _time = _time * 3600;
   }
 
   if (unit === "days") {
-    return time * 86400;
+    _time = _time * 86400;
   }
 
   if (unit === "months") {
-    return time * 60 * 60 * 24 * 30.44;
+    _time = _time * 60 * 60 * 24 * 30.44;
   }
+
+  return _time.toString();
 }
 
 export function getCurrentTimestampInSeconds() {

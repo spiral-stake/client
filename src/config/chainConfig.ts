@@ -34,7 +34,7 @@ const fraxtalTestnet: any = defineChain({
       http: ["https://rpc.testnet.frax.com"],
     },
   },
-  logo: "/logo/frax-logo.svg",
+  logo: "/logos/frax.svg",
   api: "https://api.spiralstake.xyz", // Needs to change at production
   onboard: {
     amountNative: "0.0001",
