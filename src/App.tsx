@@ -2,7 +2,6 @@ import { Toaster } from "react-hot-toast";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAccount, useChainId } from "wagmi";
-import "./App.css";
 // Components
 import AppNetworkOverlay from "./components/AppNetworkOverlay";
 import Navbar from "./components/Navbar";
@@ -17,6 +16,7 @@ import ERC20 from "./contract-hooks/ERC20";
 import PoolFactory from "./contract-hooks/PoolFactory";
 import { readYbts } from "./config/contractsData";
 import { Ybt } from "./types/types";
+import Test from "./pages/Test";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
@@ -32,10 +32,11 @@ function App() {
 
   useEffect(() => {
     /**
-    * @dev Checks if the user's ybt balance is 0, and airdrop ybt and baseTokens for testnet onboarding
-    */
+     * @dev Checks if the user's ybt balance is 0, and airdrop ybt and baseTokens for testnet onboarding
+     */
     const onboardUser = async () => {
-      if (!address || chainId !== appChainId || !ybts.length) return setOnboarding(false);
+      if (!address || chainId !== appChainId || !ybts.length)
+        return setOnboarding(false);
 
       const { address: tokenAddress, name, symbol, decimals } = ybts[0];
       const ybt = new ERC20(tokenAddress, name, symbol, decimals);
@@ -85,16 +86,15 @@ function App() {
             }
           />
           <Route path={"/pools/:address"} element={<PoolPage />} />
-          <Route path={"/pools"} element={<Pools
-            ybts={ybts} poolFactory={poolFactory}
-          />} />
+          <Route path="/pools" element={<Test />} />
+          <Route
+            path={"/pools"}
+            element={<Pools ybts={ybts} poolFactory={poolFactory} />}
+          />
           <Route path={"/marketPlace"} element={<Market />} />
           <Route path="dashboard" element={<Dashboard />} />
 
-          <Route
-            path="*"
-            element={<Navigate to={"/pools"} />}
-          />
+          <Route path="*" element={<Navigate to={"/pools"} />} />
         </Routes>
         <OnboardingOverlay
           onboarding={onboarding}
@@ -102,8 +102,7 @@ function App() {
         />
       </div>
     </div>
-  )
-
+  );
 }
 
 export default App;
