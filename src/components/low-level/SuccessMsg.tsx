@@ -1,4 +1,4 @@
-import checkIcon from "../../assets/Icons/check.svg"
+import checkIcon from "../../../assets/Icons/check.svg"
 
 const SuccesMsg = () => {
     return ( 

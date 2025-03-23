@@ -3,14 +3,13 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useAccount, useSwitchChain } from "wagmi";
 
 import Pool from "../contract-hooks/Pool.js";
-import PoolInfo from "../components/pool/PoolInfo.js";
-import PoolJoin from "../components/pool/PoolJoin.js";
-import PoolRedeem from "../components/pool/PoolRedeem.js";
-import PoolContribute from "../components/pool/PoolDeposit.js";
-import PoolBid from "../components/pool/PoolBid.js";
+import PoolRedeem from "../components/pool/PoolRedeemTab.js";
+import PoolContribute from "../components/pool/PoolContribute.js";
 import { getCurrentTimestampInSeconds, wait } from "../utils/time.js";
 import { toastSuccess } from "../utils/toastWrapper.js";
 import { Cycle, Position } from "../types/types.js";
+import PoolInfoTab from "../components/pool/PoolInfoTab.js";
+import PoolJoinTab from "../components/pool/PoolJoinTab.js";
 
 
 const PoolPage = () => {
@@ -151,7 +150,7 @@ const PoolPage = () => {
 
     if (state === "WAITING") {
       return (
-        <PoolJoin
+        <PoolJoinTab
           // pool={pool}
           // allPositions={allPositions}
           // position={position}
@@ -192,7 +191,7 @@ const PoolPage = () => {
   };
 
   return pool ? (
-    <><PoolInfo />
+    <><PoolInfoTab/>
     </>
   ): <></>
 };

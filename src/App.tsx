@@ -17,18 +17,22 @@ import PoolFactory from "./contract-hooks/PoolFactory";
 import { readYbts } from "./config/contractsData";
 import { Ybt } from "./types/types";
 import Test from "./pages/Test";
+import DropdownMenu from "./components/DropdownMenu";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
   const [poolFactory, setPoolFactory] = useState<PoolFactory>();
   const [switchingNetwork, setSwitchingNetwork] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
+  const [dropdown, setDropDown] = useState(false);
 
   // appChainId == only chains supported by the app
   const appChainId = useChainId();
   const { address, chainId } = useAccount();
 
   // Mainnet - Need to remove onboarding
+
+  const showDropdown = (bool: boolean) => setDropDown(bool);
 
   useEffect(() => {
     /**
@@ -72,8 +76,13 @@ function App() {
   return (
     <div className="app">
       <Toaster />
-      <Navbar />
-      <div className="main">
+      {!dropdown ? (
+        <Navbar showDropdown={showDropdown} />
+      ) : (
+        <DropdownMenu showDropdown={showDropdown} />
+      )}
+
+      <div className="main px-16">
         <Routes>
           <Route
             path={"/pools/create"}
