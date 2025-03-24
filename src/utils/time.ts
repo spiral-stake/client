@@ -77,22 +77,22 @@ export function formatTime(timeInSeconds: number) {
   let timeValue;
 
   if (timeInSeconds < secondsInMinute) {
-    timeUnit = "second";
+    timeUnit = "Second";
     timeValue = timeInSeconds;
   } else if (timeInSeconds < secondsInHour) {
-    timeUnit = "minute";
+    timeUnit = "Minute";
     timeValue = Math.floor(timeInSeconds / secondsInMinute);
   } else if (timeInSeconds < secondsInDay) {
-    timeUnit = "hour";
+    timeUnit = "Hour";
     timeValue = Math.floor(timeInSeconds / secondsInHour);
   } else if (timeInSeconds < secondsInMonth) {
-    timeUnit = "day";
+    timeUnit = "Day";
     timeValue = Math.floor(timeInSeconds / secondsInDay);
   } else if (timeInSeconds < secondsInYear) {
-    timeUnit = "month";
+    timeUnit = "Month";
     timeValue = Math.floor(timeInSeconds / secondsInMonth);
   } else {
-    timeUnit = "year";
+    timeUnit = "Year";
     timeValue = Math.floor(timeInSeconds / secondsInYear);
   }
 

@@ -1,3 +1,4 @@
+import Btn from "./Btn";
 import TagGreen from "./TagGreen";
 
 const WaitTab = ({
@@ -5,13 +6,21 @@ const WaitTab = ({
   title,
   msg,
   countdown,
-  countdownTitle
+  countdownTitle,
+  btn,
+  btnText,
+  btnOnClick,
+  btnDisabled
 }: {
   icon: string;
   title: string;
   msg: string;
-  countdown:string;
-  countdownTitle:string;
+  countdown?: string;
+  countdownTitle?: string;
+  btn?: boolean,
+  btnText?: string,
+  btnOnClick?: () => void,
+  btnDisabled?: boolean
 }) => {
   return (
     <div className="self-stretch p-1 inline-flex flex-col justify-start items-start gap-5">
@@ -40,22 +49,20 @@ const WaitTab = ({
                 data-type="Primary"
                 className="w-44 h-9 px-3 py-2 bg-blue-800 rounded-[52px] inline-flex justify-center items-center gap-2 overflow-hidden"
               >
-                <div className="text-center justify-start text-white text-sm font-normal font-['Outfit']">
-                  Claim Liquidity
-                </div>
+                {btn && btnOnClick && <Btn text={btnText} onClick={btnOnClick} disabled={btnDisabled} />}
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="self-stretch p-2 rounded-xl inline-flex justify-between items-center">
-        {countdown&&countdownTitle&&<div className="flex-1 flex justify-center items-center gap-2.5">
+        {countdown && countdownTitle && <div className="flex-1 flex justify-center items-center gap-2.5">
           <div className="flex-1 justify-start text-white text-sm font-medium font-['Outfit'] leading-tight">
             {countdownTitle}
           </div>
-          
-            <TagGreen text={countdown.toString()}/>
-          
+
+          <TagGreen text={countdown.toString()} />
+
         </div>}
       </div>
     </div>

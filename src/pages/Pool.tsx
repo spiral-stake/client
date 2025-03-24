@@ -7,9 +7,13 @@ import PoolRedeem from "../components/pool/PoolRedeemTab.js";
 import PoolContribute from "../components/pool/PoolContribute.js";
 import { getCurrentTimestampInSeconds, wait } from "../utils/time.js";
 import { toastSuccess } from "../utils/toastWrapper.js";
-import { Cycle, Position } from "../types/types.js";
+import { Cycle, Position } from "../types/index.js";
 import PoolInfoTab from "../components/pool/PoolInfoTab.js";
 import PoolJoinTab from "../components/pool/PoolJoinTab.js";
+import { Loader } from "lucide-react";
+import TokenData from "../components/low-level/TokenData.js";
+import TagYellow from "../components/low-level/TagYellow.js";
+import PoolState from "../components/pool/PoolState.js";
 
 
 const PoolPage = () => {
@@ -25,7 +29,7 @@ const PoolPage = () => {
   const [loading, setLoading] = useState(false);
   const [actionBtn, setActionBtn] = useState({
     text: "Loading...",
-    onClick: () => {},
+    onClick: () => { },
     disabled: false,
   });
 
@@ -36,16 +40,16 @@ const PoolPage = () => {
   const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
 
   useEffect(() => {
-    if(!poolAddress) return;
-    const getPool = async()=> {
-            try {
-              const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
-              setPool(_pool);
-            }catch(error){
-              console.error("Failed to create pool instance:", error);
-            }
+    if (!poolAddress) return;
+    const getPool = async () => {
+      try {
+        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
+        setPool(_pool);
+      } catch (error) {
+        console.error("Failed to create pool instance:", error);
+      }
     }
-    
+
     getPool();
   }, []);
 
@@ -99,7 +103,7 @@ const PoolPage = () => {
   }, [address, state, allPositions]);
 
   const getAllPositions = async () => {
-    if(!pool) return;
+    if (!pool) return;
 
     try {
       const _allPositions = await pool.getAllPositions();
@@ -133,10 +137,10 @@ const PoolPage = () => {
   };
 
   const updateCurrentCycle = () => {
-    if(!pool) return;
+    if (!pool) return;
 
     let newCycleCount = !currentCycle ? 1 : currentCycle.count + 1;
-   
+
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
     setCurrentCycle({ count: newCycleCount, startTime, endTime, depositAndBidEndTime });
@@ -151,12 +155,12 @@ const PoolPage = () => {
     if (state === "WAITING") {
       return (
         <PoolJoinTab
-          // pool={pool}
-          // allPositions={allPositions}
-          // position={position}
-          // getAllPositions={getAllPositions}
-          // setActionBtn={setActionBtn}
-          // setLoading={setLoading}
+          pool={pool}
+          allPositions={allPositions}
+          position={position}
+          getAllPositions={getAllPositions}
+          setActionBtn={setActionBtn}
+          setLoading={setLoading}
         />
       );
     }
@@ -164,13 +168,13 @@ const PoolPage = () => {
     if (state === "LIVE") {
       return (
         <PoolContribute
-          // pool={pool}
-          // currentCycle={currentCycle}
-          // position={position}
-          // updatePosition={updatePosition}
-          // setActionBtn={setActionBtn}
-          // setLoading={setLoading}
-          // isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
+        // pool={pool}
+        // currentCycle={currentCycle}
+        // position={position}
+        // updatePosition={updatePosition}
+        // setActionBtn={setActionBtn}
+        // setLoading={setLoading}
+        // isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
         />
       );
     }
@@ -178,11 +182,11 @@ const PoolPage = () => {
     if (state === "DISCARDED") {
       return (
         <PoolRedeem
-          // pool={pool}
-          // position={position}
-          // updatePosition={updatePosition}
-          // setActionBtn={setActionBtn}
-          // setLoading={setLoading}
+        // pool={pool}
+        // position={position}
+        // updatePosition={updatePosition}
+        // setActionBtn={setActionBtn}
+        // setLoading={setLoading}
         />
       );
     }
@@ -191,9 +195,14 @@ const PoolPage = () => {
   };
 
   return pool ? (
-    <><PoolInfoTab/>
-    </>
-  ): <></>
+    <div>
+      <TokenData token={pool.ybt} />
+      <PoolState state={state} currentCycle={currentCycle} positionsFilled={allPositions.length} totalCycles={pool.totalCycles} totalPositions={pool.totalPositions} />
+      <PoolInfoTab pool={pool} />
+      {renderPoolInterface()}
+
+    </div>
+  ) : <Loader />
 };
 
 export default PoolPage;

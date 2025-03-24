@@ -15,7 +15,7 @@ import Dashboard from "./pages/Dashboard";
 import ERC20 from "./contract-hooks/ERC20";
 import PoolFactory from "./contract-hooks/PoolFactory";
 import { readYbts } from "./config/contractsData";
-import { Ybt } from "./types/types";
+import { Ybt } from "./types";
 import Test from "./pages/Test";
 import DropdownMenu from "./components/DropdownMenu";
 
@@ -82,7 +82,7 @@ function App() {
         <DropdownMenu showDropdown={showDropdown} />
       )}
 
-      <div className="main px-4 lg:px-16">
+      <div className="px-4 lg:px-16">
         <Routes>
           <Route
             path={"/pools/create"}
@@ -95,7 +95,7 @@ function App() {
             }
           />
           <Route path={"/pools/:address"} element={<PoolPage />} />
-          <Route path="/pools" element={<Test />} />
+          {/* <Route path="/pools" element={<Test />} /> */}
           <Route
             path={"/pools"}
             element={<Pools ybts={ybts} poolFactory={poolFactory} />}

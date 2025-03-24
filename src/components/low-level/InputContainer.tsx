@@ -4,12 +4,14 @@
 //input 
 //error msg
 
-const InputContainer = ({renderInput,label,labelSymbol,condition,errorMsg}:{renderInput:()=>any,label:string,labelSymbol:string,condition:string,errorMsg:string}) => {
-    return ( 
+// need css
+
+const InputContainer = ({ inputComponent, label, labelSymbol, condition, errorMsg }: { inputComponent: JSX.Element, label?: string, labelSymbol?: string, condition?: string, errorMsg?: string }) => {
+    return (
         <div>
-            
+            {inputComponent}
         </div>
-     );
+    );
 }
- 
+
 export default InputContainer;

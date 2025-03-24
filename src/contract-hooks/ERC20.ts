@@ -8,7 +8,7 @@ export default class ERC20 extends Base {
   decimals: number;
 
 
-  constructor(address: string, name :string, symbol:string, decimals:number, ...extendedAbis: any[]) {
+  constructor(address: string, name: string, symbol: string, decimals: number, ...extendedAbis: any[]) {
     super(address, [...TOKEN_ABI, ...extendedAbis]);
 
     this.name = name;

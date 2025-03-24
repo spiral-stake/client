@@ -1,4 +1,4 @@
-import { Ybt } from "../types/types";
+import { Ybt } from "../types";
 import { chainConfig } from "./chainConfig";
 
 const nativeAddress = "0x0000000000000000000000000000000000000000";

@@ -32,20 +32,20 @@ export interface PoolInfo {
 export interface Cycle {
   count: number,
   startTime: number,
-  endTime:number,
+  endTime: number,
   depositAndBidEndTime: number
 }
 
 export interface SpiralYield {
   amountBase: BigNumber
   amountSy: BigNumber
-  }
-  
-export  interface Position {
-    id: number;
-    owner: string;
-    amountCollateral: BigNumber;
-    winningCycle: number;
-    spiralYield: SpiralYield
-    cyclesDeposited: boolean[]
-  }
+}
+
+export interface Position {
+  id: number;
+  owner: string;
+  amountCollateral: BigNumber;
+  winningCycle: number;
+  spiralYield: SpiralYield
+  cyclesDeposited: boolean[]
+}

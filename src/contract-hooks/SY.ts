@@ -1,5 +1,5 @@
 import { abi as ABI_SY } from "../abi/SYBase.sol/SYBase.json";
-import { Ybt } from "../types/types";
+import { Ybt } from "../types";
 import { formatUnits } from "../utils/formatUnits";
 import { Base } from "./Base";
 

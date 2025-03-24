@@ -1,4 +1,4 @@
-import { Token, Ybt } from './../types/types';
+import { Token, Ybt } from '../types';
 const nativeAddress = "0x0000000000000000000000000000000000000000";
 
 export const getTokens = async (chainId: number) => {

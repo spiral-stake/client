@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import PoolFactory from "../contract-hooks/PoolFactory"
-import { PoolInfo, Ybt } from "../types/types"
+import { PoolInfo, Ybt } from "../types"
 import { chainConfig } from "../config/chainConfig";
 import SY from "../contract-hooks/SY";
 import { readYbt } from "../config/contractsData";
@@ -10,16 +10,27 @@ import { toastSuccess } from "../utils/toastWrapper";
 import axios from "axios";
 import { parseTime } from "../utils/time";
 import { handleAsync } from "../utils/handleAsyncFunction";
+import PageTitle from "../components/low-level/PageTitle";
+import InputContainer from "../components/low-level/InputContainer";
+import Input from "../components/low-level/Input";
+import SelectToken from "../components/low-level/SelectToken";
+import CustomSelect from "../components/low-level/CustomSelect";
+import Slider from "../components/low-level/Slider";
+import BtnFull from "../components/low-level/BtnFull";
+
+const cycleDurations = ["2 min", "7 min", "10 min"]
+const cycleDepositAndBidDurations = ["1 min", "2 mins", "5 mins"]
+const startIntervals = ["2 min", "5 min", "10 min"]
 
 function CreatePool({ ybts, poolFactory, setSwitchingNetwork }: { ybts: Ybt[], poolFactory: PoolFactory | undefined, setSwitchingNetwork: (value: boolean) => void }) {
   const [pool, setPool] = useState<PoolInfo>({
     ybt: undefined,
     ybtExchangeRate: undefined,
     amountCycle: "",
-    cycleDuration: "",
+    cycleDuration: cycleDurations[0],
     cycleDurationUnit: "minutes",
     totalCycles: "",
-    startInterval: "",
+    startInterval: startIntervals[0],
     startIntervalUnit: "minutes",
     cycleDepositAndBidDuration: "",
     cycleDepositAndBidDurationUnit: "minutes",
@@ -94,10 +105,10 @@ function CreatePool({ ybts, poolFactory, setSwitchingNetwork }: { ybts: Ybt[], p
     });
   }, [pool]);
 
-  const handleYbtChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const _ybt = await readYbt(chainId || appChainId, e.target.value);
-    const _ybtExchangeRate = await new SY(_ybt.syToken.address).getYbtExchangeRate(_ybt);
-    setPool({ ...pool, ybt: _ybt, ybtExchangeRate: _ybtExchangeRate });
+  const handleYbtChange = async (tokenSymbol: string) => {
+    const _ybt = await readYbt(chainId || appChainId, tokenSymbol);
+    // const _ybtExchangeRate = await new SY(_ybt.syToken.address).getYbtExchangeRate(_ybt);
+    setPool({ ...pool, ybt: _ybt });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -107,8 +118,15 @@ function CreatePool({ ybts, poolFactory, setSwitchingNetwork }: { ybts: Ybt[], p
     setPool(prevPool => ({
       ...prevPool,
       [name]: value,
-    }) as typeof pool); // Assert as correct type
+    }) as typeof pool);
   };
+
+  const handleCustomInputChange = (name: string, value: string) => {
+    setPool(prevPool => ({
+      ...prevPool,
+      [name]: value,
+    }) as typeof pool);
+  }
 
   const handleCreatePool = async () => {
     if (!poolFactory) return
@@ -129,8 +147,16 @@ function CreatePool({ ybts, poolFactory, setSwitchingNetwork }: { ybts: Ybt[], p
     navigate(`/pools/${poolAddress}?ybt=${pool.ybt.symbol}&poolChainId=${chainId}`);
   };
 
-  return (
+  return (pool.ybt &&
     <div>
+      <PageTitle title={"Create a Spiral Pool"} subheading={"Create pools to enjoy Liquidity"} />
+      <InputContainer inputComponent={<SelectToken tokens={ybts} handleTokenChange={handleYbtChange} selectedToken={pool.ybt} />} />
+      <InputContainer inputComponent={<Input name={"amountCycle"} onChange={handleInputChange} value={pool.amountCycle} inputTokenSymbol={pool.ybt.baseToken.symbol} />} />
+      <InputContainer inputComponent={<Input name={"totalCycles"} onChange={handleInputChange} value={pool.totalCycles} />} />
+      <InputContainer inputComponent={<CustomSelect name={"cycleDuration"} options={cycleDurations} onChange={handleCustomInputChange} value={pool.cycleDuration} />} />
+      <InputContainer inputComponent={<Slider name="cycleDepositAndBidDuration" value={pool.cycleDepositAndBidDuration} onChange={handleInputChange} />} />
+      <InputContainer inputComponent={<CustomSelect name={"startInterval"} options={startIntervals} onChange={handleCustomInputChange} value={pool.startInterval} />} />
+      <BtnFull text={actionBtn.text} onClick={actionBtn.onClick} disabled={actionBtn.disabled} />
     </div>
   )
 }

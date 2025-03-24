@@ -1,7 +1,7 @@
 import { Base } from "./Base";
 import { abi as POOL_FACTORY_ABI } from "../abi/SpiralPoolFactory.sol/SpiralPoolFactory.json";
 import { parseUnits } from "../utils/formatUnits.ts";
-import { Token } from "../types/types";
+import { Token } from "../types/index.ts";
 
 export default class PoolFactory extends Base {
   constructor(poolFactoryAddress: string) {

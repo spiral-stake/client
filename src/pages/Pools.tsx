@@ -1,17 +1,17 @@
 
 import { useEffect, useState } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useChainId } from "wagmi";
 
 import { readYbt } from "../config/contractsData";
 import PoolFactory from "../contract-hooks/PoolFactory"
-import { Ybt } from "../types/types"
+import { Ybt } from "../types"
+import Loader from "../components/low-level/Loader";
 
 const Pools = ({ ybts, poolFactory }: { ybts: Ybt[], poolFactory: PoolFactory | undefined }) => {
   const [ybt, setYbt] = useState<Ybt>();
-  const [poolAddresses, setYbtPoolAddresses] = useState({});
+  const [poolAddresses, setYbtPoolAddresses] = useState<Record<string, string[]>>({});
 
-  const navigate = useNavigate();
   const appChainId = useChainId();
   const ybtSymbol = useSearchParams()[0].get("ybt");
 
@@ -53,8 +53,29 @@ const Pools = ({ ybts, poolFactory }: { ybts: Ybt[], poolFactory: PoolFactory | 
     setYbt(_ybt);
   };
 
+  console.log(ybt && poolAddresses && true);
+
   return (
     <div>
+      {ybt && poolAddresses[ybt.symbol] && poolAddresses[ybt.symbol].length > 0 ? (
+        <div>
+          {poolAddresses[ybt.symbol].map((poolAddress: string, index: number) => {
+
+            return (
+              <div>
+                <Link
+                  key={index}
+                  to={`/pools/${poolAddress}?ybt=${ybt.symbol}&poolChainId=${appChainId}`}
+                >
+                  view
+                </Link>
+              </div>
+            );
+          })}
+        </div>
+      ) : (
+        <Loader />
+      )}
     </div>
   );
 };
