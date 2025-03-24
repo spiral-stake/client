@@ -8,7 +8,7 @@ import dropdown from "../assets/Icons/arrowDown.svg";
 function Navbar({ showDropdown }: { showDropdown: (bool: boolean) => void }) {
   return (
     <>
-      <div className="w-full px-16 py-4 border-b-[0.72px] border-white border-opacity-10 inline-flex justify-start items-center gap-3">
+      <div className="w-full px-4 lg:px-16 py-4 border-b-[0.72px] border-white border-opacity-10 inline-flex justify-start items-center gap-3">
         <div className="w-6 h-6 relative overflow-hidden lg:hidden">
           <img
             src={menuIcon}
