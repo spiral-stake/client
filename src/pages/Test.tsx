@@ -1,11 +1,10 @@
-import InputSelect from "../components/low-level/InputSelect";
-import Select from "../components/low-level/Select";
-import PoolReedemTab from "../components/pool/PoolRedeemTab";
+import NotificationPopup from "../components/low-level/NotificatioPopup";
+
 
 function Test() {
   return (
-    <div className="font-[Outfit] w-full">
-      <InputSelect/>
+    <div className="font-[Outfit] w-full p-2">
+      <NotificationPopup/>
     </div>
   );
 }

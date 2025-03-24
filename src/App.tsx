@@ -82,7 +82,7 @@ function App() {
         <DropdownMenu showDropdown={showDropdown} />
       )}
 
-      <div className="main px-16">
+      <div className="main px-4 lg:px-16">
         <Routes>
           <Route
             path={"/pools/create"}
