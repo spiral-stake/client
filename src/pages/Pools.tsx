@@ -1,16 +1,26 @@
-
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useChainId } from "wagmi";
 
 import { readYbt } from "../config/contractsData";
-import PoolFactory from "../contract-hooks/PoolFactory"
-import { Ybt } from "../types"
+import PoolFactory from "../contract-hooks/PoolFactory";
+import { Ybt } from "../types";
 import Loader from "../components/low-level/Loader";
+import PoolCard from "../components/low-level/PoolCard";
+import YbtDropdown from "../components/low-level/YbtDropdown";
+import tokenIcon from "../assets/icons/GroupDark.svg";
 
-const Pools = ({ ybts, poolFactory }: { ybts: Ybt[], poolFactory: PoolFactory | undefined }) => {
+const Pools = ({
+  ybts,
+  poolFactory,
+}: {
+  ybts: Ybt[];
+  poolFactory: PoolFactory | undefined;
+}) => {
   const [ybt, setYbt] = useState<Ybt>();
-  const [poolAddresses, setYbtPoolAddresses] = useState<Record<string, string[]>>({});
+  const [ybtPoolAddresses, setYbtPoolAddresses] = useState<
+    Record<string, string[]>
+  >({});
 
   const appChainId = useChainId();
   const ybtSymbol = useSearchParams()[0].get("ybt");
@@ -35,12 +45,14 @@ const Pools = ({ ybts, poolFactory }: { ybts: Ybt[], poolFactory: PoolFactory | 
 
       // Promise.all returns an array of arrays of pool addresses
       const _allPoolAddresses = await Promise.all(
-        ybts.map(ybt => poolFactory.getSpiralPoolsForSYToken(ybt.syToken.address))
+        ybts.map((ybt) =>
+          poolFactory.getSpiralPoolsForSYToken(ybt.syToken.address)
+        )
       );
 
       // Process each array of pool addresses with its corresponding index
-      _allPoolAddresses.forEach((poolAddresses, index) => {
-        _ybtPoolAddresses[ybts[index].symbol] = poolAddresses;
+      _allPoolAddresses.forEach((ybtPoolAddresses, index) => {
+        _ybtPoolAddresses[ybts[index].symbol] = ybtPoolAddresses;
       });
 
       setYbtPoolAddresses(_ybtPoolAddresses);
@@ -53,33 +65,24 @@ const Pools = ({ ybts, poolFactory }: { ybts: Ybt[], poolFactory: PoolFactory | 
     setYbt(_ybt);
   };
 
-  console.log(ybt && poolAddresses && true);
+  console.log(ybt && ybtPoolAddresses && true);
 
   return (
-    <div>
-      {ybt && poolAddresses[ybt.symbol] && poolAddresses[ybt.symbol].length > 0 ? (
-        <div>
-          {poolAddresses[ybt.symbol].map((poolAddress: string, index: number) => {
-
-            return (
-              <div>
-                <Link
-                  key={index}
-                  to={`/pools/${poolAddress}?ybt=${ybt.symbol}&poolChainId=${appChainId}`}
-                >
-                  view
-                </Link>
-              </div>
-            );
-          })}
-        </div>
-      ) : (
-        <Loader />
-      )}
-    </div>
+    //fix this LATER
+    ybt && (
+      <div className="min-h-[90.5vh] h-fit">
+        {Object.keys(ybtPoolAddresses).map((ybtSymbol) => (
+          <YbtDropdown
+            tagMsg="2 pools live"
+            tokenIcon={tokenIcon}
+            key={ybtSymbol}
+            ybt={ybt}
+            poolAddresses={ybtPoolAddresses[ybtSymbol]}
+          />
+        ))}
+      </div>
+    )
   );
 };
 
 export default Pools;
-
-

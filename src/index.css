@@ -3,8 +3,6 @@
 @tailwind utilities;
 
 .app{
-    width: 100vw;
-    height: 100vh;
     background: linear-gradient(180deg, #01152A 1.93%, #03050D 28.18%);
     color:white;
 }
