@@ -16,13 +16,11 @@ import ERC20 from "./contract-hooks/ERC20";
 import PoolFactory from "./contract-hooks/PoolFactory";
 import { readYbts } from "./config/contractsData";
 import { Ybt } from "./types";
-import Test from "./pages/Test";
 import DropdownMenu from "./components/DropdownMenu";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
   const [poolFactory, setPoolFactory] = useState<PoolFactory>();
-  const [switchingNetwork, setSwitchingNetwork] = useState(false);
   const [onboarding, setOnboarding] = useState(false);
   const [dropdown, setDropDown] = useState(false);
 
@@ -90,7 +88,6 @@ function App() {
               <CreatePool
                 poolFactory={poolFactory}
                 ybts={ybts}
-                setSwitchingNetwork={setSwitchingNetwork}
               />
             }
           />

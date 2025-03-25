@@ -10,11 +10,13 @@ import { toastSuccess } from "../utils/toastWrapper.js";
 import { Cycle, Position } from "../types/index.js";
 import PoolInfoTab from "../components/pool/PoolInfoTab.js";
 import PoolJoinTab from "../components/pool/PoolJoinTab.js";
-import { Loader } from "lucide-react";
 import TokenData from "../components/low-level/TokenData.js";
-import TagYellow from "../components/low-level/TagYellow.js";
 import PoolState from "../components/pool/PoolState.js";
-
+import PoolBidTab from "../components/pool/PoolBidTab.js";
+import PoolDepositTab from "../components/pool/PoolDepositTab.js";
+import WaitTab from "../components/low-level/WaitTab.js";
+import Loader from "../components/low-level/Loader.js";
+import PoolStarted from "../components/pool/PoolStarted.js";
 
 const PoolPage = () => {
   const [pool, setPool] = useState<Pool>();
@@ -27,16 +29,11 @@ const PoolPage = () => {
   const [position, setPosition] = useState<Position>();
 
   const [loading, setLoading] = useState(false);
-  const [actionBtn, setActionBtn] = useState({
-    text: "Loading...",
-    onClick: () => { },
-    disabled: false,
-  });
 
   const { address, chainId } = useAccount();
   const { switchChain } = useSwitchChain();
   const { address: poolAddress } = useParams();
-  const ybtSymbol = (useSearchParams()[0].get("ybt") as string);
+  const ybtSymbol = useSearchParams()[0].get("ybt") as string;
   const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
 
   useEffect(() => {
@@ -48,7 +45,7 @@ const PoolPage = () => {
       } catch (error) {
         console.error("Failed to create pool instance:", error);
       }
-    }
+    };
 
     getPool();
   }, []);
@@ -86,7 +83,6 @@ const PoolPage = () => {
 
     if (state === "ENDED") {
       toastSuccess("Pool Ended, Claim Yield (if any)");
-      return setActionBtn({ ...actionBtn, text: "Pool Ended", disabled: true });
     }
   }, [state, currentCycle]);
 
@@ -159,22 +155,7 @@ const PoolPage = () => {
           allPositions={allPositions}
           position={position}
           getAllPositions={getAllPositions}
-          setActionBtn={setActionBtn}
           setLoading={setLoading}
-        />
-      );
-    }
-
-    if (state === "LIVE") {
-      return (
-        <PoolContribute
-        // pool={pool}
-        // currentCycle={currentCycle}
-        // position={position}
-        // updatePosition={updatePosition}
-        // setActionBtn={setActionBtn}
-        // setLoading={setLoading}
-        // isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
         />
       );
     }
@@ -191,18 +172,38 @@ const PoolPage = () => {
       );
     }
 
+    if (state === "LIVE" || state === "ENDED")
+      return (
+        <PoolStarted
+          pool={pool}
+          state={state}
+          currentCycle={currentCycle}
+          position={position}
+          updatePosition={updatePosition}
+          isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
+          poolChainId={poolChainId}
+        />
+      );
+
     return null;
   };
 
   return pool ? (
     <div>
       <TokenData token={pool.ybt} />
-      <PoolState state={state} currentCycle={currentCycle} positionsFilled={allPositions.length} totalCycles={pool.totalCycles} totalPositions={pool.totalPositions} />
+      <PoolState
+        state={state}
+        currentCycle={currentCycle}
+        positionsFilled={allPositions.length}
+        totalCycles={pool.totalCycles}
+        totalPositions={pool.totalPositions}
+      />
       <PoolInfoTab pool={pool} />
       {renderPoolInterface()}
-
     </div>
-  ) : <Loader />
+  ) : (
+    <Loader />
+  );
 };
 
 export default PoolPage;

@@ -8,20 +8,31 @@ import BigNumber from "bignumber.js";
 import { useAccount } from "wagmi";
 import { handleAsync } from "../../utils/handleAsyncFunction";
 import { toastSuccess } from "../../utils/toastWrapper";
-import TextLoading from "../low-level/textLoading";
 import { displayAmount } from "../../utils/displayAmounts";
 import WaitTab from "../low-level/WaitTab";
-import waitIcon from "../../assets/Icons/wait.svg"
-import successIcon from "../../assets/Icons/success.svg"
+import waitIcon from "../../assets/Icons/wait.svg";
+import successIcon from "../../assets/Icons/success.svg";
 
-const PoolJoinTab = ({ pool, allPositions, position, getAllPositions, setLoading }: { pool: Pool, allPositions: Position[], position: Position, getAllPositions: () => void, setLoading: (bool: boolean) => void }) => {
+const PoolJoinTab = ({
+  pool,
+  allPositions,
+  position,
+  getAllPositions,
+  setLoading,
+}: {
+  pool: Pool;
+  allPositions: Position[];
+  position: Position | undefined;
+  getAllPositions: () => void;
+  setLoading: (bool: boolean) => void;
+}) => {
   const ybtCollateral = pool.ybt;
 
   const [poolRouter, setPoolRouter] = useState<PoolRouter>();
   const [amountYbtCollateral, setAmountYbtCollateral] = useState<BigNumber>();
   const [userYbtCollateralBalance, setUserYbtCollateralBalance] = useState<BigNumber>();
   const [userYbtCollateralAllowance, setUserYbtCollateralAllowance] = useState<BigNumber>();
-  const [actionBtn, setActionBtn] = useState({ text: "", onClick: () => { }, disabled: false });
+  const [actionBtn, setActionBtn] = useState({ text: "", onClick: () => {}, disabled: false });
 
   const { address } = useAccount() as { address: `0x${string}` };
 
@@ -53,22 +64,6 @@ const PoolJoinTab = ({ pool, allPositions, position, getAllPositions, setLoading
     if (!amountYbtCollateral) return;
 
     const updatingActionBtn = () => {
-      if (position) {
-        return setActionBtn({
-          ...actionBtn,
-          text: "Joined",
-          disabled: true,
-        });
-      }
-
-      if (allPositions.length == pool.totalPositions) {
-        return setActionBtn({
-          ...actionBtn,
-          text: "Pool is Filled",
-          disabled: true,
-        });
-      }
-
       if (userYbtCollateralBalance?.isLessThan(amountYbtCollateral)) {
         return setActionBtn({
           ...actionBtn,
@@ -107,20 +102,20 @@ const PoolJoinTab = ({ pool, allPositions, position, getAllPositions, setLoading
   };
 
   const updateUserYbtCollateralAllowance = async () => {
-    if (!poolRouter) return
+    if (!poolRouter) return;
     const allowance = await ybtCollateral.allowance(address, poolRouter.address);
     setUserYbtCollateralAllowance(allowance);
   };
 
   const handleApproveAndJoin = async () => {
-    if (!poolRouter || !amountYbtCollateral) return
+    if (!poolRouter || !amountYbtCollateral) return;
 
     await ybtCollateral.approve(poolRouter.address, amountYbtCollateral.toString());
     await Promise.all([updateUserYbtCollateralAllowance(), handleJoin()]);
   };
 
   const handleJoin = async () => {
-    if (!poolRouter || !amountYbtCollateral) return
+    if (!poolRouter || !amountYbtCollateral) return;
 
     await poolRouter.depositYbtCollateral(address, amountYbtCollateral);
 
@@ -132,22 +127,54 @@ const PoolJoinTab = ({ pool, allPositions, position, getAllPositions, setLoading
     ]);
   };
 
-
-  return allPositions.length < pool.totalPositions ? <div className="w-full">
-    <span className="text-xl">YBT Collateral</span>
-    <div className="w-full mt-3 mb-2">
-      {amountYbtCollateral ?
-        <Input name={"YBT Collateral"} autoFocus={true} disabled={true} inputTokenSymbol={pool.ybt.symbol} value={displayAmount(amountYbtCollateral)} onChange={() => { }} />
-        : <TextLoading />}
-    </div>
-    <div className="flex justify-between text-xs font-thin">
-      <span>Approx YBT Collateral</span>
-      <span>~{`${pool.amountCollateralInBase} ${pool.baseToken.symbol}`}</span>
-    </div>
-    <div className="w-full mt-4">
-      <BtnFull disabled={actionBtn.disabled} onClick={actionBtn.onClick} text={actionBtn.text} />
-    </div>
-  </div> : <WaitTab icon={waitIcon} title={"Pool Starting In"} msg={"You have participated in this pool and deposited your collateral of 4 frxETH."} />;
+  return allPositions.length < pool.totalPositions ? (
+    !position ? (
+      <div className="w-full">
+        <span className="text-xl">YBT Collateral</span>
+        <div className="w-full mt-3 mb-2">
+          {amountYbtCollateral ? (
+            <Input
+              name={"YBT Collateral"}
+              autoFocus={true}
+              disabled={true}
+              inputTokenSymbol={pool.ybt.symbol}
+              value={displayAmount(amountYbtCollateral)}
+              onChange={() => {}}
+            />
+          ) : (
+            <>Loading...</>
+          )}
+        </div>
+        <div className="flex justify-between text-xs font-thin">
+          <span>Approx YBT Collateral</span>
+          <span>~{`${pool.amountCollateralInBase} ${pool.baseToken.symbol}`}</span>
+        </div>
+        <div className="w-full mt-4">
+          <BtnFull
+            disabled={actionBtn.disabled}
+            onClick={actionBtn.onClick}
+            text={actionBtn.text}
+          />
+        </div>
+      </div>
+    ) : (
+      <WaitTab
+        icon={waitIcon}
+        title={"Waiting for Participants"}
+        msg={`You have participated in this pool and deposited your collateral of ${
+          amountYbtCollateral && displayAmount(amountYbtCollateral)
+        } ${pool.ybt.symbol}`}
+      />
+    )
+  ) : (
+    <WaitTab
+      icon={waitIcon}
+      title={"Pool Starting In"}
+      msg={`You have participated in this pool and deposited your collateral of ${
+        amountYbtCollateral && displayAmount(amountYbtCollateral)
+      } ${pool.ybt.symbol}.`}
+    />
+  );
 };
 
 export default PoolJoinTab;

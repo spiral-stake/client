@@ -16,7 +16,7 @@ export class Base {
   abi: any[];
 
   constructor(address: string, abi: any[]) {
-    this.address = address as `0x${string}`; 
+    this.address = address as `0x${string}`;
     this.abi = abi;
   }
 
@@ -28,9 +28,9 @@ export class Base {
       args,
       chainId: chainId as 31337 | 2522 | 421614 | undefined,
     });
-  
-    // await this.wait(2);
-  
+
+    await wait(2);
+
     return res as T;
   }
 
@@ -55,7 +55,7 @@ export class Base {
       functionName,
       args,
       value,
-      // __mode: "prepared", // Needs to be uncommented on local
+      __mode: "prepared", // Needs to be uncommented on local
     });
 
     // await wait(4);
@@ -64,7 +64,7 @@ export class Base {
   }
 
 
-  
+
 
   async getNativeBalance(account: string) {
     const { value } = await getBalance(config, {

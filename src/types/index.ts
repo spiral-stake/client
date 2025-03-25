@@ -21,12 +21,17 @@ export interface PoolInfo {
   ybtExchangeRate: BigNumber | undefined,
   amountCycle: string,
   cycleDuration: string,
-  cycleDurationUnit: string,
+  cycleDurationUnit?: string,
   totalCycles: string,
   startInterval: string,
-  startIntervalUnit: string,
+  startIntervalUnit?: string,
   cycleDepositAndBidDuration: string,
-  cycleDepositAndBidDurationUnit: string,
+  cycleDepositAndBidDurationUnit?: string,
+}
+
+export interface LowestBid {
+  positionId: number,
+  amount: BigNumber
 }
 
 export interface Cycle {

@@ -1,5 +1,5 @@
+import Tag from "./Tag";
 import Btn from "./Btn";
-import TagGreen from "./TagGreen";
 
 const WaitTab = ({
   icon,
@@ -10,17 +10,17 @@ const WaitTab = ({
   btn,
   btnText,
   btnOnClick,
-  btnDisabled
+  btnDisabled,
 }: {
   icon: string;
   title: string;
-  msg: string;
+  msg?: string;
   countdown?: string;
   countdownTitle?: string;
-  btn?: boolean,
-  btnText?: string,
-  btnOnClick?: () => void,
-  btnDisabled?: boolean
+  btn?: boolean;
+  btnText?: string;
+  btnOnClick?: () => void;
+  btnDisabled?: boolean;
 }) => {
   return (
     <div className="self-stretch p-1 inline-flex flex-col justify-start items-start gap-5">
@@ -39,31 +39,34 @@ const WaitTab = ({
                 </div>
                 <div className="w-64 text-center justify-start">
                   <span className="text-white text-opacity-70 text-xs font-normal font-['Outfit'] leading-none">
-                    {msg}
+                    {msg ? msg : <>Loading...</>}
                   </span>
                 </div>
               </div>
-              <div
-                data-size="Small"
-                data-state="Default"
-                data-type="Primary"
-                className="w-44 h-9 px-3 py-2 bg-blue-800 rounded-[52px] inline-flex justify-center items-center gap-2 overflow-hidden"
-              >
-                {btn && btnOnClick && <Btn text={btnText} onClick={btnOnClick} disabled={btnDisabled} />}
-              </div>
+              {btn && btnOnClick && (
+                <div
+                  data-size="Small"
+                  data-state="Default"
+                  data-type="Primary"
+                  className="w-44 h-9 px-3 py-2 bg-blue-800 rounded-[52px] inline-flex justify-center items-center gap-2 overflow-hidden"
+                >
+                  <Btn text={btnText} onClick={btnOnClick} disabled={btnDisabled} />
+                </div>
+              )}
             </div>
           </div>
         </div>
       </div>
       <div className="self-stretch p-2 rounded-xl inline-flex justify-between items-center">
-        {countdown && countdownTitle && <div className="flex-1 flex justify-center items-center gap-2.5">
-          <div className="flex-1 justify-start text-white text-sm font-medium font-['Outfit'] leading-tight">
-            {countdownTitle}
+        {countdown && countdownTitle && (
+          <div className="flex-1 flex justify-center items-center gap-2.5">
+            <div className="flex-1 justify-start text-white text-sm font-medium font-['Outfit'] leading-tight">
+              {countdownTitle}
+            </div>
+
+            <Tag color="green" text={countdown.toString()} />
           </div>
-
-          <TagGreen text={countdown.toString()} />
-
-        </div>}
+        )}
       </div>
     </div>
   );

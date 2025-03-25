@@ -3,7 +3,7 @@ const TagSquare = ({ text, color }: { text: string; color: string }) => {
     green: "text-green-400 bg-stone-900",
     red: "text-red-500 bg-stone-900",
     gray: "text-neutral-500 bg-zinc-400 bg-opacity-20",
-    yellow: "text-yeloow-300 bg-stone-800"
+    yellow: "text-yellow-300 bg-stone-800",
   };
 
   return (

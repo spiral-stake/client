@@ -2,7 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-.app{
-    background: linear-gradient(180deg, #01152A 1.93%, #03050D 28.18%);
-    color:white;
+.app {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #01152a 1.93%, #03050d 28.18%);
+  color: white;
 }

@@ -4,12 +4,12 @@ import { formatUnits, parseUnits } from "../utils/formatUnits.ts";
 import { readYbt } from "../config/contractsData";
 import ERC20 from "./ERC20";
 import { NATIVE_ADDRESS } from "../utils/NATIVE.ts";
-import { Position, SpiralYield, Token, Ybt } from "../types/index.ts";
+import { LowestBid, Position, SpiralYield, Token, Ybt } from "../types/index.ts";
 import BigNumber from "bignumber.js";
 
 export default class Pool extends Base {
   public chainId!: number;
-  public baseToken!: Token | ERC20;
+  public baseToken!: ERC20;
   public ybt!: ERC20;
   public syToken!: ERC20;
   public amountCycle!: BigNumber;
@@ -41,12 +41,12 @@ export default class Pool extends Base {
           baseToken.decimals
         );
       } else {
-        instance.baseToken = {
-          address: baseToken.address,
-          name: baseToken.name,
-          symbol: baseToken.symbol,
-          decimals: baseToken.decimals,
-        };
+        instance.baseToken = new ERC20(
+          baseToken.address,
+          baseToken.name,
+          baseToken.symbol,
+          baseToken.decimals,
+        )
       }
       instance.ybt = new ERC20(ybt.address, ybt.name, ybt.symbol, ybt.decimals);
       instance.syToken = new ERC20(syToken.address, syToken.name, syToken.symbol, syToken.decimals);
@@ -192,7 +192,7 @@ export default class Pool extends Base {
     };
   }
 
-  async getLowestBid() {
+  async getLowestBid(): Promise<LowestBid> {
     const lowestBid: { positionId: bigint, amount: bigint } = await this.read(
       "getLowestBid",
       [this.calcCurrentCycle()],

@@ -10,32 +10,9 @@ import PoolCard from "../components/low-level/PoolCard";
 import YbtDropdown from "../components/low-level/YbtDropdown";
 import tokenIcon from "../assets/icons/GroupDark.svg";
 
-const Pools = ({
-  ybts,
-  poolFactory,
-}: {
-  ybts: Ybt[];
-  poolFactory: PoolFactory | undefined;
-}) => {
-  const [ybt, setYbt] = useState<Ybt>();
-  const [ybtPoolAddresses, setYbtPoolAddresses] = useState<
-    Record<string, string[]>
-  >({});
-
-  const appChainId = useChainId();
-  const ybtSymbol = useSearchParams()[0].get("ybt");
-
-  useEffect(() => {
-    async function initializeYbt() {
-      if (ybtSymbol) {
-        const _ybt = await readYbt(appChainId, ybtSymbol);
-        return setYbt(_ybt);
-      }
-      return setYbt(ybts[0]);
-    }
-
-    initializeYbt();
-  }, [ybts]);
+const Pools = ({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFactory | undefined }) => {
+  const [selectedYbt, setSelectedYbt] = useState<Ybt>();
+  const [ybtPoolAddresses, setYbtPoolAddresses] = useState<Record<string, string[]>>();
 
   useEffect(() => {
     if (!poolFactory || ybts.length === 0) return;
@@ -43,14 +20,10 @@ const Pools = ({
     const fetchPoolAddresses = async () => {
       const _ybtPoolAddresses: Record<string, string[]> = {};
 
-      // Promise.all returns an array of arrays of pool addresses
       const _allPoolAddresses = await Promise.all(
-        ybts.map((ybt) =>
-          poolFactory.getSpiralPoolsForSYToken(ybt.syToken.address)
-        )
+        ybts.map((ybt) => poolFactory.getSpiralPoolsForSYToken(ybt.syToken.address))
       );
 
-      // Process each array of pool addresses with its corresponding index
       _allPoolAddresses.forEach((ybtPoolAddresses, index) => {
         _ybtPoolAddresses[ybts[index].symbol] = ybtPoolAddresses;
       });
@@ -61,27 +34,26 @@ const Pools = ({
     fetchPoolAddresses();
   }, [poolFactory]);
 
-  const handleYbtChange = (_ybt: Ybt) => {
-    setYbt(_ybt);
+  const handleYbtChange = (_ybt: Ybt | undefined) => {
+    setSelectedYbt(_ybt);
   };
 
-  console.log(ybt && ybtPoolAddresses && true);
-
-  return (
-    //fix this LATER
-    ybt && (
-      <div className="min-h-[90.5vh] h-fit">
-        {Object.keys(ybtPoolAddresses).map((ybtSymbol) => (
-          <YbtDropdown
-            tagMsg="2 pools live"
-            tokenIcon={tokenIcon}
-            key={ybtSymbol}
-            ybt={ybt}
-            poolAddresses={ybtPoolAddresses[ybtSymbol]}
-          />
-        ))}
-      </div>
-    )
+  return ybtPoolAddresses ? (
+    <div className="min-h-[90.5vh] h-fit">
+      {ybts.map((ybt: Ybt) => (
+        <YbtDropdown
+          key={ybt.symbol}
+          ybt={ybt}
+          selectedYbt={selectedYbt}
+          tagMsg="2 pools live"
+          tokenIcon={tokenIcon}
+          poolAddresses={ybtPoolAddresses[ybt.symbol]}
+          handleYbtChange={handleYbtChange}
+        />
+      ))}
+    </div>
+  ) : (
+    <Loader />
   );
 };
 

@@ -34,7 +34,7 @@ export function getLocalTimeFromTimestamp(timestamp: number) {
 
   // Format date and time
   const formattedDate = `${day} ${month}`;
-  const formattedTime = `${hours}:${minutes}:${seconds}`;
+  const formattedTime = `${hours}:${minutes}`;
 
   // Return the full formatted date and time
   return { formattedDate, formattedTime };
@@ -43,19 +43,23 @@ export function getLocalTimeFromTimestamp(timestamp: number) {
 export function parseTime(time: string, unit: string) {
   let _time = parseInt(time);
 
-  if (unit === "minutes") {
+  if (unit === "mins" || unit === "min") {
     _time = _time * 60;
   }
 
-  if (unit === "hours") {
-    _time = _time * 3600;
+  if (unit === "hours" || unit === "hour") {
+    _time = _time * 60 * 60;
   }
 
-  if (unit === "days") {
-    _time = _time * 86400;
+  if (unit === "days" || unit === "day") {
+    _time = _time * 60 * 60 * 24;
   }
 
-  if (unit === "months") {
+  if (unit === "weeks" || unit === "week") {
+    _time = _time * 60 * 60 * 24 * 7
+  }
+
+  if (unit === "months" || unit === "month") {
     _time = _time * 60 * 60 * 24 * 30.44;
   }
 
@@ -99,23 +103,12 @@ export function formatTime(timeInSeconds: number) {
   return { value: timeValue, unit: timeValue > 1 ? timeUnit + "s" : timeUnit };
 }
 
-/**
- * Converts seconds into a formatted string showing days, hours, minutes, and seconds
- * in the standard format of DD:HH:MM:SS
- * @param {number} totalSeconds - Total number of seconds to convert
- * @returns {string} - Formatted time string (e.g., "01:05:30:45")
- */
-export function countdown(totalSeconds: number) {
-  // Handle invalid input
-  if (typeof totalSeconds !== "number" || isNaN(totalSeconds) || totalSeconds < 0) {
-    return "Invalid input";
-  }
-
+export function countdown(secondsLeft: number) {
   // Calculate days, hours, minutes, and seconds
-  const days = Math.floor(totalSeconds / (60 * 60 * 24));
-  const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-  const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-  const seconds = Math.floor(totalSeconds % 60);
+  const days = Math.floor(secondsLeft / (60 * 60 * 24));
+  const hours = Math.floor((secondsLeft % (60 * 60 * 24)) / (60 * 60));
+  const minutes = Math.floor((secondsLeft % (60 * 60)) / 60);
+  const seconds = Math.floor(secondsLeft % 60);
 
   // Format each component to have two digits
   const formattedDays = days.toString().padStart(2, "0");
