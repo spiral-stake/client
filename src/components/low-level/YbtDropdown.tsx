@@ -52,28 +52,30 @@ const YbtDropdown = ({
             ? handleYbtChange(ybt)
             : handleYbtChange(undefined)
         }
-        className="w-full h-16 px-2 border-b border-gray-900 inline-flex justify-start items-center gap-6"
+        className="w-full h-16 border-b border-gray-900 inline-flex justify-start items-center gap-6"
       >
-        <div className="flex-1 flex justify-start items-center">
-          <div className="h-16 p-3 flex justify-start items-center gap-2">
-            <img src={tokenIcon} alt="" className="w-8 h-8" />
+        <div className="w-full grid grid-cols-12 justify-start items-center">
+          <div className="col-span-6 flex justify-start  items-center">
+            <div className="h-16 p-3 flex justify-start items-center gap-2">
+              <img src={tokenIcon} alt="" className="w-8 h-8" />
+            </div>
+            <div className="w-full pl-2 flex justify-start text-zinc-300 text-xl font-medium font-['Outfit']">
+              {ybt.symbol}
+            </div>
           </div>
-          <div className="flex-1 h-16 py-3 flex justify-start items-center gap-4">
-            <div className="flex-1 inline-flex flex-col justify-center items-start gap-3">
-              <div className="self-stretch inline-flex justify-center items-center gap-2">
-                <div className="flex-1 justify-center text-zinc-300 text-xl font-medium font-['Outfit']">
-                  {ybt.symbol}
-                </div>
+          <div className="col-span-6 flex justify-end">
+            <div className="p-3 flex justify-start items-center gap-4">
+              <div className="inline-flex flex-col justify-center items-start gap-2">
+                <Tag color="green" text={tagMsg} />
               </div>
             </div>
-          </div>
-          <div className="self-stretch p-3 flex justify-start items-center gap-4">
-            <div className="inline-flex flex-col justify-center items-start gap-2">
-              <Tag color="green" text={tagMsg} />
+            <div className="h-16 p-3 flex justify-start items-center gap-4">
+              <img
+                src={arrowIcon}
+                alt=""
+                className={`h-6 w-6 ${showPools && "-rotate-180"}`}
+              />
             </div>
-          </div>
-          <div className="h-16 p-3 flex justify-start items-center gap-4">
-            <img src={arrowIcon} alt="" className={`h-6 w-6 ${showPools && "-rotate-180"}`} />
           </div>
         </div>
       </div>
@@ -81,6 +83,33 @@ const YbtDropdown = ({
       {showPools &&
         (pools.length ? (
           <div>
+            <div className="mt-2 pb-2 w-full grid grid-cols-12 pr-5 border-b border-gray-900">
+              <div className="col-span-4 flex justify-center items-center pl-3">
+                <span className="px-3 inline-flex justify-start items-center ">
+                  #
+                </span>
+                <span className="w-full px-5 inline-flex justify-start items-center gap-4">
+                  Pools
+                </span>
+              </div>
+
+              <div className="col-span-1 flex justify-start items-center">
+                <span>Cycles</span>
+              </div>
+              <div className="col-span-2 flex justify-start items-center">
+                <span>Duration</span>
+              </div>
+              <div className="col-span-2 flex justify-start items-center">
+                <span>Deposit</span>
+              </div>
+              <div className="col-span-2 flex justify-start items-center">
+                <span>Win</span>
+              </div>
+              <div className="col-span-1 flex justify-start items-center">
+                <span>Status</span>
+              </div>
+            </div>
+            {/* <div className="h-0 w-full px-5 outline-[10px] outline-gray-600"/> */}
             <div>
               {pools.map((pool: Pool, index: number) => (
                 <PoolCard key={index} pool={pool} />

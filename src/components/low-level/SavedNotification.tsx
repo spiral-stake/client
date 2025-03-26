@@ -2,7 +2,7 @@ import tokenIcon from "../../assets/Icons/Group.svg";
 import BtnFull from "./BtnFull";
 import Notification from "./Notification";
 
-const NotificationPopup = () => {
+const SavedNotification = () => {
   const notifications = [
     {
       tokenIcon:  tokenIcon ,
@@ -47,9 +47,9 @@ const NotificationPopup = () => {
         />
       ))}
     </div>
-    <BtnFull text="View more"/>
+    <BtnFull onClick={()=>{}} text="View more"/>
     </div>
   );
 };
 
-export default NotificationPopup;
+export default SavedNotification;

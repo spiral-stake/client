@@ -17,6 +17,7 @@ import PoolFactory from "./contract-hooks/PoolFactory";
 import { readYbts } from "./config/contractsData";
 import { Ybt } from "./types";
 import DropdownMenu from "./components/DropdownMenu";
+import { toastSuccess } from "./utils/toastWrapper";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
@@ -72,7 +73,8 @@ function App() {
   }, [appChainId]);
 
   return (
-    <div className="app">
+    <div className="app font-[Outfit]">
+      
       <Toaster />
       {!dropdown ? (
         <Navbar showDropdown={showDropdown} />
@@ -84,12 +86,7 @@ function App() {
         <Routes>
           <Route
             path={"/pools/create"}
-            element={
-              <CreatePool
-                poolFactory={poolFactory}
-                ybts={ybts}
-              />
-            }
+            element={<CreatePool poolFactory={poolFactory} ybts={ybts} />}
           />
           <Route path={"/pools/:address"} element={<PoolPage />} />
           {/* <Route path="/pools" element={<Test />} /> */}
@@ -107,6 +104,7 @@ function App() {
           setOnboarding={setOnboarding}
         />
       </div>
+      {/* <button onClick={()=>toastSuccess("notification popped")}>notification</button> */}
     </div>
   );
 }
