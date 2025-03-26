@@ -25,13 +25,13 @@ const PoolCard = ({ pool }: { pool: Pool }) => {
 
   return (
     <Link to={`/pools/${pool.address}?ybt=${pool.ybt.symbol}&poolChainId=${pool.chainId}`}>
-      <div className="w-full flex items-center justify-between">
-        <div className="flex justify-center items-center">
+      <div className="w-full grid grid-cols-12 items-center pr-5">
+        <div className="col-span-4 flex justify-center items-center">
           <div className="h-16 p-3 inline-flex justify-start items-center gap-2">
             <img src={tokenIcon} alt="" />
           </div>
-          <div className=" h-16 p-3 w-[400px] inline-flex justify-start items-center gap-4">
-            <div className="flex-1 inline-flex flex-col justify-center items-start">
+          <div className="w-full h-16 p-3 inline-flex justify-start items-center gap-4">
+            <div className="inline-flex flex-col justify-center items-start">
               <div className="inline-flex justify-center items-center gap-2">
                 <div className="flex-1 justify-center text-zinc-300 text-base font-medium font-['Outfit']">
                   {pool.ybt.symbol}
@@ -62,35 +62,35 @@ const PoolCard = ({ pool }: { pool: Pool }) => {
             </div>
           </div>
         </div>
-        <div className=" h-16 p-3 pr-10 inline-flex justify-start items-center gap-4">
-          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 w-28">
+        <div className="col-span-1 h-16 inline-flex justify-start items-center">
+          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2">
             <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit'] truncate">
               {pool.totalCycles}
             </div>
           </div>
         </div>
-        <div className="h-16 p-3 pr-10 inline-flex justify-start items-center gap-4">
-          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 w-28 overflow-hidden">
+        <div className="col-span-2 h-16 inline-flex justify-center items-center gap-4">
+          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
             <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit']">
-              {`${formatTime(pool.cycleDuration).value} ${formatTime(pool.cycleDuration).unit}`}
+              {`${formatTime(pool.cycleDuration).value} ${formatTime(pool.cycleDuration).unit.toLowerCase()}`}
             </div>
           </div>
         </div>
-        <div className=" h-16 p-3 pr-10 inline-flex justify-start items-center gap-4">
-          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 w-28 overflow-hidden">
+        <div className="col-span-2 h-16 inline-flex justify-start items-center gap-4">
+          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
             <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit']">
               {`${displayAmount(pool.amountCycle, 2)} ${pool.baseToken.symbol}`}
             </div>
           </div>
         </div>
-        <div className=" h-16 p-3 pr-10 inline-flex justify-start items-center gap-4">
-          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 w-28 overflow-hidden">
+        <div className="col-span-2 h-16 inline-flex justify-start items-center gap-4">
+          <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
             <div className="justify-center text-white text-base font-normal font-['Outfit']">
               {`${displayAmount(pool.amountCollateralInBase, 2)} ${pool.baseToken.symbol}`}
             </div>
           </div>
         </div>
-        <div className="w-16">
+        <div className="col-span-1">
           {state ? (
             (state === "WAITING" && <TagSquare text="Waiting" color="yellow" />) ||
             (state === "LIVE" && <TagSquare text="Live" color="green" />) ||

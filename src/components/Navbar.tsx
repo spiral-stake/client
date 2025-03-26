@@ -24,7 +24,7 @@ function Navbar({ showDropdown }: { showDropdown: (bool: boolean) => void }) {
             <Link to={"/pools"}>
               <div className="cursor-pointer flex items-center justify-center gap-1">
                 <img src={logo} alt="" className="h-9 w-9" />
-                <span className="hidden md:inline-flex text-xl font-bold">Spiral Stake</span>
+                <span className="hidden md:inline-flex text-xl font-semibold">Spiral Stake</span>
               </div>
             </Link>
 
