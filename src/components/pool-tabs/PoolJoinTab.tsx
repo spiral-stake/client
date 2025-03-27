@@ -16,13 +16,13 @@ const PoolJoinTab = ({
   pool,
   allPositions,
   position,
-  getAllPositions,
+  updateAllPositions,
   setLoading,
 }: {
   pool: Pool;
   allPositions: Position[];
   position: Position | undefined;
-  getAllPositions: () => void;
+  updateAllPositions: () => void;
   setLoading: (bool: boolean) => void;
 }) => {
   const ybtCollateral = pool.ybt;
@@ -40,10 +40,7 @@ const PoolJoinTab = ({
       const _poolRouter = await PoolRouter.createInstance(pool);
       setPoolRouter(_poolRouter);
     };
-
     const getAmountCollateral = async () => {
-      setAmountYbtCollateral(undefined);
-
       const _amountCollateral = await pool.getAmountCollateral();
       setAmountYbtCollateral(_amountCollateral);
     };
@@ -122,7 +119,7 @@ const PoolJoinTab = ({
     await Promise.all([
       updateUserYbtCollateralBalance(),
       updateUserYbtCollateralAllowance(),
-      getAllPositions(),
+      updateAllPositions(),
     ]);
   };
 

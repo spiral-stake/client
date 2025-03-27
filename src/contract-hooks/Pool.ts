@@ -20,6 +20,7 @@ export default class Pool extends Base {
   public totalPositions!: number;
   public startTime!: number;
   public endTime!: number;
+  public allPositions!: Position[]; // Only non-immutable storage variable (needed for optimized pool state)
 
   constructor(address: string) {
     super(address, POOL_ABI);
@@ -45,8 +46,8 @@ export default class Pool extends Base {
           baseToken.address,
           baseToken.name,
           baseToken.symbol,
-          baseToken.decimals,
-        )
+          baseToken.decimals
+        );
       }
       instance.ybt = new ERC20(ybt.address, ybt.name, ybt.symbol, ybt.decimals);
       instance.syToken = new ERC20(syToken.address, syToken.name, syToken.symbol, syToken.decimals);
@@ -59,6 +60,7 @@ export default class Pool extends Base {
       cycleDepositAndBidDuration,
       totalCycles,
       startTime,
+      allPositions,
     ] = await Promise.all([
       instance.read("getamountCycle", [], chainId),
       instance.read("getAmountCollateralInBase", [], chainId),
@@ -66,17 +68,21 @@ export default class Pool extends Base {
       instance.read("getCycleDepositAndBidDuration", [], chainId),
       instance.read("getTotalCycles", [], chainId),
       instance.read("getStartTime", [], chainId),
+      instance.getAllPositions(),
     ]);
 
     instance.address = instance.address;
     instance.amountCycle = formatUnits(amountCycle as bigint);
     instance.amountCollateralInBase = formatUnits(amountCollateralInBase as bigint);
     instance.cycleDuration = parseInt((cycleDuration as bigint).toString());
-    instance.cycleDepositAndBidDuration = parseInt((cycleDepositAndBidDuration as bigint).toString());
+    instance.cycleDepositAndBidDuration = parseInt(
+      (cycleDepositAndBidDuration as bigint).toString()
+    );
     instance.totalCycles = parseInt((totalCycles as bigint).toString());
     instance.totalPositions = parseInt((totalCycles as bigint).toString());
     instance.startTime = parseInt((startTime as bigint).toString());
     instance.endTime = instance.startTime + instance.cycleDuration * instance.totalCycles;
+    instance.allPositions = allPositions;
 
     return instance;
   }
@@ -114,20 +120,24 @@ export default class Pool extends Base {
   }
 
   async getPositionsFilled() {
-    return parseInt((await this.read("getPositionsFilled", [], this.chainId) as bigint).toString());
+    return parseInt(
+      ((await this.read("getPositionsFilled", [], this.chainId)) as bigint).toString()
+    );
   }
 
   async getCyclesFinalized() {
-    return parseInt((await this.read("getCyclesFinalized", [], this.chainId) as bigint).toString());
+    return parseInt(
+      ((await this.read("getCyclesFinalized", [], this.chainId)) as bigint).toString()
+    );
   }
 
   async getAmountCollateral() {
     const amountCollateral = await this.read("getAmountCollateral", [], this.chainId);
-    return formatUnits((amountCollateral as bigint), this.ybt.decimals);
+    return formatUnits(amountCollateral as bigint, this.ybt.decimals);
   }
 
   async getAllPositions(): Promise<Position[]> {
-    const positionsData = (await this.read("getAllPositions", [], this.chainId) as Position[]);
+    const positionsData = (await this.read("getAllPositions", [], this.chainId)) as Position[];
     const positions = await Promise.all(
       positionsData.map((_: any, index: number) => this.getPosition(index))
     );
@@ -149,14 +159,14 @@ export default class Pool extends Base {
       amountCollateral: bigint;
       winningCycle: bigint;
       cyclesDeposited: boolean[];
-      spiralYield: SpiralYield
+      spiralYield: SpiralYield;
     };
-  
+
     const [position, owner] = await Promise.all([
       this.read("getPosition", [positionId], this.chainId) as Promise<RawPosition>,
       this.read("ownerOf", [positionId], this.chainId) as Promise<string>,
     ]);
-  
+
     const typedPosition: Position = {
       ...position, // Preserve any additional properties
       id: positionId,
@@ -164,9 +174,9 @@ export default class Pool extends Base {
       amountCollateral: formatUnits(position.amountCollateral, this.ybt.decimals),
       winningCycle: parseInt(position.winningCycle.toString()),
       cyclesDeposited: position.cyclesDeposited,
-      spiralYield: position.spiralYield
+      spiralYield: position.spiralYield,
     };
-  
+
     return typedPosition;
   }
 
@@ -176,11 +186,11 @@ export default class Pool extends Base {
       [position.id],
       this.chainId
     );
-    return formatUnits((amountCollateralYield as bigint), this.ybt.decimals);
+    return formatUnits(amountCollateralYield as bigint, this.ybt.decimals);
   }
 
   async getSpiralYield(position: Position) {
-    const spiralYield: { amountBase: bigint, amountSY: bigint } = await this.read(
+    const spiralYield: { amountBase: bigint; amountSY: bigint } = await this.read(
       "getSpiralYield",
       [position.id],
       this.chainId
@@ -193,28 +203,28 @@ export default class Pool extends Base {
   }
 
   async getLowestBid(): Promise<LowestBid> {
-    const lowestBid: { positionId: bigint, amount: bigint } = await this.read(
+    const lowestBid: { positionId: bigint; amount: bigint } = await this.read(
       "getLowestBid",
       [this.calcCurrentCycle()],
       this.chainId
     );
-  
+
     return {
       positionId: parseInt(lowestBid.positionId.toString()),
       amount: formatUnits(lowestBid.amount, (this.baseToken as Token).decimals),
     };
   }
 
-  currentTimestamp(){
+  currentTimestamp() {
     return Math.floor(Date.now() / 1000);
   }
 
-  calcPoolState(positionsFilled: number, cyclesFinalized: number) {
+  calcPoolState(positionsFilled: number) {
     const timestamp = this.currentTimestamp();
 
     if (timestamp < this.startTime) return "WAITING";
     else if (positionsFilled < this.totalPositions) return "DISCARDED";
-    else if (cyclesFinalized === this.totalCycles) return "ENDED";
+    else if (timestamp > this.endTime) return "ENDED";
     else return "LIVE";
   }
 

@@ -44,43 +44,24 @@ const PoolPage = ({
     if (!poolAddress) return;
     showOverlay(undefined);
 
-    const getPool = async () => {
+    const getPoolAndPositions = async () => {
       try {
         const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
+
         setPool(_pool);
+        setState(_pool.calcPoolState(_pool.allPositions.length));
+        setAllPositions(_pool.allPositions);
       } catch (error) {
         console.error("Failed to create pool instance:", error);
       }
     };
 
-    getPool();
+    getPoolAndPositions();
   }, []);
 
   useEffect(() => {
-    getPoolState();
-  }, [pool]);
-
-  const getPoolState = async () => {
-    if (!pool) return;
-
-    try {
-      const [_allPositions, _cyclesFinalized] = await Promise.all([
-        pool.getAllPositions(),
-        pool.getCyclesFinalized(),
-      ]);
-
-      setState(pool.calcPoolState(_allPositions.length, _cyclesFinalized));
-      setCyclesFinalized(_cyclesFinalized);
-      setAllPositions(_allPositions);
-    } catch (error) {
-      console.error("Failed to get pool state:", error);
-    }
-  };
-
-  useEffect(() => {
-    // Only for the 1st cycle
     if (state === "LIVE" && !currentCycle) {
-      updateCurrentCycle();
+      updateCurrentCycle(); // Only for the 1st cycle
     }
 
     if (state === "DISCARDED") {
@@ -93,18 +74,33 @@ const PoolPage = ({
   }, [state, currentCycle]);
 
   useEffect(() => {
-    if (address && state && allPositions) {
-      const userPositions = allPositions.filter((position) => position.owner === address);
+    if (!address || (!state && !allPositions)) return;
 
-      if (userPositions.length) {
-        setPosition(userPositions[0]);
-      } else {
-        setPosition(undefined);
-      }
+    const userPositions = allPositions.filter((position) => position.owner === address);
+
+    if (!userPositions.length) {
+      setPosition(undefined);
     }
+    setPosition(userPositions[0]);
   }, [address, state, allPositions]);
 
-  const getAllPositions = async () => {
+  // To be pinged by startTime countdown
+  const syncPoolInitialState = async () => {
+    if (!pool) return;
+
+    try {
+      const _allPositions = await pool.getAllPositions();
+      const _poolState = pool.calcPoolState(_allPositions.length);
+
+      setState(_poolState);
+      setAllPositions(_allPositions);
+    } catch (error) {
+      console.error("Failed to get current pool state:", error);
+    }
+  };
+
+  // To be called by joinPool, to add new positions
+  const updateAllPositions = async () => {
     if (!pool) return;
 
     try {
@@ -115,6 +111,7 @@ const PoolPage = ({
     }
   };
 
+  // To update positions state for various action items
   const updatePosition = async (positionId: number) => {
     if (!allPositions || !pool) return;
 
@@ -130,14 +127,7 @@ const PoolPage = ({
     }
   };
 
-  const closeCycleDepositWindow = async () => {
-    setIsCycleDepositAndBidOpen(false);
-    toastSuccess(`Deposit and Bid Window closed for cycle ${currentCycle}`);
-
-    await wait(10);
-    getPoolState();
-  };
-
+  // Will be called by coutdown timers and once during page state initialization (IF LIVE)
   const updateCurrentCycle = () => {
     if (!pool) return;
 
@@ -151,6 +141,18 @@ const PoolPage = ({
     toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
   };
 
+  // Will be called by countdown timers to close depositAndBidWindow and to also check if cycle is finalized
+  const closeCycleDepositWindow = async () => {
+    setIsCycleDepositAndBidOpen(false);
+    toastSuccess(`Deposit and Bid Window closed for cycle ${currentCycle}`);
+
+    // Also wait & to check if cycle is finalized
+    await wait(10);
+    if (!pool) return;
+    const _cyclesFinalized = await pool.getCyclesFinalized();
+    setCyclesFinalized(_cyclesFinalized);
+  };
+
   const renderPoolTab = () => {
     if (!pool || !state) return;
 
@@ -161,7 +163,7 @@ const PoolPage = ({
             pool={pool}
             allPositions={allPositions}
             position={position}
-            getAllPositions={getAllPositions}
+            updateAllPositions={updateAllPositions}
             setLoading={setLoading}
           />
         </div>
@@ -220,7 +222,9 @@ const PoolPage = ({
       );
 
     if (state === "ENDED") {
-      return; // Need to add logic
+      return (
+        <WaitTab title="Pool is Ended" msg="Pool has ended, Please Claim remaining Yield, if any" />
+      );
     }
   };
 
