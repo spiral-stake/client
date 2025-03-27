@@ -8,7 +8,7 @@ import deposit from "../../assets/Icons/deposit.svg";
 import Info from "../low-level/Info";
 import Pool from "../../contract-hooks/Pool";
 import { formatTime, getLocalTimeFromTimestamp } from "../../utils/time";
-import { displayAmount } from "../../utils/displayAmounts";
+import { displayTokenAmount } from "../../utils/displayTokenAmounts";
 
 const PoolInfoTab = ({ pool }: { pool: Pool }) => {
   const poolStartTime = getLocalTimeFromTimestamp(pool.startTime);
@@ -16,16 +16,33 @@ const PoolInfoTab = ({ pool }: { pool: Pool }) => {
   const poolDepositAndBidDuration = formatTime(pool.cycleDepositAndBidDuration);
 
   const items = [
-    { symbol: timeIcon, title: "Start Time", value: `${poolStartTime.formattedDate}, ${poolStartTime.formattedTime}` },
     {
-      symbol: collateral, title: "Collateral", value: `~ ${displayAmount(pool.amountCollateralInBase)} ${pool.baseToken.symbol}`
+      symbol: timeIcon,
+      title: "Start Time",
+      value: `${poolStartTime.formattedDate}, ${poolStartTime.formattedTime}`,
     },
-    { symbol: coin, title: "Cycle Amount", value: `${displayAmount(pool.amountCycle)} ${pool.baseToken.symbol}` },
+    {
+      symbol: collateral,
+      title: "Collateral",
+      value: `~ ${displayTokenAmount(pool.amountCollateralInBase)} ${pool.baseToken.symbol}`,
+    },
+    {
+      symbol: coin,
+      title: "Cycle Amount",
+      value: `${displayTokenAmount(pool.amountCycle)} ${pool.baseToken.symbol}`,
+    },
     { symbol: cycle, title: "Total Cycles", value: `${pool.totalCycles}` },
-    { symbol: timeIcon, title: "Cycle Duration", value: `${poolCycleDuration.value} ${poolCycleDuration.unit}` },
-    { symbol: deposit, title: "Deposit Window", value: `${poolDepositAndBidDuration.value} ${poolDepositAndBidDuration.unit}` },
+    {
+      symbol: timeIcon,
+      title: "Cycle Duration",
+      value: `${poolCycleDuration.value} ${poolCycleDuration.unit}`,
+    },
+    {
+      symbol: deposit,
+      title: "Deposit Window",
+      value: `${poolDepositAndBidDuration.value} ${poolDepositAndBidDuration.unit}`,
+    },
   ];
-
 
   return (
     <div className="grid grid-cols-2  lg:flex justify-around my-5 mx-5 ">
@@ -33,10 +50,11 @@ const PoolInfoTab = ({ pool }: { pool: Pool }) => {
         <div className="mb-5 flex justify-center items-center">
           {key !== 0 && (
             <div
-              className={` ${key % 2 == 0
-                ? "hidden"
-                : "w-0 h-6 mr-6 outline outline-[1.50px] outline-offset-[-0.75px] outline-gray-800"
-                } `}
+              className={` ${
+                key % 2 == 0
+                  ? "hidden"
+                  : "w-0 h-6 mr-6 outline outline-[1.50px] outline-offset-[-0.75px] outline-gray-800"
+              } `}
             ></div>
           )}
           <Info symbol={item.symbol} title={item.title} value={item.value} />

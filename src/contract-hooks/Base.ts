@@ -29,7 +29,7 @@ export class Base {
       chainId: chainId as 31337 | 2522 | 421614 | undefined,
     });
 
-    await wait(2);
+    // await wait(2);
 
     return res as T;
   }
@@ -41,7 +41,9 @@ export class Base {
         address: this.address,
         functionName: functionName,
         args,
-        account: (await connector?.getAccounts?.())?.[0] || "0x0000000000000000000000000000000000000000" as `0x${string}`,
+        account:
+          (await connector?.getAccounts?.())?.[0] ||
+          ("0x0000000000000000000000000000000000000000" as `0x${string}`),
         value,
         chainId: chainId as 31337 | 2522 | 421614 | undefined,
       })
@@ -58,13 +60,10 @@ export class Base {
       __mode: "prepared", // Needs to be uncommented on local
     });
 
-    // await wait(4);
+    await wait(4);
 
     return waitForTransactionReceipt(config, { hash, confirmations: 1 });
   }
-
-
-
 
   async getNativeBalance(account: string) {
     const { value } = await getBalance(config, {

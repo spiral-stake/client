@@ -8,7 +8,7 @@ import BigNumber from "bignumber.js";
 import { useAccount } from "wagmi";
 import { handleAsync } from "../../utils/handleAsyncFunction";
 import { toastSuccess } from "../../utils/toastWrapper";
-import { displayAmount } from "../../utils/displayAmounts";
+import { displayTokenAmount } from "../../utils/displayTokenAmounts.ts";
 import WaitTab from "../low-level/WaitTab";
 import waitIcon from "../../assets/Icons/wait.svg";
 import successIcon from "../../assets/Icons/success.svg";
@@ -138,7 +138,7 @@ const PoolJoinTab = ({
               autoFocus={true}
               disabled={true}
               inputTokenSymbol={pool.ybt.symbol}
-              value={displayAmount(amountYbtCollateral)}
+              value={displayTokenAmount(amountYbtCollateral)}
               onChange={() => {}}
             />
           ) : (
@@ -161,9 +161,13 @@ const PoolJoinTab = ({
       <WaitTab
         icon={waitIcon}
         title={"Waiting for Participants"}
-        msg={`You have participated in this pool and deposited your collateral of ${
-          amountYbtCollateral && displayAmount(amountYbtCollateral)
-        } ${pool.ybt.symbol}`}
+        msg={
+          amountYbtCollateral &&
+          `You have participated in this pool and deposited your collateral of ${displayTokenAmount(
+            amountYbtCollateral,
+            pool.ybt.symbol
+          )}`
+        }
       />
     )
   ) : (
@@ -171,8 +175,8 @@ const PoolJoinTab = ({
       icon={waitIcon}
       title={"Pool Starting In"}
       msg={`You have participated in this pool and deposited your collateral of ${
-        amountYbtCollateral && displayAmount(amountYbtCollateral)
-      } ${pool.ybt.symbol}.`}
+        amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt.symbol)
+      }`}
     />
   );
 };

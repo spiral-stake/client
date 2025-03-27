@@ -4,7 +4,6 @@ import { useAccount, useSwitchChain } from "wagmi";
 
 import Pool from "../contract-hooks/Pool.js";
 import PoolRedeem from "../components/pool/PoolRedeemTab.js";
-import PoolContribute from "../components/pool/PoolContribute.js";
 import { getCurrentTimestampInSeconds, wait } from "../utils/time.js";
 import { toastSuccess } from "../utils/toastWrapper.js";
 import { Cycle, Position } from "../types/index.js";
@@ -135,14 +134,14 @@ const PoolPage = () => {
   const updateCurrentCycle = () => {
     if (!pool) return;
 
-    let newCycleCount = !currentCycle ? 1 : currentCycle.count + 1;
+    let newCycleCount = !currentCycle ? pool.calcCurrentCycle() : currentCycle.count + 1;
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
     setCurrentCycle({ count: newCycleCount, startTime, endTime, depositAndBidEndTime });
 
     setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
-    toastSuccess(`Cycle ${currentCycle} has started, Please make cycle Deposits and Bid`);
+    toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
   };
 
   const renderPoolInterface = () => {
@@ -150,46 +149,52 @@ const PoolPage = () => {
 
     if (state === "WAITING") {
       return (
-        <PoolJoinTab
-          pool={pool}
-          allPositions={allPositions}
-          position={position}
-          getAllPositions={getAllPositions}
-          setLoading={setLoading}
-        />
+        <div>
+          <PoolJoinTab
+            pool={pool}
+            allPositions={allPositions}
+            position={position}
+            getAllPositions={getAllPositions}
+            setLoading={setLoading}
+          />
+        </div>
       );
     }
 
     if (state === "DISCARDED") {
       return (
-        <PoolRedeem
-        // pool={pool}
-        // position={position}
-        // updatePosition={updatePosition}
-        // setActionBtn={setActionBtn}
-        // setLoading={setLoading}
-        />
+        <div>
+          <PoolRedeem
+          // pool={pool}
+          // position={position}
+          // updatePosition={updatePosition}
+          // setActionBtn={setActionBtn}
+          // setLoading={setLoading}
+          />
+        </div>
       );
     }
 
     if (state === "LIVE" || state === "ENDED")
       return (
-        <PoolStarted
-          pool={pool}
-          state={state}
-          currentCycle={currentCycle}
-          position={position}
-          updatePosition={updatePosition}
-          isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
-          poolChainId={poolChainId}
-        />
+        <div>
+          <PoolStarted
+            pool={pool}
+            state={state}
+            currentCycle={currentCycle}
+            position={position}
+            updatePosition={updatePosition}
+            isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
+            poolChainId={poolChainId}
+          />
+        </div>
       );
 
     return null;
   };
 
   return pool ? (
-    <div>
+    <div className="">
       <TokenData token={pool.ybt} />
       <PoolState
         state={state}
@@ -199,7 +204,10 @@ const PoolPage = () => {
         totalPositions={pool.totalPositions}
       />
       <PoolInfoTab pool={pool} />
-      {renderPoolInterface()}
+      <div className="absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] circle-gradient rounded-full border-2 border-gray-950 flex justify-center" />
+      <div className="relative w-full flex justify-center items-center min-h-[650px]">
+        {renderPoolInterface()}
+      </div>
     </div>
   ) : (
     <Loader />

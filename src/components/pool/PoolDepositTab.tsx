@@ -9,10 +9,13 @@ import { Cycle, Position } from "../../types";
 import BigNumber from "bignumber.js";
 import ERC20 from "../../contract-hooks/ERC20";
 import Input from "../low-level/Input";
-import infoIcon from "../../assets/Icons/infoIcon.svg";
-import BtnFull from "../low-level/BtnFull";
 import ActionBtn from "../ActionBtn";
-import { displayAmount } from "../../utils/displayAmounts";
+import { displayTokenAmount } from "../../utils/displayTokenAmounts.ts";
+import Loading from "../low-level/Loading.tsx";
+import { HoverInfo } from "../low-level/HoverInfo.tsx";
+import UserMessage from "../low-level/SuccessMsg.tsx";
+import checkIconBig from "../../assets/icons/checkIconBig.svg";
+import errorIconBig from "../../assets/icons/errorIconBig.svg";
 
 const PoolDepositTab = ({
   pool,
@@ -44,31 +47,7 @@ const PoolDepositTab = ({
   }, [address]);
 
   useEffect(() => {
-    if (!position) {
-      return setActionBtn({
-        ...actionBtn,
-        text: `Not Joined`,
-        disabled: true,
-      });
-    }
-
     const updatingActionBtn = () => {
-      if (position.cyclesDeposited[currentCycle.count] === true) {
-        return setActionBtn({
-          ...actionBtn,
-          text: `Cycle Deposit Paid`,
-          disabled: true,
-        });
-      }
-
-      if (!isCycleDepositAndBidOpen) {
-        return setActionBtn({
-          ...actionBtn,
-          text: "Cycle Deposit & Bid Window Closed",
-          disabled: true,
-        });
-      }
-
       if (userBaseTokenBalance?.isLessThan(pool.amountCycle)) {
         return setActionBtn({
           ...actionBtn,
@@ -152,11 +131,11 @@ const PoolDepositTab = ({
   };
 
   return (
-    <div>
+    <div className="mb-8">
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <span>Cycles Deposit</span>
-          <img onClick={() => {}} src={infoIcon} alt="" className="w-4 h-4 text-gray-400" />
+          <HoverInfo content="Receive real-time updates and important alerts" />
         </div>
         <div className="px-2.5 py-2 bg-neutral-800 rounded-[33.78px] inline-flex justify-start items-center gap-1.5">
           <div className="justify-start text-neutral-300 text-xs font-normal font-['Outfit'] leading-none">
@@ -164,22 +143,59 @@ const PoolDepositTab = ({
           </div>
         </div>
       </div>
-      <div className="mt-3 mb-4">
-        <Input
-          disabled={true}
-          value={displayAmount(pool.amountCycle)}
-          inputTokenSymbol={pool.baseToken.symbol}
-          name={""}
-          onChange={() => {}}
-        />
-      </div>
-      <div>
-        <ActionBtn
-          text={actionBtn.text}
-          disabled={actionBtn.disabled}
-          expectedChainId={poolChainId}
-          onClick={actionBtn.onClick}
-        />
+
+      <div className="mt-4">
+        {position.cyclesDeposited[currentCycle.count] === false ? (
+          isCycleDepositAndBidOpen ? (
+            !loading ? (
+              <div>
+                <div className="mb-4">
+                  <Input
+                    disabled={true}
+                    value={displayTokenAmount(pool.amountCycle)}
+                    inputTokenSymbol={pool.baseToken.symbol}
+                    name={""}
+                    onChange={() => {}}
+                  />
+                </div>
+                <div>
+                  <ActionBtn
+                    text={actionBtn.text}
+                    disabled={actionBtn.disabled}
+                    expectedChainId={poolChainId}
+                    onClick={actionBtn.onClick}
+                  />
+                </div>
+              </div>
+            ) : (
+              <div className="">
+                <Loading loadingText="Depositing" />
+              </div>
+            )
+          ) : (
+            <UserMessage
+              icon={errorIconBig}
+              title={`Cycle Deposit window is closed.`}
+              message={`Your ${displayTokenAmount(
+                pool.amountCycle,
+                pool.baseToken.symbol
+              )} worth of ${
+                pool.ybt.symbol
+              } collateral has been liquidated for your missed cycle deposit`}
+            />
+          )
+        ) : (
+          <div>
+            <UserMessage
+              icon={checkIconBig}
+              title={`${displayTokenAmount(
+                pool.amountCycle,
+                pool.baseToken.symbol
+              )} deposited successfully.`}
+              message={`You have successfully deposited in this cycle ${currentCycle.count}.`}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

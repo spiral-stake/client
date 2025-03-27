@@ -1,5 +1,6 @@
 import Tag from "./Tag";
 import Btn from "./Btn";
+import TextLoading from "./TextLoading";
 
 const WaitTab = ({
   icon,
@@ -12,9 +13,9 @@ const WaitTab = ({
   btnOnClick,
   btnDisabled,
 }: {
-  icon: string;
+  icon?: string;
   title: string;
-  msg?: string;
+  msg: string | undefined;
   countdown?: string;
   countdownTitle?: string;
   btn?: boolean;
@@ -39,7 +40,7 @@ const WaitTab = ({
                 </div>
                 <div className="w-64 text-center justify-start">
                   <span className="text-white text-opacity-70 text-xs font-normal font-['Outfit'] leading-none">
-                    {msg ? msg : <>Loading...</>}
+                    {msg ? msg : <TextLoading lineCount={2} />}
                   </span>
                 </div>
               </div>

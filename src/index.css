@@ -7,3 +7,7 @@
   background: linear-gradient(180deg, #01152a 1.93%, #03050d 28.18%);
   color: white;
 }
+
+.circle-gradient {
+  background: linear-gradient(180deg, #01152a 1.93%, #03050d 28.18%);
+}

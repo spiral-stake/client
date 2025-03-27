@@ -17,7 +17,6 @@ import PoolFactory from "./contract-hooks/PoolFactory";
 import { readYbts } from "./config/contractsData";
 import { Ybt } from "./types";
 import DropdownMenu from "./components/DropdownMenu";
-import { toastSuccess } from "./utils/toastWrapper";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
@@ -38,8 +37,7 @@ function App() {
      * @dev Checks if the user's ybt balance is 0, and airdrop ybt and baseTokens for testnet onboarding
      */
     const onboardUser = async () => {
-      if (!address || chainId !== appChainId || !ybts.length)
-        return setOnboarding(false);
+      if (!address || chainId !== appChainId || !ybts.length) return setOnboarding(false);
 
       const { address: tokenAddress, name, symbol, decimals } = ybts[0];
       const ybt = new ERC20(tokenAddress, name, symbol, decimals);
@@ -73,8 +71,7 @@ function App() {
   }, [appChainId]);
 
   return (
-    <div className="app font-[Outfit]">
-      
+    <div className="app font-[Outfit] relative overflow-hidden">
       <Toaster />
       {!dropdown ? (
         <Navbar showDropdown={showDropdown} />
@@ -82,7 +79,7 @@ function App() {
         <DropdownMenu showDropdown={showDropdown} />
       )}
 
-      <div className="px-4 lg:px-16">
+      <main className="px-4 lg:px-16">
         <Routes>
           <Route
             path={"/pools/create"}
@@ -90,21 +87,14 @@ function App() {
           />
           <Route path={"/pools/:address"} element={<PoolPage />} />
           {/* <Route path="/pools" element={<Test />} /> */}
-          <Route
-            path={"/pools"}
-            element={<Pools ybts={ybts} poolFactory={poolFactory} />}
-          />
+          <Route path={"/pools"} element={<Pools ybts={ybts} poolFactory={poolFactory} />} />
           <Route path={"/marketPlace"} element={<Market />} />
           <Route path="dashboard" element={<Dashboard />} />
 
           <Route path="*" element={<Navigate to={"/pools"} />} />
         </Routes>
-        <OnboardingOverlay
-          onboarding={onboarding}
-          setOnboarding={setOnboarding}
-        />
-      </div>
-      {/* <button onClick={()=>toastSuccess("notification popped")}>notification</button> */}
+        <OnboardingOverlay onboarding={onboarding} setOnboarding={setOnboarding} />
+      </main>
     </div>
   );
 }

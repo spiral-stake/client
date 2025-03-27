@@ -1,7 +1,7 @@
 import Pool from "../../contract-hooks/Pool";
 import { useState, useEffect } from "react";
 import tokenIcon from "../../assets/icons/Group.svg";
-import { displayAmount } from "../../utils/displayAmounts";
+import { displayTokenAmount } from "../../utils/displayTokenAmounts";
 import TagSquare from "./TagSquare";
 import { formatTime, getLocalTimeFromTimestamp } from "../../utils/time";
 import { Link } from "react-router-dom";
@@ -79,14 +79,14 @@ const PoolCard = ({ pool }: { pool: Pool }) => {
         <div className="col-span-2 h-16 inline-flex justify-start items-center gap-4">
           <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
             <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit']">
-              {`${displayAmount(pool.amountCycle, 2)} ${pool.baseToken.symbol}`}
+              {`${displayTokenAmount(pool.amountCycle, 2)} ${pool.baseToken.symbol}`}
             </div>
           </div>
         </div>
         <div className="col-span-2 h-16 inline-flex justify-start items-center gap-4">
           <div className="flex-1 inline-flex flex-col justify-center items-start gap-2 overflow-hidden">
             <div className="justify-center text-white text-base font-normal font-['Outfit']">
-              {`${displayAmount(pool.amountCollateralInBase, 2)} ${pool.baseToken.symbol}`}
+              {`${displayTokenAmount(pool.amountCollateralInBase, 2)} ${pool.baseToken.symbol}`}
             </div>
           </div>
         </div>
