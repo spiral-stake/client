@@ -87,7 +87,7 @@ function App() {
             path={"/pools/create"}
             element={<CreatePool showOverlay={showOverlay} poolFactory={poolFactory} ybts={ybts} />}
           />
-          <Route path={"/pools/:address"} element={<PoolPage />} />
+          <Route path={"/pools/:address"} element={<PoolPage showOverlay={showOverlay} />} />
           {/* <Route path="/pools" element={<Test />} /> */}
           <Route path={"/pools"} element={<Pools ybts={ybts} poolFactory={poolFactory} />} />
           <Route path={"/marketPlace"} element={<Market />} />

@@ -125,16 +125,17 @@ function CreatePool({
   }, [pool]);
 
   useEffect(() => {
-    if (loading)
-      showOverlay(
-        <div className="w-[420px]">
-          <Loading
-            loadingText="Creating Pool"
-            loadingTitle="Creating Spiral Pool"
-            infoComponent={<CreatePoolInfo poolInfo={pool} />}
-          />
-        </div>
-      );
+    if (!loading) return showOverlay(undefined);
+
+    showOverlay(
+      <div className="w-[420px]">
+        <Loading
+          loadingText="Creating Pool"
+          loadingTitle="Creating Spiral Pool"
+          infoComponent={<CreatePoolInfo poolInfo={pool} />}
+        />
+      </div>
+    );
   }, [loading]);
 
   const handleYbtChange = async (tokenSymbol: string) => {

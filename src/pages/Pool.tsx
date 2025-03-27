@@ -18,7 +18,11 @@ import WaitTab from "../components/low-level/WaitTab.js";
 import PositionNft from "../components/low-level/PositionNft.js";
 import ErrorIconBig from "../assets/icons/errorIconBig.svg";
 
-const PoolPage = () => {
+const PoolPage = ({
+  showOverlay,
+}: {
+  showOverlay: (overlayComponent: React.ReactNode | undefined) => void;
+}) => {
   const [pool, setPool] = useState<Pool>();
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
@@ -38,6 +42,8 @@ const PoolPage = () => {
 
   useEffect(() => {
     if (!poolAddress) return;
+    showOverlay(undefined);
+
     const getPool = async () => {
       try {
         const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
@@ -221,14 +227,14 @@ const PoolPage = () => {
   return pool ? (
     <div className="">
       <div className="flex items-center gap-4 mt-2">
-      <TokenData token={pool.ybt} />
-      <PoolState
-        state={state}
-        currentCycle={currentCycle}
-        positionsFilled={allPositions.length}
-        totalCycles={pool.totalCycles}
-        totalPositions={pool.totalPositions}
-      />
+        <TokenData token={pool.ybt} />
+        <PoolState
+          state={state}
+          currentCycle={currentCycle}
+          positionsFilled={allPositions.length}
+          totalCycles={pool.totalCycles}
+          totalPositions={pool.totalPositions}
+        />
       </div>
       <PoolInfoTab pool={pool} />
       <div className="absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] circle-gradient rounded-full border-2 border-gray-950 flex justify-center" />
