@@ -13,15 +13,16 @@ const SelectToken = ({
   selectedToken: Ybt | Token | ERC20;
 }) => {
   return (
-    <div className="w-full flex flex-row p-1 bg-white bg-opacity-5 text-xs rounded-md justify-evenly">
+    <div className="w-fit gap-3 flex flex-row p-1  text-xs rounded-md justify-evenly">
       {tokens.map((token) => (
         <div
           onClick={() => handleTokenChange(token.symbol)}
           key={token.symbol}
-          className={`w-full flex justify-center items-center p-1 px-5 rounded cursor-pointer transition-all duration-200 ${
-            selectedToken.symbol === token.symbol ? "text-black bg-white" : ""
+          className={`w-fit gap-1 py-2 flex justify-center items-center p-1 px-3 rounded cursor-pointer transition-all ease-out duration-75 ${
+            selectedToken.symbol === token.symbol ? "outline outline-2 outline-white" : "outline outline-2 outline-[#34383E]"
           }`}
         >
+          <div className={`w-4 h-4 rounded-full bg-white ${selectedToken.symbol === token.symbol ? "" : "opacity-10"}`}></div>
           <span>{token.symbol}</span>
         </div>
       ))}

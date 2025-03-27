@@ -195,6 +195,7 @@ const PoolPage = () => {
 
   return pool ? (
     <div className="">
+      <div className="flex items-center gap-4 mt-2">
       <TokenData token={pool.ybt} />
       <PoolState
         state={state}
@@ -203,6 +204,7 @@ const PoolPage = () => {
         totalCycles={pool.totalCycles}
         totalPositions={pool.totalPositions}
       />
+      </div>
       <PoolInfoTab pool={pool} />
       <div className="absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] circle-gradient rounded-full border-2 border-gray-950 flex justify-center" />
       <div className="relative w-full flex justify-center items-center min-h-[650px]">

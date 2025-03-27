@@ -22,7 +22,7 @@ const InputContainer = ({
   errorMsg?: string;
 }) => {
   return (
-    <div className="mb-4">
+    <div className="">
       <div className="flex justify-between text-stone-300 text-xs my-2">
         <div className="flex items-center gap-1">
           <img src={labelIcon} alt="" className="w-3 h-3" />
