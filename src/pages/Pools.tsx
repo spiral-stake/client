@@ -7,6 +7,8 @@ import Loader from "../components/low-level/Loader";
 import YbtDropdown from "../components/low-level/YbtDropdown";
 import tokenIcon from "../assets/icons/GroupDark.svg";
 import PageTitle from "../components/low-level/PageTitle";
+import CycleFinalzedTab from "../components/low-level/CycleFinalizedTab";
+import logoBlue from "../assets/icons/logoBlue.svg";
 
 const Pools = ({
   ybts,

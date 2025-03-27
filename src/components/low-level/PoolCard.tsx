@@ -80,17 +80,20 @@ const PoolCard = ({ pool }: { pool: Pool }) => {
 
         <div className="col-span-1 h-16 inline-flex justify-start items-center">
           <div className="w-full lg:pl-0 inline-flex flex-col justify-center items-center lg:items-start gap-0">
-            <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit'] truncate">
+           <div className="flex flex-col justify-start">
+           <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit'] truncate">
               {pool.totalCycles}
             </div>
             <div className="text-xs text-gray-500 flex items-center gap-1 lg:hidden">
               <img src={cycleIcon} alt="" className="w-2.5 h-2.5" />
               <span>Cycle</span>
             </div>
+           </div>
           </div>
         </div>
         <div className="col-span-1 lg:col-span-2 h-16  inline-flex items-center justify-start gap-0 lg:gap-4">
           <div className="w-full inline-flex flex-col  lg:pl-0 lg:border-l-0 border-l-2 border-l-gray-800 justify-center lg:items-start items-center gap-0 lg:gap-2 overflow-hidden">
+            <div className="flex flex-col justify-start">
             <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit']">
               {`${formatTime(pool.cycleDuration).value} ${formatTime(
                 pool.cycleDuration
@@ -100,27 +103,32 @@ const PoolCard = ({ pool }: { pool: Pool }) => {
               <img src={timeIcon} alt="" className="w-2.5 h-2.5" />
               <span>Duration</span>
             </div>
+            </div>
           </div>
         </div>
         <div className="col-span-1 lg:col-span-2 h-16  inline-flex justify-start items-center gap-4">
           <div className="w-full inline-flex flex-col lg:pl-0 lg:border-l-0 border-l-2 border-l-gray-800 justify-center lg:items-start items-center gap-0 overflow-hidden">
-            <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit']">
+           <div className="flex flex-col justify-start">
+           <div className="justify-center text-zinc-300 text-base font-normal font-['Outfit']">
               {`${displayTokenAmount(pool.amountCycle, pool.baseToken, 2)}`}
             </div>
             <div className="text-xs text-gray-500 flex items-center gap-1 lg:hidden">
               <img src={depositIcon} alt="" className="w-2.5 h-2.5" />
               <span>Deposit</span>
             </div>
+           </div>
           </div>
         </div>
         <div className="col-span-1 lg:col-span-2 h-16  inline-flex justify-start items-center lg:gap-4">
           <div className="w-full inline-flex flex-col lg:pl-0 lg:border-l-0 border-l-2 border-l-gray-800 justify-center lg:items-start items-center gap-0 overflow-hidden">
+            <div className="flex flex-col justify-start">
             <div className="justify-center text-white text-base font-normal font-['Outfit']">
               {`${displayTokenAmount(pool.amountCollateralInBase, pool.baseToken, 2)}`}
             </div>
             <div className="text-xs text-gray-500 flex items-center gap-1 lg:hidden">
               <img src={winIcon} alt="" className="w-2.5 h-2.5" />
               <span>Win</span>
+            </div>
             </div>
           </div>
         </div>
