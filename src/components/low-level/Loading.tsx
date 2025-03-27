@@ -8,7 +8,7 @@ const Loading = ({
 }: {
   loadingText: string;
   loadingTitle?: string;
-  infoComponent?: React.ElementType;
+  infoComponent?: React.ReactNode;
 }) => {
   return (
     <div className="w-full py-4 mb-2 bg-gradient-to-b from-slate-900 to-gray-950 rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-800 inline-flex flex-col justify-start items-center gap-6">
@@ -49,6 +49,7 @@ const Loading = ({
             </div>
           </div>
         </div>
+        {infoComponent}
       </div>
     </div>
   );

@@ -16,20 +16,23 @@ import PoolFactory from "./contract-hooks/PoolFactory";
 import { readYbts } from "./config/contractsData";
 import { Ybt } from "./types";
 import DropdownMenu from "./components/DropdownMenu";
+import Overlay from "./components/low-level/Overlay";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
   const [poolFactory, setPoolFactory] = useState<PoolFactory>();
   const [onboarding, setOnboarding] = useState(false);
   const [dropdown, setDropDown] = useState(false);
+  const [overlay, setOverlay] = useState<React.ReactNode>();
 
   // appChainId == only chains supported by the app
   const appChainId = useChainId();
   const { address, chainId } = useAccount();
 
-  // Mainnet - Need to remove onboarding
-
   const showDropdown = (bool: boolean) => setDropDown(bool);
+  const showOverlay = (overlayComponent: React.ReactNode | undefined) => {
+    setOverlay(overlayComponent);
+  };
 
   useEffect(() => {
     /**
@@ -82,7 +85,7 @@ function App() {
         <Routes>
           <Route
             path={"/pools/create"}
-            element={<CreatePool poolFactory={poolFactory} ybts={ybts} />}
+            element={<CreatePool showOverlay={showOverlay} poolFactory={poolFactory} ybts={ybts} />}
           />
           <Route path={"/pools/:address"} element={<PoolPage />} />
           {/* <Route path="/pools" element={<Test />} /> */}
@@ -92,6 +95,7 @@ function App() {
 
           <Route path="*" element={<Navigate to={"/pools"} />} />
         </Routes>
+        <Overlay overlay={overlay} />
         <OnboardingOverlay onboarding={onboarding} setOnboarding={setOnboarding} />
       </main>
     </div>

@@ -1,17 +1,16 @@
 import { useEffect, useState } from "react";
-import Pool from "../../contract-hooks/Pool";
-import { Position } from "../../types";
-import BtnFull from "../low-level/BtnFull";
-import Input from "../low-level/Input";
-import PoolRouter from "../../contract-hooks/PoolRouter";
+import Pool from "../../contract-hooks/Pool.ts";
+import { Position } from "../../types/index.ts";
+import BtnFull from "../low-level/BtnFull.tsx";
+import Input from "../low-level/Input.tsx";
+import PoolRouter from "../../contract-hooks/PoolRouter.ts";
 import BigNumber from "bignumber.js";
 import { useAccount } from "wagmi";
-import { handleAsync } from "../../utils/handleAsyncFunction";
-import { toastSuccess } from "../../utils/toastWrapper";
+import { handleAsync } from "../../utils/handleAsyncFunction.ts";
+import { toastSuccess } from "../../utils/toastWrapper.tsx";
 import { displayTokenAmount } from "../../utils/displayTokenAmounts.ts";
-import WaitTab from "../low-level/WaitTab";
+import WaitTab from "../low-level/WaitTab.tsx";
 import waitIcon from "../../assets/Icons/wait.svg";
-import successIcon from "../../assets/Icons/success.svg";
 
 const PoolJoinTab = ({
   pool,
@@ -127,23 +126,63 @@ const PoolJoinTab = ({
     ]);
   };
 
-  return allPositions.length < pool.totalPositions ? (
-    !position ? (
+  const renderJoinTab = () => {
+    // When Pool is Filled
+    if (allPositions.length === pool.totalPositions) {
+      // And User hasn't joined the pool
+      if (!position) {
+        return (
+          <WaitTab
+            icon={waitIcon}
+            title={"Pool is Filled"}
+            msg={`You were unable to join this pool`}
+          />
+        );
+      }
+
+      // And User has joined the pool
+      return (
+        <WaitTab
+          icon={waitIcon}
+          title={"Pool Starting In"}
+          msg={`You have joined this pool by depositing ${
+            amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt)
+          } as YBT collateral`}
+        />
+      );
+    }
+
+    // --- When pool is not filled --- //
+
+    // And user has already joined the pool (Now waiting for partcipants)
+    if (position) {
+      return (
+        <WaitTab
+          icon={waitIcon}
+          title={"Waiting for Participants"}
+          msg={
+            amountYbtCollateral &&
+            `You have joined this pool by depositing ${
+              amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt)
+            } as YBT collateral`
+          }
+        />
+      );
+    }
+
+    // And user is yet to join the pool
+    return (
       <div className="w-full">
         <span className="text-xl">YBT Collateral</span>
         <div className="w-full mt-3 mb-2">
-          {amountYbtCollateral ? (
-            <Input
-              name={"YBT Collateral"}
-              autoFocus={true}
-              disabled={true}
-              inputTokenSymbol={pool.ybt.symbol}
-              value={displayTokenAmount(amountYbtCollateral)}
-              onChange={() => {}}
-            />
-          ) : (
-            <>Loading...</>
-          )}
+          <Input
+            name={"YBT Collateral"}
+            autoFocus={true}
+            disabled={true}
+            inputTokenSymbol={pool.ybt.symbol}
+            value={amountYbtCollateral && displayTokenAmount(amountYbtCollateral)}
+            onChange={() => {}}
+          />
         </div>
         <div className="flex justify-between text-xs font-thin">
           <span>Approx YBT Collateral</span>
@@ -157,28 +196,10 @@ const PoolJoinTab = ({
           />
         </div>
       </div>
-    ) : (
-      <WaitTab
-        icon={waitIcon}
-        title={"Waiting for Participants"}
-        msg={
-          amountYbtCollateral &&
-          `You have participated in this pool and deposited your collateral of ${displayTokenAmount(
-            amountYbtCollateral,
-            pool.ybt.symbol
-          )}`
-        }
-      />
-    )
-  ) : (
-    <WaitTab
-      icon={waitIcon}
-      title={"Pool Starting In"}
-      msg={`You have participated in this pool and deposited your collateral of ${
-        amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt.symbol)
-      }`}
-    />
-  );
+    );
+  };
+
+  return <div>{renderJoinTab()}</div>;
 };
 
 export default PoolJoinTab;

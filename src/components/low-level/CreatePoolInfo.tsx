@@ -1,4 +1,8 @@
-const CreatePoolInfo = () => {
+import BigNumber from "bignumber.js";
+import { PoolInfo } from "../../types";
+import { displayTokenAmount } from "../../utils/displayTokenAmounts";
+
+const CreatePoolInfo = ({ poolInfo }: { poolInfo: PoolInfo }) => {
   return (
     <div className="self-stretch flex flex-col justify-start items-start gap-4">
       <div className="self-stretch flex flex-col justify-start items-start gap-2">
@@ -9,7 +13,7 @@ const CreatePoolInfo = () => {
           <div className="flex justify-start items-center gap-1">
             <div className="w-3 h-3 bg-white rounded-[30px]" />
             <div className="text-right justify-start text-white text-xs font-normal font-['Outfit']">
-              frxETH
+              {poolInfo.ybt?.symbol}
             </div>
           </div>
         </div>
@@ -18,35 +22,39 @@ const CreatePoolInfo = () => {
             Cycle Amount
           </div>
           <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-            01 frxETH
+            {poolInfo.amountCycle} {poolInfo.ybt?.baseToken.symbol}
           </div>
         </div>
         <div className="self-stretch inline-flex justify-between items-start">
           <div className="justify-start text-white text-opacity-80 text-xs font-normal font-['Outfit']">
-            Total Cycle
+            Total Cycles
           </div>
-          <div className="justify-start text-white text-xs font-normal font-['Outfit']">04</div>
+          <div className="justify-start text-white text-xs font-normal font-['Outfit']">
+            {poolInfo.totalCycles}
+          </div>
         </div>
         <div className="self-stretch inline-flex justify-between items-start">
           <div className="justify-start text-white text-opacity-80 text-xs font-normal font-['Outfit']">
             Cycle Duration
           </div>
           <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-            20 Days
+            {poolInfo.cycleDuration}
           </div>
         </div>
         <div className="self-stretch inline-flex justify-between items-start">
           <div className="justify-start text-white text-opacity-80 text-xs font-normal font-['Outfit']">
             Cycle Deposit and Bid Duration
           </div>
-          <div className="justify-start text-white text-xs font-normal font-['Outfit']">2 min</div>
+          <div className="justify-start text-white text-xs font-normal font-['Outfit']">
+            {poolInfo.cycleDepositAndBidDuration}
+          </div>
         </div>
         <div className="self-stretch inline-flex justify-between items-start">
           <div className="justify-start text-white text-opacity-80 text-xs font-normal font-['Outfit']">
             Starting time
           </div>
           <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-            2 min (18:56:00)
+            {poolInfo.startInterval}
           </div>
         </div>
       </div>
@@ -56,7 +64,7 @@ const CreatePoolInfo = () => {
           Approx collateral
         </div>
         <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-          ~4 frxETH
+          {parseInt(poolInfo.amountCycle) * parseInt(poolInfo.totalCycles)}
         </div>
       </div>
     </div>

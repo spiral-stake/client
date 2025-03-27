@@ -3,19 +3,20 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { useAccount, useSwitchChain } from "wagmi";
 
 import Pool from "../contract-hooks/Pool.js";
-import PoolRedeem from "../components/pool/PoolRedeemTab.js";
+import PoolRedeem from "../components/pool-tabs/PoolRedeemTab.js";
 import { getCurrentTimestampInSeconds, wait } from "../utils/time.js";
 import { toastSuccess } from "../utils/toastWrapper.js";
 import { Cycle, Position } from "../types/index.js";
-import PoolInfoTab from "../components/pool/PoolInfoTab.js";
-import PoolJoinTab from "../components/pool/PoolJoinTab.js";
+import PoolInfoTab from "../components/PoolInfo.js";
+import PoolJoinTab from "../components/pool-tabs/PoolJoinTab.js";
 import TokenData from "../components/low-level/TokenData.js";
-import PoolState from "../components/pool/PoolState.js";
-import PoolBidTab from "../components/pool/PoolBidTab.js";
-import PoolDepositTab from "../components/pool/PoolDepositTab.js";
-import WaitTab from "../components/low-level/WaitTab.js";
+import PoolState from "../components/PoolState.js";
 import Loader from "../components/low-level/Loader.js";
-import PoolStarted from "../components/pool/PoolStarted.js";
+import PoolDepositTab from "../components/pool-tabs/PoolDepositTab.js";
+import PoolBidTab from "../components/pool-tabs/PoolBidTab.js";
+import WaitTab from "../components/low-level/WaitTab.js";
+import PositionNft from "../components/low-level/PositionNft.js";
+import ErrorIconBig from "../assets/icons/errorIconBig.svg";
 
 const PoolPage = () => {
   const [pool, setPool] = useState<Pool>();
@@ -144,8 +145,8 @@ const PoolPage = () => {
     toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
   };
 
-  const renderPoolInterface = () => {
-    if (!pool) return;
+  const renderPoolTab = () => {
+    if (!pool || !state) return;
 
     if (state === "WAITING") {
       return (
@@ -165,32 +166,56 @@ const PoolPage = () => {
       return (
         <div>
           <PoolRedeem
-          // pool={pool}
-          // position={position}
-          // updatePosition={updatePosition}
-          // setActionBtn={setActionBtn}
-          // setLoading={setLoading}
+            pool={pool}
+            position={position}
+            updatePosition={updatePosition}
+            positionsFilled={allPositions.length}
           />
         </div>
       );
     }
 
-    if (state === "LIVE" || state === "ENDED")
+    if (!position) {
       return (
         <div>
-          <PoolStarted
-            pool={pool}
-            state={state}
-            currentCycle={currentCycle}
-            position={position}
-            updatePosition={updatePosition}
-            isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
-            poolChainId={poolChainId}
+          <WaitTab
+            icon={ErrorIconBig}
+            title="Not a Participant"
+            msg="You don't hold a position in this Pool"
           />
         </div>
       );
+    }
 
-    return null;
+    if (state === "LIVE" && currentCycle)
+      return (
+        <div className="grid grid-cols-2 w-[764px] gap-16">
+          <div className="">
+            <PoolDepositTab
+              pool={pool}
+              currentCycle={currentCycle}
+              position={position}
+              updatePosition={updatePosition}
+              isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
+              poolChainId={poolChainId}
+            />
+            <PoolBidTab
+              pool={pool}
+              currentCycle={currentCycle}
+              position={position}
+              isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
+              poolChainId={poolChainId}
+            />
+          </div>
+          <div className="w-full flex justify-center">
+            <PositionNft winningCycle={1} />
+          </div>
+        </div>
+      );
+
+    if (state === "ENDED") {
+      return; // Need to add logic
+    }
   };
 
   return pool ? (
@@ -208,7 +233,7 @@ const PoolPage = () => {
       <PoolInfoTab pool={pool} />
       <div className="absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] circle-gradient rounded-full border-2 border-gray-950 flex justify-center" />
       <div className="relative w-full flex justify-center items-center min-h-[650px]">
-        {renderPoolInterface()}
+        {renderPoolTab()}
       </div>
     </div>
   ) : (

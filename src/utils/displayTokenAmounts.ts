@@ -1,6 +1,7 @@
 import BigNumber from "bignumber.js";
+import { Token } from "../types";
 
-export const displayTokenAmount = (amount: BigNumber, tokenSymbol?: string, decimalPlaces = 3) => {
+export const displayTokenAmount = (amount: BigNumber, token?: Token, decimalPlaces = 3) => {
   let formattedAmount;
 
   if (amount.isZero()) formattedAmount = "0.00";
@@ -11,6 +12,6 @@ export const displayTokenAmount = (amount: BigNumber, tokenSymbol?: string, deci
   }
 
   return `${new BigNumber(formattedAmount).isGreaterThan(0) ? formattedAmount : "< 0.001"} ${
-    tokenSymbol || ""
+    (token && token.symbol) || ""
   }`;
 };

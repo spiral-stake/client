@@ -23,23 +23,21 @@ import timeIcon from "../assets/icons/Time.svg";
 import depositIcon from "../assets/icons/deposit.svg";
 import circleIcon from "../assets/icons/circleIcon.svg";
 import logo from "../assets/logo.svg";
+import Loading from "../components/low-level/Loading";
+import CreatePoolInfo from "../components/low-level/CreatePoolInfo";
 
 const cycleDurations = ["2 mins", "7 mins", "10 mins"];
-const cycleDepositAndBidDurations = [
-  "1 min",
-  "2 mins",
-  "3 mins",
-  "4 mins",
-  "5 mins",
-];
+const cycleDepositAndBidDurations = ["1 min", "2 mins", "3 mins", "4 mins", "5 mins"];
 const startIntervals = ["2 min", "5 min", "10 min"];
 
 function CreatePool({
   ybts,
   poolFactory,
+  showOverlay,
 }: {
   ybts: Ybt[];
   poolFactory: PoolFactory | undefined;
+  showOverlay: (overlayComponent: React.ReactNode) => void;
 }) {
   const [pool, setPool] = useState<PoolInfo>({
     ybt: undefined,
@@ -77,22 +75,11 @@ function CreatePool({
   }, [chainId]);
 
   useEffect(() => {
-    let {
-      amountCycle,
-      totalCycles,
-      cycleDuration,
-      startInterval,
-      cycleDepositAndBidDuration,
-    } = pool;
+    let { amountCycle, totalCycles, cycleDuration, startInterval, cycleDepositAndBidDuration } =
+      pool;
 
-    cycleDuration = parseTime(
-      cycleDuration.split(" ")[0],
-      cycleDuration.split(" ")[1]
-    );
-    startInterval = parseTime(
-      startInterval.split(" ")[0],
-      startInterval.split(" ")[1]
-    );
+    cycleDuration = parseTime(cycleDuration.split(" ")[0], cycleDuration.split(" ")[1]);
+    startInterval = parseTime(startInterval.split(" ")[0], startInterval.split(" ")[1]);
     cycleDepositAndBidDuration = parseTime(cycleDepositAndBidDuration, "mins");
 
     const errors = [
@@ -131,22 +118,28 @@ function CreatePool({
       disabled: false,
       text: "Create Spiral Pool",
       onClick: handleAsync(
-        () =>
-          handleCreatePool(
-            cycleDuration,
-            cycleDepositAndBidDuration,
-            startInterval
-          ),
+        () => handleCreatePool(cycleDuration, cycleDepositAndBidDuration, startInterval),
         setLoading
       ),
     });
   }, [pool]);
 
+  useEffect(() => {
+    if (loading)
+      showOverlay(
+        <div className="w-[420px]">
+          <Loading
+            loadingText="Creating Pool"
+            loadingTitle="Creating Spiral Pool"
+            infoComponent={<CreatePoolInfo poolInfo={pool} />}
+          />
+        </div>
+      );
+  }, [loading]);
+
   const handleYbtChange = async (tokenSymbol: string) => {
     const _ybt = await readYbt(chainId || appChainId, tokenSymbol);
-    const _ybtExchangeRate = await new SY(
-      _ybt.syToken.address
-    ).getYbtExchangeRate(_ybt);
+    const _ybtExchangeRate = await new SY(_ybt.syToken.address).getYbtExchangeRate(_ybt);
     setPool({ ...pool, ybt: _ybt, ybtExchangeRate: _ybtExchangeRate });
   };
 
@@ -193,9 +186,7 @@ function CreatePool({
 
     await axios.post(api, { poolAddress });
     toastSuccess("Spiral Pool created successfully");
-    navigate(
-      `/pools/${poolAddress}?ybt=${pool.ybt.symbol}&poolChainId=${chainId}`
-    );
+    navigate(`/pools/${poolAddress}?ybt=${pool.ybt.symbol}&poolChainId=${chainId}`);
   };
 
   return (
@@ -206,101 +197,96 @@ function CreatePool({
       </div>
       {pool.ybt && (
         <div className="w-full flex flex-col justify-between gap-2 lg:px-10">
-            <PageTitle
-              title={"Create a Spiral Pool"}
-              subheading={"Create pools to enjoy Liquidity"}
-            />
-            <InputContainer
-              label="Select Token*"
-              condition=""
-              errorMsg="Select a Token first"
-              labelIcon={circleIcon}
-              inputComponent={
-                <SelectToken
-                  tokens={ybts}
-                  handleTokenChange={handleYbtChange}
-                  selectedToken={pool.ybt}
-                />
-              }
-            />
-            <InputContainer
-              label="Cycle Deposit*"
-              condition=""
-              errorMsg="This Feild is compulsary"
-              labelIcon={collateralIcon}
-              inputComponent={
-                <Input
-                  name={"amountCycle"}
-                  onChange={handleInputChange}
-                  value={pool.amountCycle}
-                  inputTokenSymbol={pool.ybt.baseToken.symbol}
-                />
-              }
-            />
-            <InputContainer
-              label="Total Cycles *"
-              condition="(>=2 cycles)"
-              errorMsg="no of cycles should be >=2 (greater than or equal to 2)"
-              labelIcon={cycleIcon}
-              inputComponent={
-                <Input
-                  name={"totalCycles"}
-                  onChange={handleInputChange}
-                  value={pool.totalCycles}
-                />
-              }
-            />
-            <InputContainer
-              label="Cycle Duration *"
-              condition="(>=7 min)"
-              errorMsg="Cycle Duration should be >=7 (greater or equal to 7)"
-              labelIcon={timeIcon}
-              inputComponent={
-                <CustomSelect
-                  name={"cycleDuration"}
-                  options={cycleDurations}
-                  onChange={handleCustomInputChange}
-                  value={pool.cycleDuration}
-                />
-              }
-            />
-            <InputContainer
-              label="Cycle Deposit and Bid duration *"
-              condition="(>=1 min)"
-              errorMsg=""
-              labelIcon={depositIcon}
-              inputComponent={
-                <Slider
-                  name="cycleDepositAndBidDuration"
-                  value={pool.cycleDepositAndBidDuration}
-                  onChange={handleInputChange}
-                  labels={cycleDepositAndBidDurations}
-                />
-              }
-            />
-            <InputContainer
-              label="Starting in *"
-              condition="(>=2 min)"
-              errorMsg=""
-              labelIcon={timeIcon}
-              inputComponent={
-                <CustomSelect
-                  name={"startInterval"}
-                  options={startIntervals}
-                  onChange={handleCustomInputChange}
-                  value={pool.startInterval}
-                />
-              }
-            />
-            <div className="mt-5">
-              <ActionBtn
-                text={actionBtn.text}
-                onClick={actionBtn.onClick}
-                disabled={actionBtn.disabled}
-                expectedChainId={appChainId}
+          <PageTitle
+            title={"Create a Spiral Pool"}
+            subheading={"Create pools to enjoy Liquidity"}
+          />
+          <InputContainer
+            label="Select Token*"
+            condition=""
+            errorMsg="Select a Token first"
+            labelIcon={circleIcon}
+            inputComponent={
+              <SelectToken
+                tokens={ybts}
+                handleTokenChange={handleYbtChange}
+                selectedToken={pool.ybt}
               />
-            </div>
-          
+            }
+          />
+          <InputContainer
+            label="Cycle Deposit*"
+            condition=""
+            errorMsg="This Feild is compulsary"
+            labelIcon={collateralIcon}
+            inputComponent={
+              <Input
+                name={"amountCycle"}
+                onChange={handleInputChange}
+                value={pool.amountCycle}
+                inputTokenSymbol={pool.ybt.baseToken.symbol}
+              />
+            }
+          />
+          <InputContainer
+            label="Total Cycles *"
+            condition="(>=2 cycles)"
+            errorMsg="no of cycles should be >=2 (greater than or equal to 2)"
+            labelIcon={cycleIcon}
+            inputComponent={
+              <Input name={"totalCycles"} onChange={handleInputChange} value={pool.totalCycles} />
+            }
+          />
+          <InputContainer
+            label="Cycle Duration *"
+            condition="(>=7 min)"
+            errorMsg="Cycle Duration should be >=7 (greater or equal to 7)"
+            labelIcon={timeIcon}
+            inputComponent={
+              <CustomSelect
+                name={"cycleDuration"}
+                options={cycleDurations}
+                onChange={handleCustomInputChange}
+                value={pool.cycleDuration}
+              />
+            }
+          />
+          <InputContainer
+            label="Cycle Deposit and Bid duration *"
+            condition="(>=1 min)"
+            errorMsg=""
+            labelIcon={depositIcon}
+            inputComponent={
+              <Slider
+                name="cycleDepositAndBidDuration"
+                value={pool.cycleDepositAndBidDuration}
+                onChange={handleInputChange}
+                labels={cycleDepositAndBidDurations}
+              />
+            }
+          />
+          <InputContainer
+            label="Starting in *"
+            condition="(>=2 min)"
+            errorMsg=""
+            labelIcon={timeIcon}
+            inputComponent={
+              <CustomSelect
+                name={"startInterval"}
+                options={startIntervals}
+                onChange={handleCustomInputChange}
+                value={pool.startInterval}
+              />
+            }
+          />
+          <div className="mt-5">
+            <ActionBtn
+              text={actionBtn.text}
+              onClick={actionBtn.onClick}
+              disabled={actionBtn.disabled}
+              expectedChainId={appChainId}
+            />
+          </div>
         </div>
       )}
     </div>

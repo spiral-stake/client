@@ -1,14 +1,14 @@
 //hard coded array with key value pair key-statr time value-it's value
-import timeIcon from "../../assets/Icons/Time.svg";
-import collateral from "../../assets/Icons/Collateral.svg";
-import coin from "../../assets/Icons/coin.svg";
-import cycle from "../../assets/Icons/cycle.svg";
-import deposit from "../../assets/Icons/deposit.svg";
+import timeIcon from "../assets/Icons/Time.svg";
+import collateral from "../assets/Icons/Collateral.svg";
+import coin from "../assets/Icons/coin.svg";
+import cycle from "../assets/Icons/cycle.svg";
+import deposit from "../assets/Icons/deposit.svg";
 
-import Info from "../low-level/Info";
-import Pool from "../../contract-hooks/Pool";
-import { formatTime, getLocalTimeFromTimestamp } from "../../utils/time";
-import { displayTokenAmount } from "../../utils/displayTokenAmounts";
+import Info from "./low-level/Info";
+import Pool from "../contract-hooks/Pool";
+import { formatTime, getLocalTimeFromTimestamp } from "../utils/time";
+import { displayTokenAmount } from "../utils/displayTokenAmounts";
 
 const PoolInfoTab = ({ pool }: { pool: Pool }) => {
   const poolStartTime = getLocalTimeFromTimestamp(pool.startTime);
@@ -24,12 +24,12 @@ const PoolInfoTab = ({ pool }: { pool: Pool }) => {
     {
       symbol: collateral,
       title: "Collateral",
-      value: `~ ${displayTokenAmount(pool.amountCollateralInBase)} ${pool.baseToken.symbol}`,
+      value: `~ ${displayTokenAmount(pool.amountCollateralInBase, pool.baseToken)} `,
     },
     {
       symbol: coin,
       title: "Cycle Amount",
-      value: `${displayTokenAmount(pool.amountCycle)} ${pool.baseToken.symbol}`,
+      value: `${displayTokenAmount(pool.amountCycle, pool.baseToken)} `,
     },
     { symbol: cycle, title: "Total Cycles", value: `${pool.totalCycles}` },
     {

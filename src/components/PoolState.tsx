@@ -1,6 +1,6 @@
-import { Cycle } from "../../types";
-import Tag from "../low-level/Tag";
-import TextLoading from "../low-level/TextLoading";
+import { Cycle } from "../types";
+import Tag from "./low-level/Tag";
+import TextLoading from "./low-level/TextLoading";
 
 const PoolState = ({
   state,
