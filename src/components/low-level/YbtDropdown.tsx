@@ -83,7 +83,7 @@ const YbtDropdown = ({
       {showPools &&
         (pools.length ? (
           <div>
-            <div className="mt-2 pb-2 w-full grid grid-cols-12 pr-5 border-b border-gray-900">
+            <div className="hidden mt-2 pb-2 w-full lg:grid grid-cols-12 pr-5 border-b border-gray-900">
               <div className="col-span-4 flex justify-center items-center pl-3">
                 <span className="px-3 inline-flex justify-start items-center ">
                   #
