@@ -3,7 +3,6 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAccount, useChainId } from "wagmi";
 // Components
-import AppNetworkOverlay from "./components/AppNetworkOverlay";
 import Navbar from "./components/Navbar";
 import OnboardingOverlay from "./components/OnboardingOverlay";
 // Pages

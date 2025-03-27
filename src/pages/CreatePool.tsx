@@ -17,6 +17,12 @@ import SelectToken from "../components/low-level/SelectToken";
 import CustomSelect from "../components/low-level/CustomSelect";
 import Slider from "../components/low-level/Slider";
 import ActionBtn from "../components/ActionBtn";
+import cycleIcon from "../assets/icons/cycle.svg";
+import collateralIcon from "../assets/icons/Collateral.svg";
+import timeIcon from "../assets/icons/Time.svg";
+import depositIcon from "../assets/icons/deposit.svg";
+import circleIcon from "../assets/icons/circleIcon.svg";
+import logo from "../assets/logo.svg";
 
 const cycleDurations = ["2 mins", "7 mins", "10 mins"];
 const cycleDepositAndBidDurations = ["1 min", "2 mins", "3 mins", "4 mins", "5 mins"];
@@ -151,10 +157,12 @@ function CreatePool({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFacto
   };
 
   return (
-    pool.ybt && (
+    <div className="w-full grid grid-cols-2">
+      <div className="flex justify-center items-center"> <img src={logo} alt="" className="w-64"/></div>
+      {pool.ybt && (
       <div>
         <PageTitle title={"Create a Spiral Pool"} subheading={"Create pools to enjoy Liquidity"} />
-        <InputContainer
+        <InputContainer label="Select Token*" condition="" errorMsg="Select a Token first" labelIcon={circleIcon}
           inputComponent={
             <SelectToken
               tokens={ybts}
@@ -163,7 +171,7 @@ function CreatePool({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFacto
             />
           }
         />
-        <InputContainer
+        <InputContainer label="Cycle Deposit*" condition="" errorMsg="This Feild is compulsary" labelIcon={collateralIcon}
           inputComponent={
             <Input
               name={"amountCycle"}
@@ -173,12 +181,12 @@ function CreatePool({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFacto
             />
           }
         />
-        <InputContainer
+        <InputContainer label="Total Cycles *" condition="(>=2 cycles)" errorMsg="no of cycles should be >=2 (greater than or equal to 2)" labelIcon={cycleIcon}
           inputComponent={
             <Input name={"totalCycles"} onChange={handleInputChange} value={pool.totalCycles} />
           }
         />
-        <InputContainer
+        <InputContainer label="Cycle Duration *" condition="(>=7 min)" errorMsg="Cycle Duration should be >=7 (greater or equal to 7)" labelIcon={timeIcon}
           inputComponent={
             <CustomSelect
               name={"cycleDuration"}
@@ -188,7 +196,7 @@ function CreatePool({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFacto
             />
           }
         />
-        <InputContainer
+        <InputContainer label="Cycle Deposit and Bid duration *" condition="(>=1 min)" errorMsg="" labelIcon={depositIcon}
           inputComponent={
             <Slider
               name="cycleDepositAndBidDuration"
@@ -198,7 +206,7 @@ function CreatePool({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFacto
             />
           }
         />
-        <InputContainer
+        <InputContainer label="Starting in *" condition="(>=2 min)" errorMsg="" labelIcon={timeIcon}
           inputComponent={
             <CustomSelect
               name={"startInterval"}
@@ -215,7 +223,8 @@ function CreatePool({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFacto
           expectedChainId={appChainId}
         />
       </div>
-    )
+    )}
+    </div>
   );
 }
 
