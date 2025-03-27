@@ -4,7 +4,7 @@ import { displayTokenAmount } from "../../utils/displayTokenAmounts";
 
 const CreatePoolInfo = ({ poolInfo }: { poolInfo: PoolInfo }) => {
   return (
-    <div className="self-stretch flex flex-col justify-start items-start gap-4">
+    <div className="px-5 py-3 self-stretch flex flex-col justify-start items-start gap-4">
       <div className="self-stretch flex flex-col justify-start items-start gap-2">
         <div className="self-stretch inline-flex justify-between items-start">
           <div className="justify-start text-white text-opacity-80 text-xs font-normal font-['Outfit']">
