@@ -1,12 +1,9 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useChainId } from "wagmi";
 
-import { readYbt } from "../config/contractsData";
 import PoolFactory from "../contract-hooks/PoolFactory";
 import { Ybt } from "../types";
 import Loader from "../components/low-level/Loader";
-import PoolCard from "../components/low-level/PoolCard";
+
 import YbtDropdown from "../components/low-level/YbtDropdown";
 import tokenIcon from "../assets/icons/GroupDark.svg";
 import PageTitle from "../components/low-level/PageTitle";
@@ -50,8 +47,11 @@ const Pools = ({
 
   return (
     <div className="">
-     <PageTitle title={"Spiral Pools"} subheading={`Stake your frxETH in fast, transparent pools and earn passive rewards.
-Secure, flexible, and low entry—start with just 0.10 frxETH! `} />
+      <PageTitle
+        title={"Spiral Pools"}
+        subheading={`Stake your frxETH in fast, transparent pools and earn passive rewards.
+Secure, flexible, and low entry—start with just 0.10 frxETH! `}
+      />
       {ybtPoolAddresses ? (
         <div className="h-fit">
           {ybts.map((ybt: Ybt) => (

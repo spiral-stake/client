@@ -94,8 +94,8 @@ const PoolCard = ({ pool }: { pool: Pool }) => {
           {state ? (
             (state === "WAITING" && <TagSquare text="Waiting" color="yellow" />) ||
             (state === "LIVE" && <TagSquare text="Live" color="green" />) ||
-            (state === "DISCARDED" && <TagSquare text="Discarded" color="gray" />) ||
-            (state == "ENDED" && <TagSquare text="Ended" color="red" />)
+            (state === "DISCARDED" && <TagSquare text="Discarded" color="red" />) ||
+            (state == "ENDED" && <TagSquare text="Ended" color="gray" />)
           ) : (
             <TextLoading />
           )}

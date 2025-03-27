@@ -11,7 +11,7 @@ const Tag = ({ text, color }: { text: string; color: string }) => {
       className={`px-2.5 py-1 rounded-[33.78px] inline-flex justify-start items-center gap-1.5 ${colors[color]}`}
     >
       <div
-        className={`w-[5px] h-[5px] bg-yellow-300 rounded-full outline outline-1 outline-yellow-300 outline-opacity-40`}
+        className={`w-[5px] h-[5px] bg-${color}-600 rounded-full outline outline-1 outline-${color}-600 outline-opacity-40`}
       />
       <div className="justify-start text-sm font-normal font-['Outfit']">{text}</div>
     </div>

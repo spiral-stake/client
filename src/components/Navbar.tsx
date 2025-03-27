@@ -2,7 +2,6 @@ import logo from "../assets/logo.svg";
 import fraxIcon from "../assets/Icons/frax.svg";
 import bell from "../assets/bell.svg";
 import menuIcon from "../assets/Icons/menu.svg";
-import dropdown from "../assets/Icons/arrowDown.svg";
 import { Link } from "react-router-dom";
 import ConnectWalletBtn from "./ConnectWalletButton";
 
