@@ -23,7 +23,6 @@ const PoolDepositTab = ({
   position,
   updatePosition,
   isCycleDepositAndBidOpen,
-  poolChainId,
   showOverlay,
 }: {
   pool: Pool;
@@ -31,7 +30,6 @@ const PoolDepositTab = ({
   position: Position;
   updatePosition: (value: number) => void;
   isCycleDepositAndBidOpen: boolean;
-  poolChainId: number;
   showOverlay: (overlayComponent: React.ReactNode) => void;
 }) => {
   const [userBaseTokenBalance, setUserBaseTokenBalance] = useState<BigNumber>();
@@ -186,7 +184,7 @@ const PoolDepositTab = ({
             <ActionBtn
               text={actionBtn.text}
               disabled={actionBtn.disabled}
-              expectedChainId={poolChainId}
+              expectedChainId={pool.chainId}
               onClick={actionBtn.onClick}
             />
           </div>

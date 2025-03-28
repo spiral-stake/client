@@ -17,13 +17,11 @@ const PoolJoinTab = ({
   allPositions,
   position,
   updateAllPositions,
-  setLoading,
 }: {
   pool: Pool;
   allPositions: Position[];
   position: Position | undefined;
   updateAllPositions: () => void;
-  setLoading: (bool: boolean) => void;
 }) => {
   const ybtCollateral = pool.ybt;
 
@@ -32,6 +30,7 @@ const PoolJoinTab = ({
   const [userYbtCollateralBalance, setUserYbtCollateralBalance] = useState<BigNumber>();
   const [userYbtCollateralAllowance, setUserYbtCollateralAllowance] = useState<BigNumber>();
   const [actionBtn, setActionBtn] = useState({ text: "", onClick: () => {}, disabled: false });
+  const [loading, setLoading] = useState(false);
 
   const { address } = useAccount() as { address: `0x${string}` };
 

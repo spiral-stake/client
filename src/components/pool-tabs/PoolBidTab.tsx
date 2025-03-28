@@ -19,14 +19,12 @@ const PoolBidTab = ({
   currentCycle,
   position,
   isCycleDepositAndBidOpen,
-  poolChainId,
   showOverlay,
 }: {
   pool: Pool;
   currentCycle: Cycle;
   position: Position;
   isCycleDepositAndBidOpen: boolean;
-  poolChainId: number;
   showOverlay: (overlayComponent: React.ReactNode) => void;
 }) => {
   const [amountBid, setAmountBid] = useState("");
@@ -204,7 +202,7 @@ const PoolBidTab = ({
               <ActionBtn
                 text={actionBtn.text}
                 disabled={actionBtn.disabled}
-                expectedChainId={poolChainId}
+                expectedChainId={pool.chainId}
                 onClick={actionBtn.onClick}
               />
             </div>
