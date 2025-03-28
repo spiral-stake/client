@@ -7,19 +7,10 @@ import Loader from "../components/low-level/Loader";
 import YbtDropdown from "../components/low-level/YbtDropdown";
 import tokenIcon from "../assets/icons/GroupDark.svg";
 import PageTitle from "../components/low-level/PageTitle";
-import CycleFinalzedTab from "../components/low-level/CycleFinalizedTab";
-import logoBlue from "../assets/icons/logoBlue.svg";
 
-const Pools = ({
-  ybts,
-  poolFactory,
-}: {
-  ybts: Ybt[];
-  poolFactory: PoolFactory | undefined;
-}) => {
+const Pools = ({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFactory | undefined }) => {
   const [selectedYbt, setSelectedYbt] = useState<Ybt>();
-  const [ybtPoolAddresses, setYbtPoolAddresses] =
-    useState<Record<string, string[]>>();
+  const [ybtPoolAddresses, setYbtPoolAddresses] = useState<Record<string, string[]>>();
 
   useEffect(() => {
     if (!poolFactory || ybts.length === 0) return;
@@ -28,9 +19,7 @@ const Pools = ({
       const _ybtPoolAddresses: Record<string, string[]> = {};
 
       const _allPoolAddresses = await Promise.all(
-        ybts.map((ybt) =>
-          poolFactory.getSpiralPoolsForSYToken(ybt.syToken.address)
-        )
+        ybts.map((ybt) => poolFactory.getSpiralPoolsForSYToken(ybt.syToken.address))
       );
 
       _allPoolAddresses.forEach((ybtPoolAddresses, index) => {

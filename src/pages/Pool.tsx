@@ -17,6 +17,7 @@ import PoolBidTab from "../components/pool-tabs/PoolBidTab.js";
 import WaitTab from "../components/low-level/WaitTab.js";
 import PositionNft from "../components/low-level/PositionNft.js";
 import ErrorIconBig from "../assets/icons/errorIconBig.svg";
+import PositionCollaretal from "../components/low-level/PositionCollateral.js";
 
 const PoolPage = ({
   showOverlay,
@@ -206,6 +207,7 @@ const PoolPage = ({
               updatePosition={updatePosition}
               isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
               poolChainId={poolChainId}
+              showOverlay={showOverlay}
             />
             <PoolBidTab
               pool={pool}
@@ -213,17 +215,25 @@ const PoolPage = ({
               position={position}
               isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
               poolChainId={poolChainId}
+              showOverlay={showOverlay}
             />
           </div>
-          <div className="w-full flex justify-center">
+          <div className="w-full flex flex-col items-center justify-center gap-4">
             <PositionNft winningCycle={1} />
+            <PositionCollaretal />
           </div>
         </div>
       );
 
     if (state === "ENDED") {
       return (
-        <WaitTab title="Pool is Ended" msg="Pool has ended, Please Claim remaining Yield, if any" />
+        <div>
+          {" "}
+          <WaitTab
+            title="Pool is Ended"
+            msg="Pool has ended, Please Claim remaining Yield, if any"
+          />
+        </div>
       );
     }
   };

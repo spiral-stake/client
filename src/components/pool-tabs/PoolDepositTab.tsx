@@ -24,6 +24,7 @@ const PoolDepositTab = ({
   updatePosition,
   isCycleDepositAndBidOpen,
   poolChainId,
+  showOverlay,
 }: {
   pool: Pool;
   currentCycle: Cycle;
@@ -31,6 +32,7 @@ const PoolDepositTab = ({
   updatePosition: (value: number) => void;
   isCycleDepositAndBidOpen: boolean;
   poolChainId: number;
+  showOverlay: (overlayComponent: React.ReactNode) => void;
 }) => {
   const [userBaseTokenBalance, setUserBaseTokenBalance] = useState<BigNumber>();
   const [userBaseTokenAllowance, setUserBaseTokenAllowance] = useState<BigNumber>();
@@ -90,6 +92,11 @@ const PoolDepositTab = ({
     currentCycle,
     isCycleDepositAndBidOpen,
   ]);
+
+  useEffect(() => {
+    if (!loading) return showOverlay(undefined);
+    showOverlay(<div></div>);
+  }, [loading]);
 
   const updateUserBaseTokenBalance = async () => {
     if (!address) return;
@@ -187,8 +194,10 @@ const PoolDepositTab = ({
       );
     } else {
       return (
-        <div className="">
-          <Loading loadingText="Depositing" />
+        <div className="relative h-[70px]">
+          <div className="absolute z-20 w-full">
+            <Loading loadingText="Depositing" />
+          </div>
         </div>
       );
     }

@@ -20,12 +20,14 @@ const PoolBidTab = ({
   position,
   isCycleDepositAndBidOpen,
   poolChainId,
+  showOverlay,
 }: {
   pool: Pool;
   currentCycle: Cycle;
   position: Position;
   isCycleDepositAndBidOpen: boolean;
   poolChainId: number;
+  showOverlay: (overlayComponent: React.ReactNode) => void;
 }) => {
   const [amountBid, setAmountBid] = useState("");
   const [lowestBid, setLowestBid] = useState<LowestBid>();
@@ -75,6 +77,11 @@ const PoolBidTab = ({
 
     updatingActionBtn();
   }, [position, currentCycle, amountBid, lowestBid]);
+
+  useEffect(() => {
+    if (!loading) return showOverlay(undefined);
+    showOverlay(<div></div>);
+  }, [loading]);
 
   const handleCycleBid = async () => {
     await pool.bidCycle(position.id, amountBid);
@@ -203,8 +210,10 @@ const PoolBidTab = ({
             </div>
           </>
         ) : (
-          <div>
-            <Loading loadingText="Bidding" />
+          <div className="relative">
+            <div className="absolute z-20 w-full">
+              <Loading loadingText="Bidding" />
+            </div>
           </div>
         ))}
     </div>
