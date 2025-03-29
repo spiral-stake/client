@@ -40,6 +40,12 @@ const PoolBidTab = ({
     updateLowestBid();
   }, [currentCycle]);
 
+  // To update cycle bids in realtime using Polling
+  useEffect(() => {
+    const interval = setInterval(updateLowestBid, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   const updateLowestBid = async () => {
     setLowestBid(await pool.getLowestBid());
   };

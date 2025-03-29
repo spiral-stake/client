@@ -29,9 +29,9 @@ const PoolPage = ({
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
-    useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
 
+  // All positions is needed for cycle globe hover effect for diplaying winning positions
   const [allPositions, setAllPositions] = useState<Position[]>([]);
   const [position, setPosition] = useState<Position>();
 
@@ -51,11 +51,7 @@ const PoolPage = ({
 
     const initialize = async () => {
       try {
-        const _pool = await Pool.createInstance(
-          poolAddress,
-          poolChainId,
-          ybtSymbol
-        );
+        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -78,9 +74,7 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || !allPositions) return;
 
-    const userPositions = allPositions.filter(
-      (position) => position.owner === address
-    );
+    const userPositions = allPositions.filter((position) => position.owner === address);
 
     if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
@@ -148,12 +142,8 @@ const PoolPage = ({
       depositAndBidEndTime,
     });
 
-    setIsCycleDepositAndBidOpen(
-      getCurrentTimestampInSeconds() < depositAndBidEndTime
-    );
-    toastSuccess(
-      `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
-    );
+    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
+    toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
   };
 
   // Will be called by countdown timers to close depositAndBidWindow and to also check if cycle is finalized
@@ -189,6 +179,7 @@ const PoolPage = ({
             position={position}
             updateAllPositions={updateAllPositions}
             syncPoolInitialState={syncPoolInitialState}
+            showOverlay={showOverlay}
           />
         </div>
       );
@@ -295,7 +286,7 @@ const PoolPage = ({
         />
       </div>
       <PoolInfoTab pool={pool} />
-      
+
       <div
         className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] bg-[linear-gradient(180deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around items-start`}
       ></div>

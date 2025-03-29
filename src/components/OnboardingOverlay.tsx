@@ -7,6 +7,7 @@ import { onboard } from "../utils/onboard";
 import { handleAsync } from "../utils/handleAsyncFunction";
 import "../Overlay.css";
 import BtnFull from "./low-level/BtnFull";
+import Loading from "./low-level/Loading";
 
 function OnboardingOverlay({
   onboarding,
@@ -31,12 +32,16 @@ function OnboardingOverlay({
       <section className="overlay">
         <div className="overlay-content">
           <h2>Beta Users</h2>
-          <BtnFull
-            text={"Claim Faucet & Test tokens"}
-            disabled={loading}
-            onClick={handleAsync(handleOnboarding, setLoading)}
-            btnLoading={loading}
-          />
+          {!loading ? (
+            <>
+              <BtnFull
+                text={"Claim Faucet & Test tokens"}
+                onClick={handleAsync(handleOnboarding, setLoading)}
+              />
+            </>
+          ) : (
+            <Loading loadingText="Sending faucet" />
+          )}
         </div>
       </section>
     )
