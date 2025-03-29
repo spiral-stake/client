@@ -95,7 +95,7 @@ const PoolBidTab = ({
     // If already winner
     if (position.winningCycle) {
       return (
-        <div className="mt-2">
+        <div className="">
           <UserMessage
             icon={errorIconBig}
             title={"Already won, so you can't bid."}
@@ -156,7 +156,7 @@ const PoolBidTab = ({
     }
 
     return (
-      <div className="w-full inline-flex flex-col justify-start items-start gap-2 mt-4 mb-1">
+      <div className="w-full inline-flex flex-col justify-start items-start gap-2">
         <BidInfoRow
           label="Current Bid"
           value={
@@ -175,7 +175,7 @@ const PoolBidTab = ({
   };
 
   return (
-    <div>
+    <div className="flex flex-col justify-center gap-4">
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <span>Cycle Bid</span>
@@ -192,7 +192,7 @@ const PoolBidTab = ({
         !position.winningCycle &&
         (!loading ? (
           <>
-            <div className="mb-4">
+            <div className="">
               <Input
                 name=""
                 value={amountBid}

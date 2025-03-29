@@ -18,6 +18,9 @@ import WaitTab from "../components/low-level/WaitTab.js";
 import PositionNft from "../components/low-level/PositionNft.js";
 import ErrorIconBig from "../assets/icons/errorIconBig.svg";
 import PositionCollaretal from "../components/low-level/PositionCollateral.js";
+import Tag from "../components/low-level/Tag.js";
+import TagSquare from "../components/low-level/TagSquare.js";
+import PoolGlobe from "../components/low-level/PoolGlobe.js";
 
 const PoolPage = ({
   showOverlay,
@@ -28,7 +31,8 @@ const PoolPage = ({
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
+    useState(false);
 
   const [allPositions, setAllPositions] = useState<Position[]>([]);
   const [position, setPosition] = useState<Position>();
@@ -39,7 +43,11 @@ const PoolPage = ({
   const { switchChain } = useSwitchChain();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
-  const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
+  const poolChainId = parseInt(
+    useSearchParams()[0].get("poolChainId") as string
+  );
+
+ 
 
   useEffect(() => {
     if (!poolAddress) return;
@@ -47,7 +55,11 @@ const PoolPage = ({
 
     const getPoolAndPositions = async () => {
       try {
-        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
+        const _pool = await Pool.createInstance(
+          poolAddress,
+          poolChainId,
+          ybtSymbol
+        );
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -77,7 +89,9 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || (!state && !allPositions)) return;
 
-    const userPositions = allPositions.filter((position) => position.owner === address);
+    const userPositions = allPositions.filter(
+      (position) => position.owner === address
+    );
 
     if (!userPositions.length) {
       setPosition(undefined);
@@ -132,14 +146,25 @@ const PoolPage = ({
   const updateCurrentCycle = () => {
     if (!pool) return;
 
-    let newCycleCount = !currentCycle ? pool.calcCurrentCycle() : currentCycle.count + 1;
+    let newCycleCount = !currentCycle
+      ? pool.calcCurrentCycle()
+      : currentCycle.count + 1;
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
-    setCurrentCycle({ count: newCycleCount, startTime, endTime, depositAndBidEndTime });
+    setCurrentCycle({
+      count: newCycleCount,
+      startTime,
+      endTime,
+      depositAndBidEndTime,
+    });
 
-    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
-    toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
+    setIsCycleDepositAndBidOpen(
+      getCurrentTimestampInSeconds() < depositAndBidEndTime
+    );
+    toastSuccess(
+      `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
+    );
   };
 
   // Will be called by countdown timers to close depositAndBidWindow and to also check if cycle is finalized
@@ -165,7 +190,7 @@ const PoolPage = ({
             allPositions={allPositions}
             position={position}
             updateAllPositions={updateAllPositions}
-            setLoading={setLoading}
+            showOverlay={showOverlay}
           />
         </div>
       );
@@ -199,7 +224,7 @@ const PoolPage = ({
     if (state === "LIVE" && currentCycle)
       return (
         <div className="grid grid-cols-2 w-[764px] gap-16">
-          <div className="">
+          <div className="flex flex-col gap-12">
             <PoolDepositTab
               pool={pool}
               currentCycle={currentCycle}
@@ -228,7 +253,6 @@ const PoolPage = ({
     if (state === "ENDED") {
       return (
         <div>
-          {" "}
           <WaitTab
             title="Pool is Ended"
             msg="Pool has ended, Please Claim remaining Yield, if any"
@@ -251,9 +275,13 @@ const PoolPage = ({
         />
       </div>
       <PoolInfoTab pool={pool} />
-      <div className="absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] circle-gradient rounded-full border-2 border-gray-950 flex justify-center" />
+      
+      <div
+        className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] bg-[linear-gradient(180deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around items-start`}
+      ></div>
+
       <div className="relative w-full flex justify-center items-center min-h-[650px]">
-        {renderPoolTab()}
+        <div className="min-w-[312px] overflow-hidden">{renderPoolTab()}</div>
       </div>
     </div>
   ) : (
