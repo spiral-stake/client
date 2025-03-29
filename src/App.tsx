@@ -17,6 +17,7 @@ import { readYbts } from "./config/contractsData";
 import { Ybt } from "./types";
 import DropdownMenu from "./components/DropdownMenu";
 import Overlay from "./components/low-level/Overlay";
+import CircularProgressClock from "./pages/Test";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
@@ -85,6 +86,7 @@ function App() {
 
       <main className="px-4 lg:px-16">
         <Routes>
+          <Route path="/test" element={<CircularProgressClock/>}/>
           <Route
             path={"/pools/create"}
             element={<CreatePool showOverlay={showOverlay} poolFactory={poolFactory} ybts={ybts} />}

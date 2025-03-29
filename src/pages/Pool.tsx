@@ -29,7 +29,8 @@ const PoolPage = ({
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
+    useState(false);
 
   const [allPositions, setAllPositions] = useState<Position[]>([]);
   const [position, setPosition] = useState<Position>();
@@ -50,7 +51,11 @@ const PoolPage = ({
 
     const initialize = async () => {
       try {
-        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
+        const _pool = await Pool.createInstance(
+          poolAddress,
+          poolChainId,
+          ybtSymbol
+        );
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -73,7 +78,9 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || !allPositions) return;
 
-    const userPositions = allPositions.filter((position) => position.owner === address);
+    const userPositions = allPositions.filter(
+      (position) => position.owner === address
+    );
 
     if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
@@ -134,10 +141,19 @@ const PoolPage = ({
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
-    setCurrentCycle({ count: newCycleCount, startTime, endTime, depositAndBidEndTime });
+    setCurrentCycle({
+      count: newCycleCount,
+      startTime,
+      endTime,
+      depositAndBidEndTime,
+    });
 
-    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
-    toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
+    setIsCycleDepositAndBidOpen(
+      getCurrentTimestampInSeconds() < depositAndBidEndTime
+    );
+    toastSuccess(
+      `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
+    );
   };
 
   // Will be called by countdown timers to close depositAndBidWindow and to also check if cycle is finalized
@@ -279,9 +295,13 @@ const PoolPage = ({
         />
       </div>
       <PoolInfoTab pool={pool} />
-      <div className="absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] circle-gradient rounded-full border-2 border-gray-950 flex justify-center" />
+      
+      <div
+        className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] bg-[linear-gradient(180deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around items-start`}
+      ></div>
+
       <div className="relative w-full flex justify-center items-center min-h-[650px]">
-        {renderPoolTab()}
+        <div className="min-w-[312px] overflow-hidden">{renderPoolTab()}</div>
       </div>
     </div>
   ) : (

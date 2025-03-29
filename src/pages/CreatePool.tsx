@@ -128,7 +128,7 @@ function CreatePool({
     if (!loading) return showOverlay(undefined);
 
     showOverlay(
-      <div className="w-[420px]">
+      <div className="w-full lg:w-[420px]">
         <Loading
           loadingText="Creating Pool"
           loadingTitle="Creating Spiral Pool"

@@ -11,6 +11,7 @@ import { toastSuccess } from "../../utils/toastWrapper.tsx";
 import { displayTokenAmount } from "../../utils/displayTokenAmounts.ts";
 import WaitTab from "../low-level/WaitTab.tsx";
 import waitIcon from "../../assets/Icons/wait.svg";
+import Loading from "../low-level/Loading.tsx";
 
 const PoolJoinTab = ({
   pool,
@@ -69,7 +70,9 @@ const PoolJoinTab = ({
         });
       }
 
-      if (userYbtCollateralAllowance?.isGreaterThanOrEqualTo(amountYbtCollateral)) {
+      if (
+        userYbtCollateralAllowance?.isGreaterThanOrEqualTo(amountYbtCollateral)
+      ) {
         return setActionBtn({
           text: "Join Pool",
           disabled: false,
@@ -79,7 +82,9 @@ const PoolJoinTab = ({
 
       return setActionBtn({
         text: `Approve and Join`,
-        disabled: userYbtCollateralBalance?.isLessThan(amountYbtCollateral) ? true : false,
+        disabled: userYbtCollateralBalance?.isLessThan(amountYbtCollateral)
+          ? true
+          : false,
         onClick: handleAsync(handleApproveAndJoin, setLoading),
       });
     };
@@ -93,6 +98,11 @@ const PoolJoinTab = ({
     position,
   ]);
 
+  useEffect(() => {
+    if (!loading) return showOverlay(undefined);
+    showOverlay(<div></div>);
+  }, [loading]);
+
   const updateUserYbtCollateralBalance = async () => {
     const balance = await ybtCollateral.balanceOf(address as `0x${string}`);
     setUserYbtCollateralBalance(balance);
@@ -100,14 +110,20 @@ const PoolJoinTab = ({
 
   const updateUserYbtCollateralAllowance = async () => {
     if (!poolRouter) return;
-    const allowance = await ybtCollateral.allowance(address, poolRouter.address);
+    const allowance = await ybtCollateral.allowance(
+      address,
+      poolRouter.address
+    );
     setUserYbtCollateralAllowance(allowance);
   };
 
   const handleApproveAndJoin = async () => {
     if (!poolRouter || !amountYbtCollateral) return;
 
-    await ybtCollateral.approve(poolRouter.address, amountYbtCollateral.toString());
+    await ybtCollateral.approve(
+      poolRouter.address,
+      amountYbtCollateral.toString()
+    );
     await Promise.all([updateUserYbtCollateralAllowance(), handleJoin()]);
   };
 
@@ -144,7 +160,8 @@ const PoolJoinTab = ({
           icon={waitIcon}
           title={"Pool Starting In"}
           msg={`You have joined this pool by depositing ${
-            amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt)
+            amountYbtCollateral &&
+            displayTokenAmount(amountYbtCollateral, pool.ybt)
           } as YBT collateral`}
           countdownTarget={pool.startTime}
           onCountdownComplete={syncPoolInitialState}
@@ -163,7 +180,8 @@ const PoolJoinTab = ({
           msg={
             amountYbtCollateral &&
             `You have joined this pool by depositing ${
-              amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt)
+              amountYbtCollateral &&
+              displayTokenAmount(amountYbtCollateral, pool.ybt)
             } as YBT collateral`
           }
         />
@@ -174,27 +192,40 @@ const PoolJoinTab = ({
     return (
       <div className="w-full">
         <span className="text-xl">YBT Collateral</span>
-        <div className="w-full mt-3 mb-2">
+        {!loading ? ( <><div className="w-full mt-3 mb-2">
           <Input
             name={"YBT Collateral"}
             autoFocus={true}
             disabled={true}
             inputTokenSymbol={pool.ybt.symbol}
-            value={amountYbtCollateral && displayTokenAmount(amountYbtCollateral)}
+            value={
+              amountYbtCollateral && displayTokenAmount(amountYbtCollateral)
+            }
             onChange={() => {}}
           />
         </div>
         <div className="flex justify-between text-xs font-thin">
           <span>Approx YBT Collateral</span>
-          <span>~{`${pool.amountCollateralInBase} ${pool.baseToken.symbol}`}</span>
+          <span>
+            ~{`${pool.amountCollateralInBase} ${pool.baseToken.symbol}`}
+          </span>
         </div>
+        </>): (
+          <div className="w-full mt-3">
+            <div className="relative h-[75px]">
+            <div className="absolute z-20 w-full">
+              <Loading loadingText="Depositing" />
+            </div>
+          </div>
+          </div>
+        )}
         <div className="w-full mt-4">
           <BtnFull
             disabled={actionBtn.disabled}
             onClick={actionBtn.onClick}
             text={actionBtn.text}
           />
-        </div>
+        </div>  
       </div>
     );
   };
