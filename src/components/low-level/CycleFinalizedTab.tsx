@@ -1,22 +1,27 @@
 import BtnFull from "./BtnFull";
-import Tag from "./Tag";
 import logoBlue from "../../assets/icons/logoBlue.svg";
 import { Cycle, Position } from "../../types";
 import Pool from "../../contract-hooks/Pool";
 import { displayTokenAmount } from "../../utils/displayTokenAmounts";
 import { useState } from "react";
+import Countdown from "react-countdown";
+import { renderCountdownTag } from "./CountdownRenderer";
 
 const CycleFinalizedTab = ({
   pool,
   currentCycle,
   position,
   updatePosition,
+  updateCurrentCycle,
+  setPoolEnded,
 }: {
   pool: Pool;
   currentCycle: Cycle;
   position: Position;
   showOverlay: (overlayComponent: React.ReactNode) => void;
   updatePosition: (value: number) => void;
+  updateCurrentCycle: () => void;
+  setPoolEnded: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
 
@@ -83,7 +88,9 @@ const CycleFinalizedTab = ({
                 ) /** Need to add actual liquidity + slashed collaerals */
             }
           </span>
-          <BtnFull text="Claim Spiral Yield" onClick={handleClaimSpiralYield} />
+          <div className="mt-2">
+            <BtnFull text="Claim Spiral Yield" onClick={handleClaimSpiralYield} />
+          </div>
         </div>
       );
     }
@@ -92,9 +99,8 @@ const CycleFinalizedTab = ({
       <div className="flex flex-col items-center">
         <span className="text-lg mb-2">Cycle Finalized</span>
         <span className="text-xs font-light text-white text-opacity-70">
-          You have claimed Spiral Yield
+          Please wait for next cycle to start
         </span>
-        <BtnFull text={"Spiral Yield Claimed"} onClick={() => {}} disabled={true} />
       </div>
     );
   };
@@ -107,8 +113,25 @@ const CycleFinalizedTab = ({
       </div>
 
       <div className="flex justify-between mt-6 p-2">
-        <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
-        <Tag color="green" text={"02m:52s"} />
+        {currentCycle.count + 1 === pool.totalCycles ? (
+          <div>
+            <span className="text-sm">{`Pool ends in`}</span>
+            <Countdown
+              date={currentCycle.endTime * 1000}
+              renderer={renderCountdownTag}
+              onComplete={setPoolEnded}
+            />
+          </div>
+        ) : (
+          <div>
+            <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
+            <Countdown
+              date={currentCycle.endTime * 1000}
+              renderer={renderCountdownTag}
+              onComplete={updateCurrentCycle}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

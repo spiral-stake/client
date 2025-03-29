@@ -25,7 +25,6 @@ const PoolPage = ({
   showOverlay: (overlayComponent: React.ReactNode | undefined) => void;
 }) => {
   // ----- State ------ //
-
   const [pool, setPool] = useState<Pool>();
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
@@ -130,6 +129,7 @@ const PoolPage = ({
   // Will be called by coutdown timers and once during page state initialization (IF LIVE)
   const updateCurrentCycle = () => {
     if (!pool) return;
+
     let newCycleCount = pool.calcCurrentCycle();
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
@@ -149,7 +149,12 @@ const PoolPage = ({
     await wait(10);
     if (!pool) return;
     const _cyclesFinalized = await pool.getCyclesFinalized();
+    console.log(_cyclesFinalized);
     setCyclesFinalized(_cyclesFinalized);
+  };
+
+  const setPoolEnded = () => {
+    setState("ENED");
   };
 
   ////////////////////////
@@ -167,6 +172,7 @@ const PoolPage = ({
             allPositions={allPositions}
             position={position}
             updateAllPositions={updateAllPositions}
+            syncPoolInitialState={syncPoolInitialState}
           />
         </div>
       );
@@ -211,6 +217,7 @@ const PoolPage = ({
                 updatePosition={updatePosition}
                 isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
                 showOverlay={showOverlay}
+                closeCycleDepositWindow={closeCycleDepositWindow}
               />
               <PoolBidTab
                 pool={pool}
@@ -218,6 +225,7 @@ const PoolPage = ({
                 position={position}
                 isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
                 showOverlay={showOverlay}
+                closeCycleDepositWindow={closeCycleDepositWindow}
               />
             </div>
           ) : (
@@ -227,6 +235,8 @@ const PoolPage = ({
               position={position}
               showOverlay={showOverlay}
               updatePosition={updatePosition}
+              updateCurrentCycle={updateCurrentCycle}
+              setPoolEnded={setPoolEnded}
             />
           )}
 

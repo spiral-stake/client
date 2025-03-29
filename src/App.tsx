@@ -55,6 +55,8 @@ function App() {
     onboardUser();
   }, [address, chainId, appChainId, ybts]);
 
+  console.log(appChainId);
+
   useEffect(() => {
     /**
      * @dev on appChainId change, reset the ybts and poolFactory according to the chain

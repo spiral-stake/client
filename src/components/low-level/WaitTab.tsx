@@ -1,13 +1,14 @@
-import Tag from "./Tag";
 import TextLoading from "./TextLoading";
 import BtnFull from "./BtnFull";
+import Countdown from "react-countdown";
+import { renderCountdownTag } from "./CountdownRenderer";
 
 const WaitTab = ({
   icon,
   title,
   msg,
-  countdown,
-  countdownTitle,
+  countdownTarget,
+  onCountdownComplete,
   btnText,
   btnOnClick,
   btnDisabled,
@@ -15,8 +16,8 @@ const WaitTab = ({
   icon?: string;
   title: string;
   msg: string | undefined;
-  countdown?: string;
-  countdownTitle?: string;
+  countdownTarget?: number;
+  onCountdownComplete?: () => void;
   btnText?: string;
   btnOnClick?: () => void;
   btnDisabled?: boolean;
@@ -37,6 +38,16 @@ const WaitTab = ({
                   {title}
                 </div>
 
+                {countdownTarget && onCountdownComplete && (
+                  <div>
+                    <Countdown
+                      renderer={renderCountdownTag}
+                      date={countdownTarget * 1000}
+                      onComplete={onCountdownComplete}
+                    />
+                  </div>
+                )}
+
                 <div className="w-64 text-center justify-start">
                   <span className="text-white text-opacity-70 text-xs font-normal font-['Outfit'] leading-none">
                     {msg ? msg : <TextLoading lineCount={2} />}
@@ -49,17 +60,6 @@ const WaitTab = ({
             </div>
           </div>
         </div>
-      </div>
-      <div className="self-stretch p-2 rounded-xl inline-flex justify-between items-center">
-        {countdown && countdownTitle && (
-          <div className="flex-1 flex justify-center items-center gap-2.5">
-            <div className="flex-1 justify-start text-white text-sm font-medium font-['Outfit'] leading-tight">
-              {countdownTitle}
-            </div>
-
-            <Tag color="green" text={countdown.toString()} />
-          </div>
-        )}
       </div>
     </div>
   );

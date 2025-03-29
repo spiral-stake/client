@@ -17,11 +17,13 @@ const PoolJoinTab = ({
   allPositions,
   position,
   updateAllPositions,
+  syncPoolInitialState,
 }: {
   pool: Pool;
   allPositions: Position[];
   position: Position | undefined;
   updateAllPositions: () => void;
+  syncPoolInitialState: () => void;
 }) => {
   const ybtCollateral = pool.ybt;
 
@@ -144,6 +146,8 @@ const PoolJoinTab = ({
           msg={`You have joined this pool by depositing ${
             amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt)
           } as YBT collateral`}
+          countdownTarget={pool.startTime}
+          onCountdownComplete={syncPoolInitialState}
         />
       );
     }

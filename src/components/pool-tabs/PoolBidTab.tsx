@@ -13,6 +13,8 @@ import checkIconBig from "../../assets/icons/checkIconBig.svg";
 import errorIconBig from "../../assets/icons/errorIconBig.svg";
 import BidInfoRow from "../low-level/BidInfoRow.tsx";
 import BigNumber from "bignumber.js";
+import Countdown from "react-countdown";
+import { renderCountdown } from "../low-level/CountdownRenderer.tsx";
 
 const PoolBidTab = ({
   pool,
@@ -20,12 +22,14 @@ const PoolBidTab = ({
   position,
   isCycleDepositAndBidOpen,
   showOverlay,
+  closeCycleDepositWindow,
 }: {
   pool: Pool;
   currentCycle: Cycle;
   position: Position;
   isCycleDepositAndBidOpen: boolean;
   showOverlay: (overlayComponent: React.ReactNode) => void;
+  closeCycleDepositWindow: () => void;
 }) => {
   const [amountBid, setAmountBid] = useState("");
   const [lowestBid, setLowestBid] = useState<LowestBid>();
@@ -181,7 +185,12 @@ const PoolBidTab = ({
         </div>
         <div className="px-2.5 py-2 bg-neutral-800 rounded-[33.78px] inline-flex justify-start items-center gap-1.5">
           <div className="justify-start text-neutral-300 text-xs font-normal font-['Outfit'] leading-none">
-            Time left: hardcoded
+            Time left:{" "}
+            <Countdown
+              date={currentCycle.depositAndBidEndTime * 1000}
+              renderer={renderCountdown}
+              onComplete={closeCycleDepositWindow}
+            />
           </div>
         </div>
       </div>
