@@ -89,7 +89,10 @@ const CycleFinalizedTab = ({
             }
           </span>
           <div className="mt-2">
-            <BtnFull text="Claim Spiral Yield" onClick={handleClaimSpiralYield} />
+            <BtnFull
+              text="Claim Spiral Yield"
+              onClick={handleClaimSpiralYield}
+            />
           </div>
         </div>
       );
@@ -106,7 +109,7 @@ const CycleFinalizedTab = ({
   };
 
   return (
-    <div className="w-full flex flex-col gap-8 bg-gradient-to-b from-slate-900 to-gray-950 rounded-xl p-1">
+    <div className="w-full flex flex-col justify-between gap-8 bg-gradient-to-b from-slate-900 to-gray-950 rounded-xl p-1">
       <div className="flex flex-col items-center gap-4 p-6">
         <img src={logoBlue} alt="" className="w-24 h-24" />
         <div className="flex flex-col gap-6 py-3">{renderFinalizedTab()}</div>
@@ -114,23 +117,27 @@ const CycleFinalizedTab = ({
 
       <div className="flex justify-between mt-6 p-2">
         {currentCycle.count + 1 === pool.totalCycles ? (
-          <div>
+          <>
             <span className="text-sm">{`Pool ends in`}</span>
-            <Countdown
-              date={currentCycle.endTime * 1000}
-              renderer={renderCountdownTag}
-              onComplete={setPoolEnded}
-            />
-          </div>
+            <div>
+              <Countdown
+                date={currentCycle.endTime * 1000}
+                renderer={renderCountdownTag}
+                onComplete={setPoolEnded}
+              />
+            </div>
+          </>
         ) : (
-          <div>
-            <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
+          <>
+            <span className="text-sm">{`Cycle ${
+              currentCycle.count + 1
+            } is starting in`}</span>
             <Countdown
               date={currentCycle.endTime * 1000}
               renderer={renderCountdownTag}
               onComplete={updateCurrentCycle}
             />
-          </div>
+          </>
         )}
       </div>
     </div>

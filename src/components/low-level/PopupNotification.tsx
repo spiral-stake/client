@@ -12,7 +12,7 @@ const PopupNotification = ({
   link?: string;
 }) => {
   return (
-    <div className="w-full absolute top-20 right-10 lg:w-[375px] flex flex-row justify-between items-center rounded-md p-4 bg-slate-800">
+    <div className="w-full absolute lg:top-20 lg:right-10 lg:w-[375px] flex flex-row justify-between items-center rounded-md p-4 bg-slate-800">
       <div className="flex justify-center items-center gap-2">
         <img src={icon} alt="" className="w-7 h-7" />
         <div className="flex flex-col">
