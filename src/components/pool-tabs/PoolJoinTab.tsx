@@ -18,27 +18,21 @@ const PoolJoinTab = ({
   allPositions,
   position,
   updateAllPositions,
-  showOverlay,
+  syncPoolInitialState,
 }: {
   pool: Pool;
   allPositions: Position[];
   position: Position | undefined;
   updateAllPositions: () => void;
-  showOverlay: (overlayComponent: React.ReactNode) => void;
+  syncPoolInitialState: () => void;
 }) => {
   const ybtCollateral = pool.ybt;
 
   const [poolRouter, setPoolRouter] = useState<PoolRouter>();
   const [amountYbtCollateral, setAmountYbtCollateral] = useState<BigNumber>();
-  const [userYbtCollateralBalance, setUserYbtCollateralBalance] =
-    useState<BigNumber>();
-  const [userYbtCollateralAllowance, setUserYbtCollateralAllowance] =
-    useState<BigNumber>();
-  const [actionBtn, setActionBtn] = useState({
-    text: "",
-    onClick: () => {},
-    disabled: false,
-  });
+  const [userYbtCollateralBalance, setUserYbtCollateralBalance] = useState<BigNumber>();
+  const [userYbtCollateralAllowance, setUserYbtCollateralAllowance] = useState<BigNumber>();
+  const [actionBtn, setActionBtn] = useState({ text: "", onClick: () => {}, disabled: false });
   const [loading, setLoading] = useState(false);
 
   const { address } = useAccount() as { address: `0x${string}` };
@@ -169,6 +163,8 @@ const PoolJoinTab = ({
             amountYbtCollateral &&
             displayTokenAmount(amountYbtCollateral, pool.ybt)
           } as YBT collateral`}
+          countdownTarget={pool.startTime}
+          onCountdownComplete={syncPoolInitialState}
         />
       );
     }

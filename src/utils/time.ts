@@ -56,7 +56,7 @@ export function parseTime(time: string, unit: string) {
   }
 
   if (unit === "weeks" || unit === "week") {
-    _time = _time * 60 * 60 * 24 * 7
+    _time = _time * 60 * 60 * 24 * 7;
   }
 
   if (unit === "months" || unit === "month") {
@@ -101,23 +101,6 @@ export function formatTime(timeInSeconds: number) {
   }
 
   return { value: timeValue, unit: timeValue > 1 ? timeUnit + "s" : timeUnit };
-}
-
-export function countdown(secondsLeft: number) {
-  // Calculate days, hours, minutes, and seconds
-  const days = Math.floor(secondsLeft / (60 * 60 * 24));
-  const hours = Math.floor((secondsLeft % (60 * 60 * 24)) / (60 * 60));
-  const minutes = Math.floor((secondsLeft % (60 * 60)) / 60);
-  const seconds = Math.floor(secondsLeft % 60);
-
-  // Format each component to have two digits
-  const formattedDays = days.toString().padStart(2, "0");
-  const formattedHours = hours.toString().padStart(2, "0");
-  const formattedMinutes = minutes.toString().padStart(2, "0");
-  const formattedSeconds = seconds.toString().padStart(2, "0");
-
-  // Combine into standard format
-  return `${formattedDays}:${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
 }
 
 export function wait(seconds: number): Promise<void> {

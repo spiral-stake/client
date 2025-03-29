@@ -1,4 +1,4 @@
-const Tag = ({ text, color }: { text: string; color: string }) => {
+const Tag = ({ text, color, dot }: { text: string; color: string; dot: boolean }) => {
   const colors: Record<string, string> = {
     green: "text-green-400 bg-stone-900",
     red: "text-red-500 bg-stone-900",
@@ -10,9 +10,11 @@ const Tag = ({ text, color }: { text: string; color: string }) => {
     <div
       className={`px-2.5 py-1 rounded-[33.78px] inline-flex justify-start items-center gap-1.5 ${colors[color]}`}
     >
-      <div
-        className={`w-[5px] h-[5px] bg-${color}-600 rounded-full outline outline-1 outline-${color}-600 outline-opacity-40`}
-      />
+      {dot && (
+        <div
+          className={`w-[5px] h-[5px] bg-${color}-600 rounded-full outline outline-1 outline-${color}-600 outline-opacity-40`}
+        />
+      )}
       <div className="justify-start text-sm font-normal font-['Outfit']">{text}</div>
     </div>
   );

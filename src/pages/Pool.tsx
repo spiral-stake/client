@@ -15,18 +15,16 @@ import Loader from "../components/low-level/Loader.js";
 import PoolDepositTab from "../components/pool-tabs/PoolDepositTab.js";
 import PoolBidTab from "../components/pool-tabs/PoolBidTab.js";
 import WaitTab from "../components/low-level/WaitTab.js";
-import PositionNft from "../components/low-level/PositionNft.js";
 import ErrorIconBig from "../assets/icons/errorIconBig.svg";
-import PositionCollaretal from "../components/low-level/PositionCollateral.js";
-import Tag from "../components/low-level/Tag.js";
-import TagSquare from "../components/low-level/TagSquare.js";
-import PoolGlobe from "../components/low-level/PoolGlobe.js";
+import CycleFinalizedTab from "../components/low-level/CycleFinalizedTab.js";
+import PoolPositionTab from "../components/pool-tabs/PoolPositionTab.js";
 
 const PoolPage = ({
   showOverlay,
 }: {
   showOverlay: (overlayComponent: React.ReactNode | undefined) => void;
 }) => {
+  // ----- State ------ //
   const [pool, setPool] = useState<Pool>();
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
@@ -37,23 +35,21 @@ const PoolPage = ({
   const [allPositions, setAllPositions] = useState<Position[]>([]);
   const [position, setPosition] = useState<Position>();
 
-  const [loading, setLoading] = useState(false);
-
-  const { address, chainId } = useAccount();
+  const { address } = useAccount();
   const { switchChain } = useSwitchChain();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
-  const poolChainId = parseInt(
-    useSearchParams()[0].get("poolChainId") as string
-  );
+  const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
 
- 
+  ////////////////////////
+  // Use Effects
+  ///////////////////////
 
   useEffect(() => {
     if (!poolAddress) return;
     showOverlay(undefined);
 
-    const getPoolAndPositions = async () => {
+    const initialize = async () => {
       try {
         const _pool = await Pool.createInstance(
           poolAddress,
@@ -64,40 +60,35 @@ const PoolPage = ({
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
         setAllPositions(_pool.allPositions);
+        setCyclesFinalized(_pool.cyclesFinalized);
       } catch (error) {
-        console.error("Failed to create pool instance:", error);
+        console.error("Failed to initialize pool page:", error);
       }
     };
 
-    getPoolAndPositions();
+    initialize();
   }, []);
 
   useEffect(() => {
-    if (state === "LIVE" && !currentCycle) {
-      updateCurrentCycle(); // Only for the 1st cycle
+    if (state === "LIVE" || state === "ENDED") {
+      updateCurrentCycle();
     }
-
-    if (state === "DISCARDED") {
-      toastSuccess("Pool Discarded, Please redeem your YBT Collateral");
-    }
-
-    if (state === "ENDED") {
-      toastSuccess("Pool Ended, Claim Yield (if any)");
-    }
-  }, [state, currentCycle]);
+  }, [state]);
 
   useEffect(() => {
-    if (!address || (!state && !allPositions)) return;
+    if (!address || !allPositions) return;
 
     const userPositions = allPositions.filter(
       (position) => position.owner === address
     );
 
-    if (!userPositions.length) {
-      setPosition(undefined);
-    }
+    if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
-  }, [address, state, allPositions]);
+  }, [address, allPositions]);
+
+  ////////////////////////
+  // Handler Functions
+  ///////////////////////
 
   // To be pinged by startTime countdown
   const syncPoolInitialState = async () => {
@@ -110,7 +101,7 @@ const PoolPage = ({
       setState(_poolState);
       setAllPositions(_allPositions);
     } catch (error) {
-      console.error("Failed to get current pool state:", error);
+      console.error("Failed to sync initial Pool State:", error);
     }
   };
 
@@ -146,9 +137,7 @@ const PoolPage = ({
   const updateCurrentCycle = () => {
     if (!pool) return;
 
-    let newCycleCount = !currentCycle
-      ? pool.calcCurrentCycle()
-      : currentCycle.count + 1;
+    let newCycleCount = pool.calcCurrentCycle();
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
@@ -176,8 +165,17 @@ const PoolPage = ({
     await wait(10);
     if (!pool) return;
     const _cyclesFinalized = await pool.getCyclesFinalized();
+    console.log(_cyclesFinalized);
     setCyclesFinalized(_cyclesFinalized);
   };
+
+  const setPoolEnded = () => {
+    setState("ENED");
+  };
+
+  ////////////////////////
+  // Compenents Renders
+  ///////////////////////
 
   const renderPoolTab = () => {
     if (!pool || !state) return;
@@ -190,7 +188,7 @@ const PoolPage = ({
             allPositions={allPositions}
             position={position}
             updateAllPositions={updateAllPositions}
-            showOverlay={showOverlay}
+            syncPoolInitialState={syncPoolInitialState}
           />
         </div>
       );
@@ -221,45 +219,67 @@ const PoolPage = ({
       );
     }
 
-    if (state === "LIVE" && currentCycle)
+    if (!currentCycle) return;
+
+    if (state === "LIVE") {
       return (
         <div className="grid grid-cols-2 w-[764px] gap-16">
-          <div className="flex flex-col gap-12">
-            <PoolDepositTab
+          {cyclesFinalized !== currentCycle.count ? (
+            <div className="">
+              <PoolDepositTab
+                pool={pool}
+                currentCycle={currentCycle}
+                position={position}
+                updatePosition={updatePosition}
+                isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
+                showOverlay={showOverlay}
+                closeCycleDepositWindow={closeCycleDepositWindow}
+              />
+              <PoolBidTab
+                pool={pool}
+                currentCycle={currentCycle}
+                position={position}
+                isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
+                showOverlay={showOverlay}
+                closeCycleDepositWindow={closeCycleDepositWindow}
+              />
+            </div>
+          ) : (
+            <CycleFinalizedTab
               pool={pool}
               currentCycle={currentCycle}
               position={position}
+              showOverlay={showOverlay}
               updatePosition={updatePosition}
-              isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
-              poolChainId={poolChainId}
-              showOverlay={showOverlay}
+              updateCurrentCycle={updateCurrentCycle}
+              setPoolEnded={setPoolEnded}
             />
-            <PoolBidTab
-              pool={pool}
-              currentCycle={currentCycle}
-              position={position}
-              isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
-              poolChainId={poolChainId}
-              showOverlay={showOverlay}
-            />
-          </div>
-          <div className="w-full flex flex-col items-center justify-center gap-4">
-            <PositionNft winningCycle={1} />
-            <PositionCollaretal />
-          </div>
-        </div>
-      );
+          )}
 
-    if (state === "ENDED") {
-      return (
-        <div>
-          <WaitTab
-            title="Pool is Ended"
-            msg="Pool has ended, Please Claim remaining Yield, if any"
+          <PoolPositionTab
+            pool={pool}
+            currentCycle={currentCycle}
+            cyclesFinalized={cyclesFinalized}
+            position={position}
+            updatePosition={updatePosition}
           />
         </div>
       );
     }
+
+    return (
+      <div className="grid grid-cols-2 w-[764px] gap-16">
+        {" "}
+        <WaitTab title="Pool has Ended" msg="Pool has ended, Claim any remaining Yield" />
+        <PoolPositionTab
+          pool={pool}
+          currentCycle={currentCycle}
+          cyclesFinalized={cyclesFinalized}
+          position={position}
+          updatePosition={updatePosition}
+        />
+      </div>
+    );
   };
 
   return pool ? (

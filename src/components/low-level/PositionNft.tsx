@@ -1,6 +1,19 @@
 import logo from "../../assets/logo.svg";
+import Pool from "../../contract-hooks/Pool";
+import { Position } from "../../types";
+import { displayTokenAmount } from "../../utils/displayTokenAmounts";
+import truncateStr from "../../utils/truncateStr";
+import BigNumber from "bignumber.js";
 
-const PositionNft = ({ winningCycle }: { winningCycle: number }) => {
+const PositionNft = ({
+  position,
+  pool,
+  amountCollateralYield,
+}: {
+  position: Position;
+  pool: Pool;
+  amountCollateralYield: BigNumber | undefined;
+}) => {
   return (
     <div className="inline-flex flex-col w-[178px]">
       <div
@@ -20,26 +33,35 @@ const PositionNft = ({ winningCycle }: { winningCycle: number }) => {
             <div className="flex flex-col gap-2">
               <div className="self-stretch inline-flex justify-start items-center gap-2">
                 <div className="text-center justify-center text-white text-opacity-60 text-[10px] font-normal font-['Outfit'] leading-none">
-                  ID : 02
+                  ID : {position.id}
                 </div>
               </div>
               <div className="self-stretch inline-flex justify-start items-center gap-[3.07px]">
                 <div className="text-center justify-center text-white text-opacity-60 text-[10px] font-normal font-['Outfit'] leading-none">
-                  Owner : -
+                  Owner : {truncateStr(position.owner, 11)}
                 </div>
               </div>
               <div className="self-stretch justify-center text-white text-opacity-60 text-[10px] font-normal font-['Outfit'] leading-none">
-                YBT Yield : 0 frxETH
+                YBT Yield :{" "}
+                {amountCollateralYield && displayTokenAmount(amountCollateralYield, pool.ybt)}
               </div>
               <div className="self-stretch justify-center text-white text-opacity-60 text-[10px] font-normal font-['Outfit'] leading-none">
-                Spiral Yield : 0 frxETH
+                Spiral Yield :{" "}
+                {
+                  <div className="mt-2">
+                    <div>{displayTokenAmount(position.spiralYield.amountBase, pool.baseToken)}</div>
+                    <div>{displayTokenAmount(position.spiralYield.amountYbt, pool.ybt)}</div>
+                  </div>
+                }
               </div>
             </div>
           </div>
         </div>
       </div>
       <div className="text-center mt-3 text-xs">
-        <span className="">{winningCycle ? `Winner of Cycle ${winningCycle}` : "NF"}</span>
+        <span className="">
+          {position.winningCycle ? `Winner of Cycle ${position.winningCycle}` : "Yet to win"}
+        </span>
       </div>
     </div>
   );

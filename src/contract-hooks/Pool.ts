@@ -21,6 +21,7 @@ export default class Pool extends Base {
   public startTime!: number;
   public endTime!: number;
   public allPositions!: Position[]; // Only non-immutable storage variable (needed for optimized pool state)
+  public cyclesFinalized!: number;
 
   constructor(address: string) {
     super(address, POOL_ABI);
@@ -61,6 +62,7 @@ export default class Pool extends Base {
       totalCycles,
       startTime,
       allPositions,
+      cyclesFinalized,
     ] = await Promise.all([
       instance.read("getamountCycle", [], chainId),
       instance.read("getAmountCollateralInBase", [], chainId),
@@ -69,6 +71,7 @@ export default class Pool extends Base {
       instance.read("getTotalCycles", [], chainId),
       instance.read("getStartTime", [], chainId),
       instance.getAllPositions(),
+      instance.getCyclesFinalized(),
     ]);
 
     instance.address = instance.address;
@@ -83,6 +86,7 @@ export default class Pool extends Base {
     instance.startTime = parseInt((startTime as bigint).toString());
     instance.endTime = instance.startTime + instance.cycleDuration * instance.totalCycles;
     instance.allPositions = allPositions;
+    instance.cyclesFinalized = cyclesFinalized;
 
     return instance;
   }
@@ -159,13 +163,15 @@ export default class Pool extends Base {
       amountCollateral: bigint;
       winningCycle: bigint;
       cyclesDeposited: boolean[];
-      spiralYield: SpiralYield;
+      spiralYield: { amountBase: bigint; amountSY: bigint };
     };
 
     const [position, owner] = await Promise.all([
       this.read("getPosition", [positionId], this.chainId) as Promise<RawPosition>,
       this.read("ownerOf", [positionId], this.chainId) as Promise<string>,
     ]);
+
+    console.log(position);
 
     const typedPosition: Position = {
       ...position, // Preserve any additional properties
@@ -174,7 +180,10 @@ export default class Pool extends Base {
       amountCollateral: formatUnits(position.amountCollateral, this.ybt.decimals),
       winningCycle: parseInt(position.winningCycle.toString()),
       cyclesDeposited: position.cyclesDeposited,
-      spiralYield: position.spiralYield,
+      spiralYield: {
+        amountBase: formatUnits(position.spiralYield.amountBase, this.baseToken.decimals),
+        amountYbt: formatUnits(position.spiralYield.amountSY, this.ybt.decimals),
+      },
     };
 
     return typedPosition;

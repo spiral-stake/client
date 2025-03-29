@@ -1,17 +1,30 @@
 import BigNumber from "bignumber.js";
 import { Token } from "../types";
 
-export const displayTokenAmount = (amount: BigNumber, token?: Token, decimalPlaces = 3) => {
-  let formattedAmount;
-
-  if (amount.isZero()) formattedAmount = "0.00";
-  else if (amount.isInteger()) {
-    formattedAmount = amount.toString();
-  } else {
-    formattedAmount = amount.toFixed(decimalPlaces);
+export const displayTokenAmount = (amount: BigNumber, token?: Token, decimalPlaces = 3): string => {
+  // Handle zero amount
+  if (amount.isZero()) {
+    return `0${token?.symbol ? ` ${token.symbol}` : ""}`;
   }
 
-  return `${new BigNumber(formattedAmount).isGreaterThan(0) ? formattedAmount : "< 0.001"} ${
-    (token && token.symbol) || ""
-  }`;
+  // Handle very small amounts
+  const smallestDisplayableValue = new BigNumber(10).pow(-decimalPlaces);
+  if (amount.isPositive() && amount.isLessThan(smallestDisplayableValue)) {
+    return `< ${smallestDisplayableValue}${token?.symbol ? ` ${token.symbol}` : ""}`;
+  }
+
+  // Format the amount
+  let formattedAmount;
+  if (amount.isInteger()) {
+    formattedAmount = amount.toFixed(0);
+  } else {
+    // Use toFormat to avoid scientific notation and properly round
+    formattedAmount = amount.toFormat(decimalPlaces, {
+      decimalSeparator: ".",
+      groupSeparator: "",
+      groupSize: 0,
+    });
+  }
+
+  return `${formattedAmount}${token?.symbol ? ` ${token.symbol}` : ""}`;
 };

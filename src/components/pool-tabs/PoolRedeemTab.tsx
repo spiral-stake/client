@@ -77,7 +77,7 @@ const PoolReedemTab = ({
           <WaitTab
             icon={warningIcon}
             title="Pool Discarded!"
-            msg={`Pool is discarded only ${positionsFilled} of ${pool.totalPositions} positions were filled`}
+            msg={`Pool got discarded as only ${positionsFilled} of ${pool.totalPositions} positions got filled`}
           />
         </>
       )}

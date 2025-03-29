@@ -66,15 +66,11 @@ const YbtDropdown = ({
           <div className="col-span-6 flex justify-end">
             <div className="p-3 flex justify-start items-center gap-4">
               <div className="inline-flex flex-col justify-center items-start gap-2">
-                <Tag color="green" text={tagMsg} />
+                <Tag dot={true} color="green" text={tagMsg} />
               </div>
             </div>
             <div className="h-16 p-3 flex justify-start items-center gap-4">
-              <img
-                src={arrowIcon}
-                alt=""
-                className={`h-6 w-6 ${showPools && "-rotate-180"}`}
-              />
+              <img src={arrowIcon} alt="" className={`h-6 w-6 ${showPools && "-rotate-180"}`} />
             </div>
           </div>
         </div>
@@ -85,9 +81,7 @@ const YbtDropdown = ({
           <div>
             <div className="hidden mt-2 pb-2 w-full lg:grid grid-cols-12 pr-5 border-b border-gray-900">
               <div className="col-span-4 flex justify-center items-center pl-3">
-                <span className="px-3 inline-flex justify-start items-center ">
-                  #
-                </span>
+                <span className="px-3 inline-flex justify-start items-center ">#</span>
                 <span className="w-full px-5 inline-flex justify-start items-center gap-4">
                   Pools
                 </span>

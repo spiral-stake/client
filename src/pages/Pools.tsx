@@ -38,11 +38,13 @@ const Pools = ({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFactory | 
 
   return (
     <div className="">
-      <PageTitle
-        title={"Spiral Pools"}
-        subheading={`Stake your frxETH in fast, transparent pools and earn passive rewards.
+      <div className="py-16">
+        <PageTitle
+          title={"Spiral Pools"}
+          subheading={`Stake your frxETH in fast, transparent pools and earn passive rewards.
 Secure, flexible, and low entry—start with just 0.10 frxETH! `}
-      />
+        />
+      </div>
       {ybtPoolAddresses ? (
         <div className="h-fit">
           {ybts.map((ybt: Ybt) => (
@@ -50,7 +52,7 @@ Secure, flexible, and low entry—start with just 0.10 frxETH! `}
               key={ybt.symbol}
               ybt={ybt}
               selectedYbt={selectedYbt}
-              tagMsg="2 pools live"
+              tagMsg={`${ybtPoolAddresses[ybt.symbol].length} Pools`}
               tokenIcon={tokenIcon}
               poolAddresses={ybtPoolAddresses[ybt.symbol]}
               handleYbtChange={handleYbtChange}

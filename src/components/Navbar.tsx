@@ -56,9 +56,9 @@ function Navbar({ showDropdown }: { showDropdown: (bool: boolean) => void }) {
               data-property-1="Default"
               className="h-8 p-2 rounded-full flex justify-start items-center gap-1.5 overflow-hidden"
             >
-              <div className="cursor-pointer inline-flex mr-3 flex-col justify-start items-start overflow-hidden">
+              {/* <div className="cursor-pointer inline-flex mr-3 flex-col justify-start items-start overflow-hidden">
                 <img src={bell} alt="" />
-              </div>
+              </div> Needs to be uncommented */}
             </div>
             <div>
               <ConnectWalletBtn />
