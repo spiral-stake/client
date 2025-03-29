@@ -15,6 +15,7 @@ import BidInfoRow from "../low-level/BidInfoRow.tsx";
 import BigNumber from "bignumber.js";
 import Countdown from "react-countdown";
 import { renderCountdown } from "../low-level/CountdownRenderer.tsx";
+import { usePolling } from "../../utils/Polling.ts";
 
 const PoolBidTab = ({
   pool,
@@ -40,15 +41,12 @@ const PoolBidTab = ({
     updateLowestBid();
   }, [currentCycle]);
 
-  // To update cycle bids in realtime using Polling
-  useEffect(() => {
-    const interval = setInterval(updateLowestBid, 5000);
-    return () => clearInterval(interval);
-  }, []);
-
   const updateLowestBid = async () => {
     setLowestBid(await pool.getLowestBid());
   };
+
+  // Polling
+  usePolling(updateLowestBid, 5);
 
   const handleAmountBidChange = (e: any) => {
     setAmountBid(e.target.value);

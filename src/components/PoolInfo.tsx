@@ -45,7 +45,7 @@ const PoolInfoTab = ({ pool }: { pool: Pool }) => {
   ];
 
   return (
-    <div className="grid grid-cols-2  lg:flex justify-around my-5 mx-5 ">
+    <div className="grid grid-cols-2  lg:flex justify-around my-5 ">
       {items.map((item, key) => (
         <div className="mb-5 flex justify-center items-center">
           {key !== 0 && (

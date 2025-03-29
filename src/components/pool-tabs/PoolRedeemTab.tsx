@@ -71,6 +71,7 @@ const PoolReedemTab = ({
             amountCollateral && amountCollateral.isGreaterThan(0) ? `Redeem YBT Collateral` : ""
           }
           btnOnClick={handleRedeemCollateralIfDiscarded}
+          poolChainId={pool.chainId}
         />
       ) : (
         <>

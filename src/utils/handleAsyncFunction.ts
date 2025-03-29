@@ -1,6 +1,6 @@
 import { toastError, toastSuccess } from "./toastWrapper";
 
-export const handleAsync = (fn, setLoading) => {
+export const handleAsync = (fn: () => void, setLoading: (value: boolean) => void) => {
   return async (...args) => {
     setLoading(true); // Start loading state before the async function
     try {

@@ -56,8 +56,6 @@ function App() {
     onboardUser();
   }, [address, chainId, appChainId, ybts]);
 
-  console.log(appChainId);
-
   useEffect(() => {
     /**
      * @dev on appChainId change, reset the ybts and poolFactory according to the chain
@@ -76,7 +74,7 @@ function App() {
   }, [appChainId]);
 
   return (
-    <div className="app font-[Outfit] relative overflow-hidden">
+    <div className="app font-[Outfit] relative overflow-hidden ">
       <Toaster />
       {!dropdown ? (
         <Navbar showDropdown={showDropdown} />
@@ -86,7 +84,7 @@ function App() {
 
       <main className="px-4 lg:px-16">
         <Routes>
-          <Route path="/test" element={<CircularProgressClock/>}/>
+          <Route path="/test" element={<CircularProgressClock />} />
           <Route
             path={"/pools/create"}
             element={<CreatePool showOverlay={showOverlay} poolFactory={poolFactory} ybts={ybts} />}

@@ -7,6 +7,7 @@ import { toastSuccess } from "../../utils/toastWrapper";
 import { ClipLoader } from "react-spinners";
 import { useState } from "react";
 import { handleAsync } from "../../utils/handleAsyncFunction";
+import { HoverInfo } from "./HoverInfo";
 
 const PositionCollateral = ({
   position,
@@ -43,19 +44,14 @@ const PositionCollateral = ({
               </div>
             </div>
 
-            {amountCollateralYield &&
-              amountCollateralYield.isGreaterThan(0) && (
-                <button
-                  className="rounded-lg text-xs font-light outline outline-[1px] outline-white px-2"
-                  onClick={handleAsync(handleClaimCollateralYield, setLoading)}
-                >
-                  {!loading ? (
-                    "Claim YBT yield"
-                  ) : (
-                    <ClipLoader size={"10px"} color="white" />
-                  )}
-                </button>
-              )}
+            {amountCollateralYield && amountCollateralYield.isGreaterThan(0) && (
+              <button
+                className="rounded-lg text-xs font-light outline outline-[1px] outline-white px-2"
+                onClick={handleAsync(handleClaimCollateralYield, setLoading)}
+              >
+                {!loading ? "Claim YBT yield" : <ClipLoader size={"10px"} color="white" />}
+              </button>
+            )}
           </div>
         </div>
         <div className="self-stretch inline-flex justify-start items-center gap-3">
@@ -65,15 +61,11 @@ const PositionCollateral = ({
               {cyclesFinalized !== currentCycle.count &&
               position.cyclesDeposited[currentCycle.count]
                 ? displayTokenAmount(
-                    pool.amountCycle.multipliedBy(
-                      pool.totalCycles - (cyclesFinalized + 1)
-                    ),
+                    pool.amountCycle.multipliedBy(pool.totalCycles - (cyclesFinalized + 1)),
                     pool.baseToken
                   )
                 : displayTokenAmount(
-                    pool.amountCycle.multipliedBy(
-                      pool.totalCycles - cyclesFinalized
-                    ),
+                    pool.amountCycle.multipliedBy(pool.totalCycles - cyclesFinalized),
                     pool.baseToken
                   )}
             </div>
@@ -106,10 +98,7 @@ const PositionCollateral = ({
                 pool.amountCycle.multipliedBy(
                   position.cyclesDeposited
                     .slice(0, cyclesFinalized)
-                    .reduce(
-                      (count, deposited) => (!deposited ? count + 1 : count),
-                      0
-                    )
+                    .reduce((count, deposited) => (!deposited ? count + 1 : count), 0)
                 ),
                 pool.baseToken
               )}

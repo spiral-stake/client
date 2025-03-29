@@ -12,9 +12,9 @@ import { displayTokenAmount } from "../../utils/displayTokenAmounts.ts";
 import WaitTab from "../low-level/WaitTab.tsx";
 import waitIcon from "../../assets/Icons/wait.svg";
 import Loading from "../low-level/Loading.tsx";
-import Tag from "../low-level/Tag.tsx";
 import Countdown from "react-countdown";
 import { renderCountdownTag } from "../low-level/CountdownRenderer.tsx";
+import { usePolling } from "../../utils/Polling.ts";
 
 const PoolJoinTab = ({
   pool,
@@ -41,6 +41,9 @@ const PoolJoinTab = ({
   const [loading, setLoading] = useState(false);
 
   const { address } = useAccount() as { address: `0x${string}` };
+
+  // Polling
+  usePolling(updateAllPositions, 5);
 
   useEffect(() => {
     const getPoolRouter = async () => {
@@ -98,12 +101,6 @@ const PoolJoinTab = ({
     amountYbtCollateral,
     position,
   ]);
-
-  // To update all the joined positions in realtime using Polling
-  useEffect(() => {
-    const interval = setInterval(updateAllPositions, 5000);
-    return () => clearInterval(interval); // Cleanup
-  }, []);
 
   useEffect(() => {
     if (!loading) return showOverlay(undefined);
@@ -220,7 +217,7 @@ const PoolJoinTab = ({
           </>
         ) : (
           <div className="w-full mt-3">
-            <div className="relative h-[75px]">
+            <div className="relative h-[70px]">
               <div className="absolute z-20 w-full">
                 <Loading loadingText="Depositing" />
               </div>

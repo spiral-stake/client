@@ -25,14 +25,21 @@ const PoolState = ({
               ? "Pool is filled"
               : `Waiting ${positionsFilled}/${totalPositions}`
           }
+          dot={true}
         />
       );
     } else if (state === "DISCARDED") {
-      return <Tag color="red" text={"Pool Discarded"} />;
+      return <Tag color="red" text={"Pool Discarded"} dot={true} />;
     } else if (state === "LIVE") {
-      return <Tag color="green" text={`Current cycle ${currentCycle?.count}/${totalCycles}`} />;
+      return (
+        <Tag
+          color="green"
+          text={`Current cycle ${currentCycle?.count}/${totalCycles}`}
+          dot={true}
+        />
+      );
     } else if (state === "ENDED") {
-      return <Tag color="gray" text={"Pool is Ended"} />;
+      return <Tag color="gray" text={"Pool is Ended"} dot={true} />;
     }
   };
 

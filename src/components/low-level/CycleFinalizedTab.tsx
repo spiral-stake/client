@@ -6,6 +6,7 @@ import { displayTokenAmount } from "../../utils/displayTokenAmounts";
 import { useState } from "react";
 import Countdown from "react-countdown";
 import { renderCountdownTag } from "./CountdownRenderer";
+import { handleAsync } from "../../utils/handleAsyncFunction";
 
 const CycleFinalizedTab = ({
   pool,
@@ -28,7 +29,6 @@ const CycleFinalizedTab = ({
   const handleClaimSpiralYield = async () => {
     if (!pool || !position) return;
 
-    setLoading(true);
     await pool.claimSpiralYield(position.id);
     updatePosition(position.id);
 
@@ -37,7 +37,6 @@ const CycleFinalizedTab = ({
     //     spiralYield.amountBase > 0 ? `${spiralYield.amountBase} ${pool.baseToken.symbol}` : ""
     //   }   ${spiralYield.amountYbt > 0 ? `& ${spiralYield.amountYbt} ${pool.ybt.symbol}` : ""}`
     // );
-    setLoading(false);
   };
 
   const renderFinalizedTab = () => {
@@ -89,9 +88,11 @@ const CycleFinalizedTab = ({
             }
           </span>
           <div className="mt-2">
+            {/* Needs to change */}
             <BtnFull
               text="Claim Spiral Yield"
-              onClick={handleClaimSpiralYield}
+              onClick={handleAsync(handleClaimSpiralYield, setLoading)}
+              btnLoading={loading}
             />
           </div>
         </div>
@@ -116,8 +117,8 @@ const CycleFinalizedTab = ({
       </div>
 
       <div className="flex justify-between mt-6 p-2">
-        {currentCycle.count + 1 === pool.totalCycles ? (
-          <>
+        {currentCycle.count === pool.totalCycles ? (
+          <div>
             <span className="text-sm">{`Pool ends in`}</span>
             <div>
               <Countdown

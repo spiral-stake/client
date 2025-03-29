@@ -171,8 +171,6 @@ export default class Pool extends Base {
       this.read("ownerOf", [positionId], this.chainId) as Promise<string>,
     ]);
 
-    console.log(position);
-
     const typedPosition: Position = {
       ...position, // Preserve any additional properties
       id: positionId,

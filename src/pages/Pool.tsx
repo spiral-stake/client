@@ -33,8 +33,7 @@ const PoolPage = ({
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
-    useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
   const [slider1, setShowSlider1] = useState(true);
 
   // All positions is needed for cycle globe hover effect for diplaying winning positions
@@ -45,9 +44,7 @@ const PoolPage = ({
   const { switchChain } = useSwitchChain();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
-  const poolChainId = parseInt(
-    useSearchParams()[0].get("poolChainId") as string
-  );
+  const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
 
   ////////////////////////
   // Use Effects
@@ -59,11 +56,7 @@ const PoolPage = ({
 
     const initialize = async () => {
       try {
-        const _pool = await Pool.createInstance(
-          poolAddress,
-          poolChainId,
-          ybtSymbol
-        );
+        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -86,9 +79,7 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || !allPositions) return;
 
-    const userPositions = allPositions.filter(
-      (position) => position.owner === address
-    );
+    const userPositions = allPositions.filter((position) => position.owner === address);
 
     if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
@@ -156,24 +147,20 @@ const PoolPage = ({
       depositAndBidEndTime,
     });
 
-    setIsCycleDepositAndBidOpen(
-      getCurrentTimestampInSeconds() < depositAndBidEndTime
-    );
-    toastSuccess(
-      `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
-    );
+    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
+    toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
   };
 
   // Will be called by countdown timers to close depositAndBidWindow and to also check if cycle is finalized
   const closeCycleDepositWindow = async () => {
     setIsCycleDepositAndBidOpen(false);
-    toastSuccess(`Deposit and Bid Window closed for cycle ${currentCycle}`);
+    toastSuccess(`Deposit and Bid Window closed for cycle ${currentCycle?.count}`);
 
     // Also wait & to check if cycle is finalized
     await wait(10);
+
     if (!pool) return;
     const _cyclesFinalized = await pool.getCyclesFinalized();
-    console.log(_cyclesFinalized);
     setCyclesFinalized(_cyclesFinalized);
   };
 
@@ -340,7 +327,7 @@ const PoolPage = ({
   };
 
   return pool ? (
-    <div className="">
+    <div className="pt-5">
       <div className="flex items-center gap-4 mt-2">
         <TokenData token={pool.ybt} />
         <PoolState
@@ -353,9 +340,9 @@ const PoolPage = ({
       </div>
       <PoolInfoTab pool={pool} />
 
-      <div className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] rotate-[16deg] bg-[linear-gradient(176deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around border-4 border-gray-700 border-l-blue-600 border-b-blue-600 items-start`}>
-
-      </div>
+      <div
+        className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] rotate-[16deg] bg-[linear-gradient(176deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around border-4 border-gray-700 border-l-blue-600 border-b-blue-600 items-start`}
+      ></div>
 
       <div
         className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px]  rounded-full transition-transform duration-1000 flex justify-around items-start`}
@@ -367,12 +354,11 @@ const PoolPage = ({
             style={{
               top: "50%",
               left: "50%",
-              transform:
-                "translate(-50%, -50%) rotate(330deg) translateY(-857px) rotate(-330deg)",
+              transform: "translate(-50%, -50%) rotate(330deg) translateY(-857px) rotate(-330deg)",
             }}
           >
             <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">
-              <div className="w-4 h-4 rounded-full bg-blue-600 "/>
+              <div className="w-4 h-4 rounded-full bg-blue-600 " />
             </div>
             <div>Cycle 1</div>
             <div>
@@ -386,12 +372,11 @@ const PoolPage = ({
             style={{
               top: "50%",
               left: "50%",
-              transform:
-                "translate(-50%, -50%) rotate(30deg) translateY(-857px) rotate(-30deg)",
+              transform: "translate(-50%, -50%) rotate(30deg) translateY(-857px) rotate(-30deg)",
             }}
           >
             <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">
-              <div className="w-4 h-4 rounded-full bg-blue-600 "/>
+              <div className="w-4 h-4 rounded-full bg-blue-600 " />
             </div>
             <div>Cycle 2</div>
             <div>

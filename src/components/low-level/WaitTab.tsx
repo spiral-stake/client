@@ -2,6 +2,10 @@ import TextLoading from "./TextLoading";
 import BtnFull from "./BtnFull";
 import Countdown from "react-countdown";
 import { renderCountdownTag } from "./CountdownRenderer";
+import { useState } from "react";
+import { handleAsync } from "../../utils/handleAsyncFunction";
+import Loading from "./Loading";
+import ActionBtn from "../ActionBtn";
 
 const WaitTab = ({
   icon,
@@ -12,6 +16,7 @@ const WaitTab = ({
   btnText,
   btnOnClick,
   btnDisabled,
+  poolChainId,
 }: {
   icon?: string;
   title: string;
@@ -21,7 +26,10 @@ const WaitTab = ({
   btnText?: string;
   btnOnClick?: () => void;
   btnDisabled?: boolean;
+  poolChainId?: number;
 }) => {
+  const [loading, setLoading] = useState(false);
+
   return (
     <div className="self-stretch p-1 inline-flex flex-col justify-start items-start gap-5">
       <div className="self-stretch p-3 bg-gradient-to-b from-slate-900 to-gray-950 min-h-[250px] rounded-xl flex flex-col justify-center items-center gap-8">
@@ -54,9 +62,18 @@ const WaitTab = ({
                   </span>
                 </div>
               </div>
-              {btnText && btnOnClick && (
-                <BtnFull text={btnText} onClick={btnOnClick} disabled={btnDisabled} />
-              )}
+              {btnText &&
+                btnOnClick &&
+                poolChainId &&
+                (!loading ? (
+                  <ActionBtn
+                    text={btnText}
+                    onClick={handleAsync(btnOnClick, setLoading)}
+                    expectedChainId={poolChainId}
+                  />
+                ) : (
+                  <Loading loadingText="Redeeming" />
+                ))}
             </div>
           </div>
         </div>
