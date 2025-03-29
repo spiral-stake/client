@@ -11,7 +11,7 @@ const Loading = ({
   infoComponent?: React.ReactNode;
 }) => {
   return (
-    <div className="w-full py-4 bg-gradient-to-b from-slate-900 to-gray-950 rounded-xl rounded-b-none lg:rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-800 inline-flex flex-col justify-start items-center gap-6">
+    <div className="w-full py-4 bg-gradient-to-b from-slate-900 to-gray-950 rounded-xl lg:rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-800 inline-flex flex-col justify-start items-center gap-6">
       {loadingTitle && (
         <div className="rounded-full inline-flex justify-center items-center gap-2 overflow-hidden">
           <div className="flex-1 flex justify-start items-center gap-2">
