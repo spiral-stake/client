@@ -127,12 +127,10 @@ const CycleFinalizedTab = ({
                 onComplete={setPoolEnded}
               />
             </div>
-          </>
+          </div>
         ) : (
           <>
-            <span className="text-sm">{`Cycle ${
-              currentCycle.count + 1
-            } is starting in`}</span>
+            <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
             <Countdown
               date={currentCycle.endTime * 1000}
               renderer={renderCountdownTag}
