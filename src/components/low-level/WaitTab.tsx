@@ -24,7 +24,7 @@ const WaitTab = ({
   countdownTarget?: number;
   onCountdownComplete?: () => void;
   btnText?: string;
-  btnOnClick?: () => void;
+  btnOnClick?: () => Promise<void>;
   btnDisabled?: boolean;
   poolChainId?: number;
 }) => {

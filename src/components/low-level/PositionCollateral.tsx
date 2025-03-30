@@ -28,7 +28,7 @@ const PositionCollateral = ({
 
   const handleClaimCollateralYield = async () => {
     await pool.claimCollateralYield(position.id);
-    toastSuccess(`Claimed ${amountCollateralYield} ${pool.ybt.symbol}`);
+    toastSuccess(`CLaimed Collateral yeild` , `Claimed ${amountCollateralYield} ${pool.ybt.symbol}`);
     updatePosition(position.id);
   };
 

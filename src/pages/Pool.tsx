@@ -24,14 +24,15 @@ import Tag from "../components/low-level/Tag.js";
 const PoolPage = ({
   showOverlay,
 }: {
-  showOverlay: (overlayComponent: React.ReactNode | undefined) => void;
+  showOverlay: (overlayComponent: JSX.Element | null | undefined) => void;
 }) => {
   // ----- State ------ //
   const [pool, setPool] = useState<Pool>();
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
+    useState(false);
   const [slider1, setShowSlider1] = useState(true);
 
   // All positions is needed for cycle globe hover effect for diplaying winning positions
@@ -41,7 +42,9 @@ const PoolPage = ({
   const { address } = useAccount();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
-  const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
+  const poolChainId = parseInt(
+    useSearchParams()[0].get("poolChainId") as string
+  );
 
   ////////////////////////
   // Use Effects
@@ -53,7 +56,11 @@ const PoolPage = ({
 
     const initialize = async () => {
       try {
-        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
+        const _pool = await Pool.createInstance(
+          poolAddress,
+          poolChainId,
+          ybtSymbol
+        );
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -76,7 +83,9 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || !allPositions) return;
 
-    const userPositions = allPositions.filter((position) => position.owner === address);
+    const userPositions = allPositions.filter(
+      (position) => position.owner === address
+    );
 
     if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
@@ -144,14 +153,22 @@ const PoolPage = ({
       depositAndBidEndTime,
     });
 
-    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
-    toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
+    setIsCycleDepositAndBidOpen(
+      getCurrentTimestampInSeconds() < depositAndBidEndTime
+    );
+    toastSuccess(
+      `Cycle ${newCycleCount} Started`,
+      `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
+    );
   };
 
   // Will be called by countdown timers to close depositAndBidWindow
   const closeCycleDepositWindow = async () => {
     setIsCycleDepositAndBidOpen(false);
-    toastSuccess(`Deposit and Bid Window closed for cycle ${currentCycle?.count}`);
+    toastSuccess(
+      "Deposit and Bid Window Closed",
+      `Deposit and Bid Window closed for cycle ${currentCycle?.count}`
+    );
   };
 
   const checkCycleFinalized = async () => {
@@ -174,7 +191,7 @@ const PoolPage = ({
   ///////////////////////
 
   const renderPoolTab = () => {
-    if (!pool || !state) return;
+    if (!pool || !state) return null;
 
     if (state === "WAITING") {
       return (
@@ -220,7 +237,7 @@ const PoolPage = ({
 
     if (state === "LIVE") {
       return (
-        <div className="flex flex-col w-full lg:grid grid-cols-2 lg:w-[764px]  gap-16">
+        <div className="flex flex-col w-full lg:grid grid-cols-2 lg:w-[764px] mt-24 ml-12  gap-16">
           <div className={`${slider1 ? "flex" : "hidden"} lg:flex w-full`}>
             {cyclesFinalized !== currentCycle.count ? (
               <div className="flex flex-col gap-12 w-full">
@@ -287,7 +304,7 @@ const PoolPage = ({
     }
 
     return (
-      <div className="w-full  lg:mb-0 flex flex-col justify-end lg:grid lg:grid-cols-2 lg:w-[764px] gap-16">
+      <div className="w-full  lg:mb-0 flex flex-col justify-end lg:grid lg:grid-cols-2 lg:w-[764px] mt-24 ml-12 gap-16">
         {" "}
         <div className={`${slider1 ? "flex" : "hidden"} lg:flex`}>
           <WaitTab
@@ -355,15 +372,16 @@ const PoolPage = ({
             style={{
               top: "50%",
               left: "50%",
-              transform: "translate(-50%, -50%) rotate(330deg) translateY(-857px) rotate(-330deg)",
+              transform:
+                "translate(-50%, -50%) rotate(330deg) translateY(-861px) rotate(-330deg)",
             }}
           >
             <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">
               <div className="w-4 h-4 rounded-full bg-blue-600 " />
             </div>
-            <div>Cycle 1</div>
+            <div className="font-normal text-sm">Cycle 1</div>
             <div>
-              <Tag color="green" text="02:13" dot={false} />
+              <Tag color="green" text="00:00:00" dot={false} />
             </div>
           </div>
 
@@ -373,21 +391,22 @@ const PoolPage = ({
             style={{
               top: "50%",
               left: "50%",
-              transform: "translate(-50%, -50%) rotate(30deg) translateY(-857px) rotate(-30deg)",
+              transform:
+                "translate(-50%, -50%) rotate(30deg) translateY(-861px) rotate(-30deg)",
             }}
           >
             <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">
               <div className="w-4 h-4 rounded-full bg-blue-600 " />
             </div>
-            <div>Cycle 2</div>
+            <div className="font-normal text-sm">Cycle 2</div>
             <div>
-              <Tag color="green" text="02:13" dot={false} />
+              <Tag color="green" text="00:00:00" dot={false} />
             </div>
           </div>
         </div>
       </div>
 
-      <div className="relative w-full flex justify-center items-center mt-24 min-h-[650px]">
+      <div className="relative w-full flex justify-center items-center min-h-[650px]">
         <div className="min-w-[312px]">{renderPoolTab()}</div>
       </div>
     </div>
