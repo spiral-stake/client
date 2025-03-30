@@ -28,7 +28,7 @@ const PositionCollateral = ({
 
   const handleClaimCollateralYield = async () => {
     await pool.claimCollateralYield(position.id);
-    toastSuccess(`CLaimed Collateral yeild` , `Claimed ${amountCollateralYield} ${pool.ybt.symbol}`);
+    toastSuccess(`Claimed Collateral Yield`, `Claimed ${amountCollateralYield} ${pool.ybt.symbol}`);
     updatePosition(position.id);
   };
 
@@ -39,9 +39,7 @@ const PositionCollateral = ({
           <div className="w-full flex justify-between items-center gap-1">
             <div className="flex items-center justify-center gap-1">
               <div>Your YBT Collateral</div>
-              <div className="inline-flex flex-col justify-start items-start overflow-hidden">
-                <img src={infoIcon} alt="" className="w-3 h-3" />
-              </div>
+              <HoverInfo content="Collateral released back for successful cycle deposits and slashed for missed ones." />
             </div>
 
             {amountCollateralYield && amountCollateralYield.isGreaterThan(0) && (
@@ -79,10 +77,7 @@ const PositionCollateral = ({
               ~
               {displayTokenAmount(
                 pool.amountCycle.multipliedBy(
-                  position.cyclesDeposited.reduce(
-                    (count, deposited) => (deposited ? count + 1 : count),
-                    0
-                  )
+                  position.cyclesDeposited.filter((deposited) => deposited).length
                 ),
                 pool.baseToken
               )}
@@ -94,11 +89,12 @@ const PositionCollateral = ({
           <div className="w-6 h-0 origin-top -rotate-90 outline outline-1 outline-offset-[-0.50px] outline-gray-800"></div>
           <div className="flex-1 inline-flex flex-col justify-center items-start">
             <div className="justify-start text-neutral-200 text-xs font-medium font-['Outfit'] leading-normal">
+              ~
               {displayTokenAmount(
                 pool.amountCycle.multipliedBy(
                   position.cyclesDeposited
-                    .slice(0, cyclesFinalized)
-                    .reduce((count, deposited) => (!deposited ? count + 1 : count), 0)
+                    .slice(1, cyclesFinalized + 1)
+                    .filter((deposited) => !deposited).length
                 ),
                 pool.baseToken
               )}

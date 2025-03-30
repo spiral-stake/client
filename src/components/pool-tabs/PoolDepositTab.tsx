@@ -35,8 +35,7 @@ const PoolDepositTab = ({
   showOverlay: (overlayComponent: JSX.Element | null | undefined) => void;
 }) => {
   const [userBaseTokenBalance, setUserBaseTokenBalance] = useState<BigNumber>();
-  const [userBaseTokenAllowance, setUserBaseTokenAllowance] =
-    useState<BigNumber>();
+  const [userBaseTokenAllowance, setUserBaseTokenAllowance] = useState<BigNumber>();
   const [loading, setLoading] = useState(false);
   const [actionBtn, setActionBtn] = useState({
     text: "",
@@ -69,12 +68,7 @@ const PoolDepositTab = ({
             text: `Approve and Deposit`,
             disabled: false,
             onClick: handleAsync(
-              () =>
-                handleApproveAndCycleDeposit(
-                  pool.baseToken,
-                  pool.address,
-                  pool.amountCycle
-                ),
+              () => handleApproveAndCycleDeposit(pool.baseToken, pool.address, pool.amountCycle),
               setLoading
             ),
           });
@@ -129,11 +123,7 @@ const PoolDepositTab = ({
     }
   };
 
-  const handleApproveAndCycleDeposit = async (
-    token: ERC20,
-    to: string,
-    value: BigNumber
-  ) => {
+  const handleApproveAndCycleDeposit = async (token: ERC20, to: string, value: BigNumber) => {
     await token.approve(to, value.toString());
     await Promise.all([updateUserBaseTokenAllowance(), handleCycleDeposit()]);
   };
@@ -176,10 +166,7 @@ const PoolDepositTab = ({
           <UserMessage
             icon={errorIconBig}
             title={`Cycle Deposit window is closed.`}
-            message={`Your ${displayTokenAmount(
-              pool.amountCycle,
-              pool.baseToken
-            )} worth of ${
+            message={`Your ${displayTokenAmount(pool.amountCycle, pool.baseToken)} worth of ${
               pool.ybt.symbol
             } collateral has been liquidated for your missed cycle deposit`}
           />
@@ -226,7 +213,7 @@ const PoolDepositTab = ({
       <div className="flex justify-between">
         <div className="flex items-center gap-1">
           <span>Cycles Deposit</span>
-          <HoverInfo content="Receive real-time updates and important alerts" />
+          <HoverInfo content="Make timely cycle deposits, to get equivivalent portion of your YBT collateral released back" />
         </div>
         <div className="px-2.5 py-2 bg-neutral-800 rounded-[33.78px] inline-flex justify-start items-center gap-1.5">
           <div className="justify-start text-neutral-300 text-xs font-normal font-['Outfit'] leading-none">

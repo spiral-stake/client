@@ -26,15 +26,9 @@ import logo from "../assets/logo.svg";
 import Loading from "../components/low-level/Loading";
 import CreatePoolInfo from "../components/low-level/CreatePoolInfo";
 
-const cycleDurations = ["2 mins", "7 mins", "10 mins"];
-const cycleDepositAndBidDurations = [
-  "1 min",
-  "2 mins",
-  "3 mins",
-  "4 mins",
-  "5 mins",
-];
-const startIntervals = ["1 min", "2 min", "5 min"];
+const cycleDurations = ["5 mins", "7 mins", "10 mins"];
+const cycleDepositAndBidDurations = ["1 min", "2 mins", "3 mins", "4 mins", "5 mins"];
+const startIntervals = ["5 min", "7 min", "10 min"];
 
 function CreatePool({
   ybts,
@@ -81,22 +75,11 @@ function CreatePool({
   }, [chainId]);
 
   useEffect(() => {
-    let {
-      amountCycle,
-      totalCycles,
-      cycleDuration,
-      startInterval,
-      cycleDepositAndBidDuration,
-    } = pool;
+    let { amountCycle, totalCycles, cycleDuration, startInterval, cycleDepositAndBidDuration } =
+      pool;
 
-    cycleDuration = parseTime(
-      cycleDuration.split(" ")[0],
-      cycleDuration.split(" ")[1]
-    );
-    startInterval = parseTime(
-      startInterval.split(" ")[0],
-      startInterval.split(" ")[1]
-    );
+    cycleDuration = parseTime(cycleDuration.split(" ")[0], cycleDuration.split(" ")[1]);
+    startInterval = parseTime(startInterval.split(" ")[0], startInterval.split(" ")[1]);
     cycleDepositAndBidDuration = parseTime(cycleDepositAndBidDuration, "mins");
 
     const errors = [
@@ -135,12 +118,7 @@ function CreatePool({
       disabled: false,
       text: "Create Spiral Pool",
       onClick: handleAsync(
-        () =>
-          handleCreatePool(
-            cycleDuration,
-            cycleDepositAndBidDuration,
-            startInterval
-          ),
+        () => handleCreatePool(cycleDuration, cycleDepositAndBidDuration, startInterval),
         setLoading
       ),
     });
@@ -162,9 +140,7 @@ function CreatePool({
 
   const handleYbtChange = async (tokenSymbol: string) => {
     const _ybt = await readYbt(chainId || appChainId, tokenSymbol);
-    const _ybtExchangeRate = await new SY(
-      _ybt.syToken.address
-    ).getYbtExchangeRate(_ybt);
+    const _ybtExchangeRate = await new SY(_ybt.syToken.address).getYbtExchangeRate(_ybt);
     setPool({ ...pool, ybt: _ybt, ybtExchangeRate: _ybtExchangeRate });
   };
 
@@ -209,11 +185,9 @@ function CreatePool({
       startInterval
     );
 
-    await axios.post(api, { poolAddress });
+    await axios.post(api, { poolAddress, ybt: pool.ybt.symbol, poolChainId: chainId });
     toastSuccess("Pool Created", "Spiral Pool created successfully");
-    navigate(
-      `/pools/${poolAddress}?ybt=${pool.ybt.symbol}&poolChainId=${chainId}`
-    );
+    navigate(`/pools/${poolAddress}?ybt=${pool.ybt.symbol}&poolChainId=${chainId}`);
   };
 
   return (
@@ -261,11 +235,7 @@ function CreatePool({
             errorMsg="no of cycles should be >=2 (greater than or equal to 2)"
             labelIcon={cycleIcon}
             inputComponent={
-              <Input
-                name={"totalCycles"}
-                onChange={handleInputChange}
-                value={pool.totalCycles}
-              />
+              <Input name={"totalCycles"} onChange={handleInputChange} value={pool.totalCycles} />
             }
           />
           <InputContainer

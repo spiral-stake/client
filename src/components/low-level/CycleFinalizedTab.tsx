@@ -93,7 +93,7 @@ const CycleFinalizedTab = ({
               position.spiralYield.amountYbt.isGreaterThan(0) &&
                 displayTokenAmount(
                   position.spiralYield.amountYbt,
-                  pool.baseToken
+                  pool.ybt
                 ) /** Need to add actual liquidity + slashed collaerals */
             }
           </span>
@@ -122,7 +122,7 @@ const CycleFinalizedTab = ({
   return (
     <div className="w-full flex flex-col justify-between gap-8 bg-gradient-to-b from-slate-900 to-gray-950 rounded-xl p-1">
       <div className="flex flex-col items-center gap-4 p-6">
-        <img src={logoBlue} alt="" className="w-24 h-24" />
+        <img src={logoBlue} alt="" className="w-24 h-24 rotate-45" />
         <div className="flex flex-col gap-6 py-3">{renderFinalizedTab()}</div>
       </div>
 
@@ -139,9 +139,7 @@ const CycleFinalizedTab = ({
         </div>
       ) : (
         <div className="flex justify-between mt-6 p-2">
-          <span className="text-sm">{`Cycle ${
-            currentCycle.count + 1
-          } is starting in`}</span>
+          <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
           <Countdown
             date={currentCycle.endTime * 1000}
             renderer={renderCountdownTag}
