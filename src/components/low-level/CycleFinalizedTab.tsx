@@ -55,17 +55,16 @@ const CycleFinalizedTab = ({
       return (
         <div className="flex flex-col items-center">
           <span className="text-lg mb-2">You Won!</span>
-          <span className="text-xs font-light text-white text-opacity-70 mb-[2px]">
+          <span className="text-xs font-light text-white text-opacity-70 mb-2">
             You received the pooled liquidity:
           </span>
           <span className="text-sm text-green-500">
-            {
-              lowestBid &&
-                displayTokenAmount(
-                  lowestBid.amount,
-                  pool.baseToken
-                ) /** Need to add actual liquidity + slashed collaerals */
-            }
+            {lowestBid &&
+              displayTokenAmount(
+                lowestBid.amount.isGreaterThan(0) ? lowestBid.amount : pool.amountCollateralInBase,
+                pool.baseToken
+              )}
+            {/* Need to add actual liquidity + slashed collaterals */}
           </span>
         </div>
       );

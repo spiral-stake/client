@@ -142,7 +142,7 @@ const PoolPage = ({
   const updateCurrentCycle = () => {
     if (!pool) return;
 
-    let newCycleCount = pool.calcCurrentCycle();
+    let newCycleCount = !currentCycle ? pool.calcCurrentCycle() : currentCycle.count + 1;
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
