@@ -32,10 +32,11 @@ const PoolDepositTab = ({
   position: Position;
   updatePosition: (value: number) => void;
   isCycleDepositAndBidOpen: boolean;
-  showOverlay: (overlayComponent: React.ReactNode) => void;
+  showOverlay: (overlayComponent: JSX.Element | null | undefined) => void;
 }) => {
   const [userBaseTokenBalance, setUserBaseTokenBalance] = useState<BigNumber>();
-  const [userBaseTokenAllowance, setUserBaseTokenAllowance] = useState<BigNumber>();
+  const [userBaseTokenAllowance, setUserBaseTokenAllowance] =
+    useState<BigNumber>();
   const [loading, setLoading] = useState(false);
   const [actionBtn, setActionBtn] = useState({
     text: "",
@@ -68,7 +69,12 @@ const PoolDepositTab = ({
             text: `Approve and Deposit`,
             disabled: false,
             onClick: handleAsync(
-              () => handleApproveAndCycleDeposit(pool.baseToken, pool.address, pool.amountCycle),
+              () =>
+                handleApproveAndCycleDeposit(
+                  pool.baseToken,
+                  pool.address,
+                  pool.amountCycle
+                ),
               setLoading
             ),
           });
@@ -123,7 +129,11 @@ const PoolDepositTab = ({
     }
   };
 
-  const handleApproveAndCycleDeposit = async (token: ERC20, to: string, value: BigNumber) => {
+  const handleApproveAndCycleDeposit = async (
+    token: ERC20,
+    to: string,
+    value: BigNumber
+  ) => {
     await token.approve(to, value.toString());
     await Promise.all([updateUserBaseTokenAllowance(), handleCycleDeposit()]);
   };
@@ -132,6 +142,7 @@ const PoolDepositTab = ({
     await pool.depositCycle(position.id);
 
     toastSuccess(
+      "Deposit Complete",
       `Cycle amount deposited successfully, ${pool.amountCycle} ${pool.baseToken.symbol} worth of ${pool.ybt.symbol} collateral released`
     );
     await Promise.all([
@@ -165,7 +176,10 @@ const PoolDepositTab = ({
           <UserMessage
             icon={errorIconBig}
             title={`Cycle Deposit window is closed.`}
-            message={`Your ${displayTokenAmount(pool.amountCycle, pool.baseToken)} worth of ${
+            message={`Your ${displayTokenAmount(
+              pool.amountCycle,
+              pool.baseToken
+            )} worth of ${
               pool.ybt.symbol
             } collateral has been liquidated for your missed cycle deposit`}
           />

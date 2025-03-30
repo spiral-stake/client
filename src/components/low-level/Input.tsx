@@ -21,7 +21,7 @@ const Input = ({
     <div className="w-full px-3 py-2.5 rounded outline outline-1 outline-offset-[-1px] outline-[#34383E] outline-opacity-20 inline-flex justify-start items-center gap-2 overflow-hidden">
       <div className="flex-1 flex justify-start items-center gap-2">
         {disabled && !value ? (
-          <TextLoading width={550} />
+          <TextLoading width={21} />
         ) : (
           <input
             autoFocus={autoFocus}

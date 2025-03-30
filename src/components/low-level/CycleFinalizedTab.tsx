@@ -19,7 +19,7 @@ const CycleFinalizedTab = ({
   pool: Pool;
   currentCycle: Cycle;
   position: Position;
-  showOverlay: (overlayComponent: React.ReactNode) => void;
+  showOverlay: (overlayComponent: JSX.Element | null | undefined) => void;
   updatePosition: (value: number) => void;
   updateCurrentCycle: () => void;
   setPoolEnded: () => void;
@@ -140,7 +140,9 @@ const CycleFinalizedTab = ({
         </div>
       ) : (
         <div className="flex justify-between mt-6 p-2">
-          <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
+          <span className="text-sm">{`Cycle ${
+            currentCycle.count + 1
+          } is starting in`}</span>
           <Countdown
             date={currentCycle.endTime * 1000}
             renderer={renderCountdownTag}

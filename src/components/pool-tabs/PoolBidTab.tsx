@@ -14,7 +14,10 @@ import errorIconBig from "../../assets/icons/errorIconBig.svg";
 import BidInfoRow from "../low-level/BidInfoRow.tsx";
 import BigNumber from "bignumber.js";
 import Countdown from "react-countdown";
-import { renderCountdown, renderCountdownTag } from "../low-level/CountdownRenderer.tsx";
+import {
+  renderCountdown,
+  renderCountdownTag,
+} from "../low-level/CountdownRenderer.tsx";
 import { usePolling } from "../../utils/Polling.ts";
 
 const PoolBidTab = ({
@@ -30,14 +33,18 @@ const PoolBidTab = ({
   currentCycle: Cycle;
   position: Position;
   isCycleDepositAndBidOpen: boolean;
-  showOverlay: (overlayComponent: React.ReactNode) => void;
+  showOverlay: (overlayComponent: JSX.Element | null | undefined) => void;
   closeCycleDepositWindow: () => void;
   checkCycleFinalized: () => void;
 }) => {
   const [amountBid, setAmountBid] = useState("");
   const [lowestBid, setLowestBid] = useState<LowestBid>();
   const [loading, setLoading] = useState(false);
-  const [actionBtn, setActionBtn] = useState({ text: "", onClick: () => {}, disabled: false });
+  const [actionBtn, setActionBtn] = useState({
+    text: "",
+    onClick: () => {},
+    disabled: false,
+  });
 
   const { stopPolling } = usePolling(updateLowestBid, 5);
 
@@ -76,7 +83,11 @@ const PoolBidTab = ({
         : _amountBid.isGreaterThanOrEqualTo(lowestBid.amount);
 
       if (isBidTooHigh) {
-        return setActionBtn({ ...actionBtn, text: "Bid Amount too High", disabled: true });
+        return setActionBtn({
+          ...actionBtn,
+          text: "Bid Amount too High",
+          disabled: true,
+        });
       }
 
       return setActionBtn({
@@ -96,7 +107,10 @@ const PoolBidTab = ({
 
   const handleCycleBid = async () => {
     await pool.bidCycle(position.id, amountBid);
-    toastSuccess(`Lowest bid is now yours at ${amountBid} ${pool.baseToken.symbol}`);
+    toastSuccess(
+      "Bid Placed",
+      `Lowest bid is now yours at ${amountBid} ${pool.baseToken.symbol}`
+    );
 
     setAmountBid("");
     updateLowestBid();
@@ -153,7 +167,10 @@ const PoolBidTab = ({
     }
 
     // When cycle window is opened
-    if (lowestBid.amount.isGreaterThan(0) && lowestBid.positionId === position.id) {
+    if (
+      lowestBid.amount.isGreaterThan(0) &&
+      lowestBid.positionId === position.id
+    ) {
       return (
         <UserMessage
           icon={checkIconBig}
@@ -161,7 +178,9 @@ const PoolBidTab = ({
           message={`Your bid of ${displayTokenAmount(
             lowestBid.amount,
             pool.baseToken
-          )} is leading. Total bidders: ${pool.totalCycles - (currentCycle.count - 1)} `}
+          )} is leading. Total bidders: ${
+            pool.totalCycles - (currentCycle.count - 1)
+          } `}
         />
       );
     }
@@ -176,10 +195,16 @@ const PoolBidTab = ({
               : "-"
           }
         />
-        <BidInfoRow label=" Total Bidders" value={pool.totalCycles - (currentCycle.count - 1)} />
+        <BidInfoRow
+          label=" Total Bidders"
+          value={pool.totalCycles - (currentCycle.count - 1)}
+        />
         <BidInfoRow
           label=" Max / Start Bid:"
-          value={displayTokenAmount(pool.amountCollateralInBase, pool.baseToken)}
+          value={displayTokenAmount(
+            pool.amountCollateralInBase,
+            pool.baseToken
+          )}
         />
       </div>
     );
@@ -240,7 +265,7 @@ const PoolBidTab = ({
           <div>Cycle Finalizes In</div>
           <div>
             <Countdown
-              date={currentCycle.depositAndBidEndTime * 1000 + 10000} // +10s
+              date={currentCycle.depositAndBidEndTime * 1000 + 15000} // +10s
               renderer={renderCountdownTag}
               onComplete={checkCycleFinalized}
             />

@@ -51,7 +51,7 @@ const PoolReedemTab = ({
     if (!position) return;
 
     await pool.redeemCollateralIfDiscarded(position.id);
-    toastSuccess("Redeemed Collateral successfully");
+    toastSuccess("Redeem Succesfull","Redeemed Collateral successfully");
 
     await updatePosition(position.id);
   };
