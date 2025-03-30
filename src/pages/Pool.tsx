@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
-import { useAccount, useSwitchChain } from "wagmi";
+import { useAccount } from "wagmi";
 
 import Pool from "../contract-hooks/Pool.js";
 import PoolRedeem from "../components/pool-tabs/PoolRedeemTab.js";
-import { getCurrentTimestampInSeconds, wait } from "../utils/time.js";
+import { getCurrentTimestampInSeconds } from "../utils/time.js";
 import { toastSuccess } from "../utils/toastWrapper.js";
 import { Cycle, Position } from "../types/index.js";
 import PoolInfoTab from "../components/PoolInfo.js";
@@ -19,8 +19,6 @@ import ErrorIconBig from "../assets/icons/errorIconBig.svg";
 import CycleFinalizedTab from "../components/low-level/CycleFinalizedTab.js";
 import PoolPositionTab from "../components/pool-tabs/PoolPositionTab.js";
 import checkBig from "../assets/icons/checkIconBig.svg";
-import { displayTokenAmount } from "../utils/displayTokenAmounts.js";
-import TagSquare from "../components/low-level/TagSquare.js";
 import Tag from "../components/low-level/Tag.js";
 
 const PoolPage = ({
@@ -41,7 +39,6 @@ const PoolPage = ({
   const [position, setPosition] = useState<Position>();
 
   const { address } = useAccount();
-  const { switchChain } = useSwitchChain();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
   const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
@@ -151,16 +148,20 @@ const PoolPage = ({
     toastSuccess(`Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`);
   };
 
-  // Will be called by countdown timers to close depositAndBidWindow and to also check if cycle is finalized
+  // Will be called by countdown timers to close depositAndBidWindow
   const closeCycleDepositWindow = async () => {
     setIsCycleDepositAndBidOpen(false);
     toastSuccess(`Deposit and Bid Window closed for cycle ${currentCycle?.count}`);
+  };
 
-    // Also wait & to check if cycle is finalized
-    await wait(10);
+  const checkCycleFinalized = async () => {
+    if (!pool || !position) return;
 
-    if (!pool) return;
-    const _cyclesFinalized = await pool.getCyclesFinalized();
+    const [_cyclesFinalized] = await Promise.all([
+      await pool.getCyclesFinalized(),
+      await updatePosition(position.id),
+    ]);
+
     setCyclesFinalized(_cyclesFinalized);
   };
 
@@ -220,9 +221,9 @@ const PoolPage = ({
     if (state === "LIVE") {
       return (
         <div className="flex flex-col w-full lg:grid grid-cols-2 lg:w-[764px]  gap-16">
-          <div className={`${slider1 ? "flex" : "hidden"} lg:flex`}>
+          <div className={`${slider1 ? "flex" : "hidden"} lg:flex w-full`}>
             {cyclesFinalized !== currentCycle.count ? (
-              <div className="flex flex-col gap-12">
+              <div className="flex flex-col gap-12 w-full">
                 <PoolDepositTab
                   pool={pool}
                   currentCycle={currentCycle}
@@ -230,7 +231,6 @@ const PoolPage = ({
                   updatePosition={updatePosition}
                   isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
                   showOverlay={showOverlay}
-                  closeCycleDepositWindow={closeCycleDepositWindow}
                 />
                 <PoolBidTab
                   pool={pool}
@@ -239,6 +239,7 @@ const PoolPage = ({
                   isCycleDepositAndBidOpen={isCycleDepositAndBidOpen}
                   showOverlay={showOverlay}
                   closeCycleDepositWindow={closeCycleDepositWindow}
+                  checkCycleFinalized={checkCycleFinalized}
                 />
               </div>
             ) : (

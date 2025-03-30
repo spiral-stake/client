@@ -1,9 +1,9 @@
 import BtnFull from "./BtnFull";
 import logoBlue from "../../assets/icons/logoBlue.svg";
-import { Cycle, Position } from "../../types";
+import { Cycle, LowestBid, Position } from "../../types";
 import Pool from "../../contract-hooks/Pool";
 import { displayTokenAmount } from "../../utils/displayTokenAmounts";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
 import { renderCountdownTag } from "./CountdownRenderer";
 import { handleAsync } from "../../utils/handleAsyncFunction";
@@ -25,6 +25,16 @@ const CycleFinalizedTab = ({
   setPoolEnded: () => void;
 }) => {
   const [loading, setLoading] = useState(false);
+  const [lowestBid, setLowestBid] = useState<LowestBid>();
+
+  useEffect(() => {
+    const getLowestBidForCycle = async () => {
+      const _lowestBid = await pool.getLowestBid(currentCycle.count);
+      setLowestBid(_lowestBid);
+    };
+
+    getLowestBidForCycle();
+  }, []);
 
   const handleClaimSpiralYield = async () => {
     if (!pool || !position) return;
@@ -50,10 +60,11 @@ const CycleFinalizedTab = ({
           </span>
           <span className="text-sm text-green-500">
             {
-              displayTokenAmount(
-                pool.amountCollateralInBase,
-                pool.baseToken
-              ) /** Need to add actual liquidity + slashed collaerals */
+              lowestBid &&
+                displayTokenAmount(
+                  lowestBid.amount,
+                  pool.baseToken
+                ) /** Need to add actual liquidity + slashed collaerals */
             }
           </span>
         </div>
@@ -116,29 +127,27 @@ const CycleFinalizedTab = ({
         <div className="flex flex-col gap-6 py-3">{renderFinalizedTab()}</div>
       </div>
 
-      <div className="flex justify-between mt-6 p-2">
-        {currentCycle.count === pool.totalCycles ? (
+      {currentCycle.count === pool.totalCycles ? (
+        <div className="flex justify-between mt-6 p-2">
+          <span className="text-sm">{`Pool ends in`}</span>
           <div>
-            <span className="text-sm">{`Pool ends in`}</span>
-            <div>
-              <Countdown
-                date={currentCycle.endTime * 1000}
-                renderer={renderCountdownTag}
-                onComplete={setPoolEnded}
-              />
-            </div>
-          </div>
-        ) : (
-          <>
-            <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
             <Countdown
               date={currentCycle.endTime * 1000}
               renderer={renderCountdownTag}
-              onComplete={updateCurrentCycle}
+              onComplete={setPoolEnded}
             />
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      ) : (
+        <div className="flex justify-between mt-6 p-2">
+          <span className="text-sm">{`Cycle ${currentCycle.count + 1} is starting in`}</span>
+          <Countdown
+            date={currentCycle.endTime * 1000}
+            renderer={renderCountdownTag}
+            onComplete={updateCurrentCycle}
+          />
+        </div>
+      )}
     </div>
   );
 };

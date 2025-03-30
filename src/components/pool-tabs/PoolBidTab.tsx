@@ -14,7 +14,7 @@ import errorIconBig from "../../assets/icons/errorIconBig.svg";
 import BidInfoRow from "../low-level/BidInfoRow.tsx";
 import BigNumber from "bignumber.js";
 import Countdown from "react-countdown";
-import { renderCountdown } from "../low-level/CountdownRenderer.tsx";
+import { renderCountdown, renderCountdownTag } from "../low-level/CountdownRenderer.tsx";
 import { usePolling } from "../../utils/Polling.ts";
 
 const PoolBidTab = ({
@@ -24,6 +24,7 @@ const PoolBidTab = ({
   isCycleDepositAndBidOpen,
   showOverlay,
   closeCycleDepositWindow,
+  checkCycleFinalized,
 }: {
   pool: Pool;
   currentCycle: Cycle;
@@ -31,26 +32,30 @@ const PoolBidTab = ({
   isCycleDepositAndBidOpen: boolean;
   showOverlay: (overlayComponent: React.ReactNode) => void;
   closeCycleDepositWindow: () => void;
+  checkCycleFinalized: () => void;
 }) => {
   const [amountBid, setAmountBid] = useState("");
   const [lowestBid, setLowestBid] = useState<LowestBid>();
   const [loading, setLoading] = useState(false);
   const [actionBtn, setActionBtn] = useState({ text: "", onClick: () => {}, disabled: false });
 
+  const { stopPolling } = usePolling(updateLowestBid, 5);
+
   useEffect(() => {
     updateLowestBid();
-  }, [currentCycle]);
 
-  const updateLowestBid = async () => {
-    setLowestBid(await pool.getLowestBid());
-  };
-
-  // Polling
-  usePolling(updateLowestBid, 5);
+    if (!isCycleDepositAndBidOpen) {
+      stopPolling();
+    }
+  }, [currentCycle, isCycleDepositAndBidOpen]);
 
   const handleAmountBidChange = (e: any) => {
     setAmountBid(e.target.value);
   };
+
+  async function updateLowestBid() {
+    setLowestBid(await pool.getLowestBid(currentCycle.count));
+  }
 
   useEffect(() => {
     const updatingActionBtn = () => {
@@ -198,7 +203,9 @@ const PoolBidTab = ({
           </div>
         </div>
       </div>
+
       {renderBidDetails()}
+
       {isCycleDepositAndBidOpen &&
         !position.winningCycle &&
         (!loading ? (
@@ -227,6 +234,19 @@ const PoolBidTab = ({
             </div>
           </div>
         ))}
+
+      {!isCycleDepositAndBidOpen && (
+        <div className="flex justify-between w-full">
+          <div>Cycle Finalizes In</div>
+          <div>
+            <Countdown
+              date={currentCycle.depositAndBidEndTime * 1000 + 10000} // +10s
+              renderer={renderCountdownTag}
+              onComplete={checkCycleFinalized}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 };

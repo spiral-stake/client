@@ -4,7 +4,7 @@ import { formatUnits, parseUnits } from "../utils/formatUnits.ts";
 import { readYbt } from "../config/contractsData";
 import ERC20 from "./ERC20";
 import { NATIVE_ADDRESS } from "../utils/NATIVE.ts";
-import { LowestBid, Position, SpiralYield, Token, Ybt } from "../types/index.ts";
+import { LowestBid, Position, Token, Ybt } from "../types/index.ts";
 import BigNumber from "bignumber.js";
 
 export default class Pool extends Base {
@@ -209,10 +209,10 @@ export default class Pool extends Base {
     };
   }
 
-  async getLowestBid(): Promise<LowestBid> {
+  async getLowestBid(cycle: number): Promise<LowestBid> {
     const lowestBid: { positionId: bigint; amount: bigint } = await this.read(
       "getLowestBid",
-      [this.calcCurrentCycle()],
+      [cycle],
       this.chainId
     );
 

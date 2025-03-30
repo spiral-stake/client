@@ -31,7 +31,7 @@ const WaitTab = ({
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className="self-stretch p-1 inline-flex flex-col justify-start items-start gap-5">
+    <div className="w-full p-1 inline-flex flex-col justify-start items-start gap-5">
       <div className="self-stretch p-3 bg-gradient-to-b from-slate-900 to-gray-950 min-h-[250px] rounded-xl flex flex-col justify-center items-center gap-8">
         <div className="self-stretch inline-flex justify-center items-center">
           <div className="flex-1 inline-flex flex-col justify-start items-center gap-3">
@@ -70,6 +70,7 @@ const WaitTab = ({
                     text={btnText}
                     onClick={handleAsync(btnOnClick, setLoading)}
                     expectedChainId={poolChainId}
+                    disabled={btnDisabled}
                   />
                 ) : (
                   <Loading loadingText="Redeeming" />
