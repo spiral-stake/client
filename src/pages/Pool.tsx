@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { Link, useParams, useSearchParams } from "react-router-dom";
 import { useAccount } from "wagmi";
 
 import Pool from "../contract-hooks/Pool.js";
@@ -20,6 +20,8 @@ import PoolFinalizedTab from "../components/pool-tabs/PoolFinalizedTab.js";
 import PoolPositionTab from "../components/pool-tabs/PoolPositionTab.js";
 import checkBig from "../assets/icons/checkIconBig.svg";
 import Tag from "../components/low-level/Tag.js";
+import CycleGlobe from "../components/low-level/CycleGlobe.js";
+import arrowIcon from "../assets/icons/arrow.svg"
 
 const PoolPage = ({
   showOverlay,
@@ -226,7 +228,7 @@ const PoolPage = ({
 
     if (state === "LIVE") {
       return (
-        <div className="flex flex-col w-full lg:grid grid-cols-2 lg:w-[764px] mt-24 ml-12  gap-16">
+        <div className="flex flex-col w-full lg:grid grid-cols-2 lg:w-[764px] lg:mt-24 lg:ml-12  lg:gap-16">
           <div className={`${slider1 ? "flex" : "hidden"} lg:flex w-full`}>
             {cyclesFinalized !== currentCycle.count ? (
               <div className="flex flex-col gap-12 w-full">
@@ -334,7 +336,8 @@ const PoolPage = ({
   };
 
   return pool ? (
-    <div className="pt-5">
+    <div className="pt-5 cursor-default">
+      <Link to={"/pools"} className="flex gap-1 text-sm pb-2"><img src={arrowIcon} alt="" /><span>{`Pools / `}</span><span className="text-gray-400">{pool.ybt.symbol}</span></Link>
       <div className="flex items-center gap-4 mt-2">
         <TokenData token={pool.ybt} />
         <PoolState

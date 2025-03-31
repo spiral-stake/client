@@ -9,8 +9,11 @@ import Info from "./low-level/Info";
 import Pool from "../contract-hooks/Pool";
 import { formatTime, getLocalTimeFromTimestamp } from "../utils/time";
 import { displayTokenAmount } from "../utils/displayTokenAmounts";
+import { useEffect, useState } from "react";
 
 const PoolInfoTab = ({ pool }: { pool: Pool }) => {
+  const [windowWidth, setWindowWidth] = useState(0);
+
   const poolStartTime = getLocalTimeFromTimestamp(pool.startTime);
   const poolCycleDuration = formatTime(pool.cycleDuration);
   const poolDepositAndBidDuration = formatTime(pool.cycleDepositAndBidDuration);
@@ -24,7 +27,10 @@ const PoolInfoTab = ({ pool }: { pool: Pool }) => {
     {
       symbol: collateral,
       title: "Collateral",
-      value: `~ ${displayTokenAmount(pool.amountCollateralInBase, pool.baseToken)} `,
+      value: `~ ${displayTokenAmount(
+        pool.amountCollateralInBase,
+        pool.baseToken
+      )} `,
     },
     {
       symbol: coin,
@@ -44,14 +50,25 @@ const PoolInfoTab = ({ pool }: { pool: Pool }) => {
     },
   ];
 
+  useEffect(() => {
+    // Function to get current window width
+    const getWindowWidth = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    // Get initial width when component mounts
+    getWindowWidth();
+  }, []);
+
+
   return (
-    <div className="grid grid-cols-2  lg:flex justify-around my-5 ">
+    <div className="grid grid-cols-2 lg:flex justify-around my-5">
       {items.map((item, key) => (
         <div className="mb-5 flex justify-center items-center">
           {key !== 0 && (
             <div
               className={` ${
-                key % 2 == 0
+                windowWidth < 1024 && key % 2 == 0
                   ? "hidden"
                   : "w-0 h-6 mr-6 outline outline-[1.50px] outline-offset-[-0.75px] outline-gray-800"
               } `}
