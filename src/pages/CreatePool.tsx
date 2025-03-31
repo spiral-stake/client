@@ -26,9 +26,9 @@ import logo from "../assets/logo.svg";
 import Loading from "../components/low-level/Loading";
 import CreatePoolInfo from "../components/low-level/CreatePoolInfo";
 
-const cycleDurations = ["2 mins", "7 mins", "10 mins"]; // changes on prod
+const cycleDurations = ["5 mins", "7 mins", "10 mins"]; // changes on prod
 const cycleDepositAndBidDurations = ["1 min", "2 mins", "3 mins", "4 mins", "5 mins"];
-const startIntervals = ["1 mins", "7 min", "10 min"]; // changes on prod
+const startIntervals = ["5 mins", "7 min", "10 min"]; // changes on prod
 
 function CreatePool({
   ybts,

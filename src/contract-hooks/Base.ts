@@ -26,7 +26,7 @@ export class Base {
       address: this.address,
       functionName,
       args,
-      chainId: chainId as 31337 | 2522 | 421614 | undefined,
+      chainId: chainId as 2522 | undefined,
     });
 
     // await wait(2);
@@ -45,7 +45,7 @@ export class Base {
           (await connector?.getAccounts?.())?.[0] ||
           ("0x0000000000000000000000000000000000000000" as `0x${string}`),
         value,
-        chainId: chainId as 31337 | 2522 | 421614 | undefined,
+        chainId: chainId as 2522 | undefined,
       })
     ).result;
   }
