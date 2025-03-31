@@ -46,7 +46,7 @@ const CreatePoolInfo = ({ poolInfo }: { poolInfo: PoolInfo }) => {
             Cycle Deposit and Bid Duration
           </div>
           <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-            {poolInfo.cycleDepositAndBidDuration}
+            {poolInfo.cycleDepositAndBidDuration} mins {/** Needs to change at prod */}
           </div>
         </div>
         <div className="self-stretch inline-flex justify-between items-start">
@@ -64,7 +64,8 @@ const CreatePoolInfo = ({ poolInfo }: { poolInfo: PoolInfo }) => {
           Approx collateral
         </div>
         <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-          {parseInt(poolInfo.amountCycle) * parseInt(poolInfo.totalCycles)}
+          ~{parseInt(poolInfo.amountCycle) * parseInt(poolInfo.totalCycles)}{" "}
+          {poolInfo.ybt?.baseToken.symbol}
         </div>
       </div>
     </div>

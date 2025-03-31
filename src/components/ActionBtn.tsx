@@ -11,7 +11,7 @@ const ActionBtn = ({
 }: {
   expectedChainId: number;
   onClick: () => void;
-  disabled?: boolean;
+  disabled: boolean;
   text: string;
 }) => {
   const { address, chainId } = useAccount();

@@ -34,6 +34,7 @@ function OnboardingOverlay({
               <BtnFull
                 text={"Claim Faucet & Test tokens"}
                 onClick={handleAsync(handleOnboarding, setLoading)}
+                disabled={loading}
               />
             </>
           ) : (

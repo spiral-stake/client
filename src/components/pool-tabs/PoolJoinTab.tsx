@@ -223,7 +223,14 @@ const PoolJoinTab = ({
           <div className="w-full mt-3">
             <div className="relative h-[70px]">
               <div className="absolute z-20 w-full">
-                <Loading loadingText="Depositing" />
+                <Loading
+                  loadingText={
+                    amountYbtCollateral &&
+                    userYbtCollateralAllowance?.isGreaterThanOrEqualTo(amountYbtCollateral)
+                      ? "Joining"
+                      : "Approving"
+                  }
+                />
               </div>
             </div>
           </div>

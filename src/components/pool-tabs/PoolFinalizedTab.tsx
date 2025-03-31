@@ -102,6 +102,7 @@ const PoolFinalizedTab = ({
               text="Claim Spiral Yield"
               onClick={handleAsync(handleClaimSpiralYield, setLoading)}
               btnLoading={loading}
+              disabled={loading}
             />
           </div>
         </div>

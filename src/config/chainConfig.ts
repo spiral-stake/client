@@ -35,7 +35,7 @@ const fraxtalTestnet: any = defineChain({
     },
   },
   logo: "/logos/frax.svg",
-  api: "https://api.spiralstake.xyz", // Needs to change at production
+  api: "https://api.spiralstake.xyz",
   onboard: {
     amountNative: "0.0001",
   },

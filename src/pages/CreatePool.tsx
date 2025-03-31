@@ -27,8 +27,8 @@ import Loading from "../components/low-level/Loading";
 import CreatePoolInfo from "../components/low-level/CreatePoolInfo";
 
 const cycleDurations = ["5 mins", "7 mins", "10 mins"]; // changes on prod
-const cycleDepositAndBidDurations = ["1 min", "2 mins", "3 mins", "4 mins", "5 mins"];
-const startIntervals = ["5 mins", "7 min", "10 min"]; // changes on prod
+const cycleDepositAndBidDurations = ["2 mins", "3 mins", "4 mins", "5 mins", "6 mins"];
+const startIntervals = ["5 mins", "7 mins", "10 mins"]; // changes on prod
 
 function CreatePool({
   ybts,
@@ -48,7 +48,7 @@ function CreatePool({
     totalCycles: "",
     startInterval: startIntervals[0],
     // startIntervalUnit: "minutes",
-    cycleDepositAndBidDuration: "1",
+    cycleDepositAndBidDuration: `${parseInt(cycleDepositAndBidDurations[0])}`,
     // cycleDepositAndBidDurationUnit: "minutes",
   });
 
@@ -100,7 +100,7 @@ function CreatePool({
         condition:
           parseInt(cycleDepositAndBidDuration) < 60 ||
           parseInt(cycleDepositAndBidDuration) >= parseInt(cycleDuration),
-        text: "Invalid Pool Deposit and Bid duration",
+        text: "Bid & Deposit Duration < Cycle Duration",
       },
     ];
 
@@ -230,7 +230,7 @@ function CreatePool({
             }
           />
           <InputContainer
-            label="Total Cycles *"
+            label="Total Cycles / Participants *"
             condition="(>=2 cycles)"
             errorMsg="no of cycles should be >=2 (greater than or equal to 2)"
             labelIcon={cycleIcon}

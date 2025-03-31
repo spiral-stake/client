@@ -70,7 +70,7 @@ const WaitTab = ({
                     text={btnText}
                     onClick={handleAsync(btnOnClick, setLoading)}
                     expectedChainId={poolChainId}
-                    disabled={btnDisabled}
+                    disabled={loading}
                   />
                 ) : (
                   <Loading loadingText="Redeeming" />
