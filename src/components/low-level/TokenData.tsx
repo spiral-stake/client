@@ -1,5 +1,5 @@
 import CopyText from "./CopyText";
-import groupIcon from "../../assets/Icons/Group.svg";
+import groupIcon from "../../assets/icons/Group.svg";
 import { Token } from "../../types";
 import ERC20 from "../../contract-hooks/ERC20";
 import truncateStr from "../../utils/truncateStr";

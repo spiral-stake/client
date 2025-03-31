@@ -1,14 +1,14 @@
-import BtnFull from "./BtnFull";
+import BtnFull from "../low-level/BtnFull";
 import logoBlue from "../../assets/icons/logoBlue.svg";
 import { Cycle, LowestBid, Position } from "../../types";
 import Pool from "../../contract-hooks/Pool";
 import { displayTokenAmount } from "../../utils/displayTokenAmounts";
 import { useEffect, useState } from "react";
 import Countdown from "react-countdown";
-import { renderCountdownTag } from "./CountdownRenderer";
+import { renderCountdownTag } from "../low-level/CountdownRenderer";
 import { handleAsync } from "../../utils/handleAsyncFunction";
 
-const CycleFinalizedTab = ({
+const PoolFinalizedTab = ({
   pool,
   currentCycle,
   position,
@@ -151,4 +151,4 @@ const CycleFinalizedTab = ({
   );
 };
 
-export default CycleFinalizedTab;
+export default PoolFinalizedTab;

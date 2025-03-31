@@ -10,7 +10,7 @@ import { handleAsync } from "../../utils/handleAsyncFunction.ts";
 import { toastSuccess } from "../../utils/toastWrapper.tsx";
 import { displayTokenAmount } from "../../utils/displayTokenAmounts.ts";
 import WaitTab from "../low-level/WaitTab.tsx";
-import waitIcon from "../../assets/Icons/wait.svg";
+import waitIcon from "../../assets/icons/wait.svg";
 import Loading from "../low-level/Loading.tsx";
 import Countdown from "react-countdown";
 import { renderCountdownTag } from "../low-level/CountdownRenderer.tsx";
@@ -35,10 +35,8 @@ const PoolJoinTab = ({
 
   const [poolRouter, setPoolRouter] = useState<PoolRouter>();
   const [amountYbtCollateral, setAmountYbtCollateral] = useState<BigNumber>();
-  const [userYbtCollateralBalance, setUserYbtCollateralBalance] =
-    useState<BigNumber>();
-  const [userYbtCollateralAllowance, setUserYbtCollateralAllowance] =
-    useState<BigNumber>();
+  const [userYbtCollateralBalance, setUserYbtCollateralBalance] = useState<BigNumber>();
+  const [userYbtCollateralAllowance, setUserYbtCollateralAllowance] = useState<BigNumber>();
   const [actionBtn, setActionBtn] = useState({
     text: "",
     onClick: () => {},
@@ -84,9 +82,7 @@ const PoolJoinTab = ({
         });
       }
 
-      if (
-        userYbtCollateralAllowance?.isGreaterThanOrEqualTo(amountYbtCollateral)
-      ) {
+      if (userYbtCollateralAllowance?.isGreaterThanOrEqualTo(amountYbtCollateral)) {
         return setActionBtn({
           text: "Join Pool",
           disabled: false,
@@ -96,9 +92,7 @@ const PoolJoinTab = ({
 
       return setActionBtn({
         text: `Approve and Join`,
-        disabled: userYbtCollateralBalance?.isLessThan(amountYbtCollateral)
-          ? true
-          : false,
+        disabled: userYbtCollateralBalance?.isLessThan(amountYbtCollateral) ? true : false,
         onClick: handleAsync(handleApproveAndJoin, setLoading),
       });
     };
@@ -124,20 +118,14 @@ const PoolJoinTab = ({
 
   const updateUserYbtCollateralAllowance = async () => {
     if (!poolRouter) return;
-    const allowance = await ybtCollateral.allowance(
-      address,
-      poolRouter.address
-    );
+    const allowance = await ybtCollateral.allowance(address, poolRouter.address);
     setUserYbtCollateralAllowance(allowance);
   };
 
   const handleApproveAndJoin = async () => {
     if (!poolRouter || !amountYbtCollateral) return;
 
-    await ybtCollateral.approve(
-      poolRouter.address,
-      amountYbtCollateral.toString()
-    );
+    await ybtCollateral.approve(poolRouter.address, amountYbtCollateral.toString());
     await Promise.all([updateUserYbtCollateralAllowance(), handleJoin()]);
   };
 
@@ -174,8 +162,7 @@ const PoolJoinTab = ({
           icon={waitIcon}
           title={"Pool Starting In"}
           msg={`You have joined this pool by depositing ${
-            amountYbtCollateral &&
-            displayTokenAmount(amountYbtCollateral, pool.ybt)
+            amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt)
           } as YBT collateral`}
           countdownTarget={pool.startTime}
           onCountdownComplete={syncPoolInitialState}
@@ -194,8 +181,7 @@ const PoolJoinTab = ({
           msg={
             amountYbtCollateral &&
             `You have joined this pool by depositing ${
-              amountYbtCollateral &&
-              displayTokenAmount(amountYbtCollateral, pool.ybt)
+              amountYbtCollateral && displayTokenAmount(amountYbtCollateral, pool.ybt)
             } as YBT collateral`
           }
           countdownTarget={pool.startTime}
@@ -224,17 +210,13 @@ const PoolJoinTab = ({
                 autoFocus={true}
                 disabled={true}
                 inputTokenSymbol={pool.ybt.symbol}
-                value={
-                  amountYbtCollateral && displayTokenAmount(amountYbtCollateral)
-                }
+                value={amountYbtCollateral && displayTokenAmount(amountYbtCollateral)}
                 onChange={() => {}}
               />
             </div>
             <div className="flex justify-between text-xs font-thin">
               <span>Approx YBT Collateral</span>
-              <span>
-                ~{`${pool.amountCollateralInBase} ${pool.baseToken.symbol}`}
-              </span>
+              <span>~{`${pool.amountCollateralInBase} ${pool.baseToken.symbol}`}</span>
             </div>
           </>
         ) : (

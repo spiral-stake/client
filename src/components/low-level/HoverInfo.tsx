@@ -1,4 +1,4 @@
-import infoIcon from "../../assets/Icons/infoIcon.svg";
+import infoIcon from "../../assets/icons/infoIcon.svg";
 
 export const HoverInfo = ({ content }: { content: string }) => {
   return (

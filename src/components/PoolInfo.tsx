@@ -1,9 +1,9 @@
 //hard coded array with key value pair key-statr time value-it's value
-import timeIcon from "../assets/Icons/Time.svg";
-import collateral from "../assets/Icons/Collateral.svg";
-import coin from "../assets/Icons/coin.svg";
-import cycle from "../assets/Icons/cycle.svg";
-import deposit from "../assets/Icons/deposit.svg";
+import timeIcon from "../assets/icons/Time.svg";
+import collateral from "../assets/icons/Collateral.svg";
+import coin from "../assets/icons/coin.svg";
+import cycle from "../assets/icons/cycle.svg";
+import deposit from "../assets/icons/deposit.svg";
 
 import Info from "./low-level/Info";
 import Pool from "../contract-hooks/Pool";

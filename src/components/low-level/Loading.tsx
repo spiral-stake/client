@@ -1,5 +1,5 @@
-import checkIconBig from "../../assets/Icons/checkIconBig.svg";
-import completedIcon from "../../assets/Icons/completed.svg";
+import checkIconBig from "../../assets/icons/checkIconBig.svg";
+import completedIcon from "../../assets/icons/completed.svg";
 
 const Loading = ({
   loadingText,

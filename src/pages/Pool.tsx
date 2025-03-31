@@ -16,7 +16,7 @@ import PoolDepositTab from "../components/pool-tabs/PoolDepositTab.js";
 import PoolBidTab from "../components/pool-tabs/PoolBidTab.js";
 import WaitTab from "../components/low-level/WaitTab.js";
 import ErrorIconBig from "../assets/icons/errorIconBig.svg";
-import CycleFinalizedTab from "../components/low-level/CycleFinalizedTab.js";
+import PoolFinalizedTab from "../components/pool-tabs/PoolFinalizedTab.js";
 import PoolPositionTab from "../components/pool-tabs/PoolPositionTab.js";
 import checkBig from "../assets/icons/checkIconBig.svg";
 import Tag from "../components/low-level/Tag.js";
@@ -31,8 +31,7 @@ const PoolPage = ({
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
-    useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
   const [slider1, setShowSlider1] = useState(true);
 
   // All positions is needed for cycle globe hover effect for diplaying winning positions
@@ -42,9 +41,7 @@ const PoolPage = ({
   const { address } = useAccount();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
-  const poolChainId = parseInt(
-    useSearchParams()[0].get("poolChainId") as string
-  );
+  const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
 
   ////////////////////////
   // Use Effects
@@ -56,11 +53,7 @@ const PoolPage = ({
 
     const initialize = async () => {
       try {
-        const _pool = await Pool.createInstance(
-          poolAddress,
-          poolChainId,
-          ybtSymbol
-        );
+        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -83,9 +76,7 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || !allPositions) return;
 
-    const userPositions = allPositions.filter(
-      (position) => position.owner === address
-    );
+    const userPositions = allPositions.filter((position) => position.owner === address);
 
     if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
@@ -153,9 +144,7 @@ const PoolPage = ({
       depositAndBidEndTime,
     });
 
-    setIsCycleDepositAndBidOpen(
-      getCurrentTimestampInSeconds() < depositAndBidEndTime
-    );
+    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
     toastSuccess(
       `Cycle ${newCycleCount} Started`,
       `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
@@ -260,7 +249,7 @@ const PoolPage = ({
                 />
               </div>
             ) : (
-              <CycleFinalizedTab
+              <PoolFinalizedTab
                 pool={pool}
                 currentCycle={currentCycle}
                 position={position}
@@ -372,8 +361,7 @@ const PoolPage = ({
             style={{
               top: "50%",
               left: "50%",
-              transform:
-                "translate(-50%, -50%) rotate(330deg) translateY(-861px) rotate(-330deg)",
+              transform: "translate(-50%, -50%) rotate(330deg) translateY(-861px) rotate(-330deg)",
             }}
           >
             <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">
@@ -391,8 +379,7 @@ const PoolPage = ({
             style={{
               top: "50%",
               left: "50%",
-              transform:
-                "translate(-50%, -50%) rotate(30deg) translateY(-861px) rotate(-30deg)",
+              transform: "translate(-50%, -50%) rotate(30deg) translateY(-861px) rotate(-30deg)",
             }}
           >
             <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">

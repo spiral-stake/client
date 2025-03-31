@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import warningIcon from "../../assets/Icons/warning.svg";
+import warningIcon from "../../assets/icons/warning.svg";
 import WaitTab from "../low-level/WaitTab";
 import { toastSuccess } from "../../utils/toastWrapper";
 import { handleAsync } from "../../utils/handleAsyncFunction";
@@ -51,7 +51,7 @@ const PoolReedemTab = ({
     if (!position) return;
 
     await pool.redeemCollateralIfDiscarded(position.id);
-    toastSuccess("Redeem Succesfull","Redeemed Collateral successfully");
+    toastSuccess("Redeem Succesfull", "Redeemed Collateral successfully");
 
     await updatePosition(position.id);
   };

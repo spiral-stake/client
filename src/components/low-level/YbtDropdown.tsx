@@ -1,4 +1,4 @@
-import arrowIcon from "../../assets/Icons/arrowDown.svg";
+import arrowIcon from "../../assets/icons/arrowDown.svg";
 import { Ybt } from "../../types";
 import PoolCard from "./PoolCard";
 import { useEffect, useState } from "react";
