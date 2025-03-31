@@ -1,7 +1,4 @@
-// need css
-
 import { useState } from "react";
-import { ClipLoader } from "react-spinners";
 import { useAccount } from "wagmi";
 import { onboard } from "../utils/onboard";
 import { handleAsync } from "../utils/handleAsyncFunction";

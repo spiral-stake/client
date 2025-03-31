@@ -98,7 +98,6 @@ const PoolFinalizedTab = ({
             }
           </span>
           <div className="mt-2">
-            {/* Needs to change */}
             <BtnFull
               text="Claim Spiral Yield"
               onClick={handleAsync(handleClaimSpiralYield, setLoading)}

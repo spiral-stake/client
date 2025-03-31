@@ -1,5 +1,3 @@
-// Need css fix
-
 import { useAccount, useSwitchChain } from "wagmi";
 import { chainConfig } from "../config/chainConfig";
 import ConnectWalletBtn from "./ConnectWalletButton";

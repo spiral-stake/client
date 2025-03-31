@@ -348,50 +348,8 @@ const PoolPage = ({
       <PoolInfoTab pool={pool} />
 
       <div
-        className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] rotate-[16deg] bg-[linear-gradient(176deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around border-4 border-gray-700 border-l-blue-600 border-b-blue-600 items-start`}
+        className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] bg-[linear-gradient(180deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around items-start`}
       ></div>
-
-      <div
-        className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px]  rounded-full transition-transform duration-1000 flex justify-around items-start`}
-      >
-        <div className="">
-          {/* 11:00 marking - positioned at 330 degrees */}
-          <div
-            className="flex flex-col justify-center items-center absolute text-white text-lg font-bold gap-2"
-            style={{
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%) rotate(330deg) translateY(-861px) rotate(-330deg)",
-            }}
-          >
-            <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">
-              <div className="w-4 h-4 rounded-full bg-blue-600 " />
-            </div>
-            <div className="font-normal text-sm">Cycle 1</div>
-            <div>
-              <Tag color="green" text="00:00:00" dot={false} />
-            </div>
-          </div>
-
-          {/* 1:00 marking - positioned at 30 degrees */}
-          <div
-            className="absolute flex flex-col justify-center items-center text-white text-lg font-bold gap-2"
-            style={{
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%) rotate(30deg) translateY(-861px) rotate(-30deg)",
-            }}
-          >
-            <div className="w-6 h-6 p-1 rounded-full bg-blue-600 bg-opacity-30">
-              <div className="w-4 h-4 rounded-full bg-blue-600 " />
-            </div>
-            <div className="font-normal text-sm">Cycle 2</div>
-            <div>
-              <Tag color="green" text="00:00:00" dot={false} />
-            </div>
-          </div>
-        </div>
-      </div>
 
       <div className="relative w-full flex justify-center items-center min-h-[650px]">
         <div className="min-w-[312px]">{renderPoolTab()}</div>

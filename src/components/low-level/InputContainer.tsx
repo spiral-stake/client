@@ -1,11 +1,3 @@
-//structure
-
-//label symbol - label      input criteria
-//input
-//error msg
-
-// need css
-
 import errorIcon from "../../assets/icons/errorRed.svg";
 
 const InputContainer = ({

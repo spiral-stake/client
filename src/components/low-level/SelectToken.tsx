@@ -1,5 +1,3 @@
-// need css
-
 import ERC20 from "../../contract-hooks/ERC20";
 import { Token, Ybt } from "../../types";
 
@@ -19,10 +17,16 @@ const SelectToken = ({
           onClick={() => handleTokenChange(token.symbol)}
           key={token.symbol}
           className={`w-fit gap-1 py-2 flex justify-center items-center p-1 px-3 rounded cursor-pointer transition-all ease-out duration-75 ${
-            selectedToken.symbol === token.symbol ? "outline outline-2 outline-white" : "outline outline-2 outline-[#34383E]"
+            selectedToken.symbol === token.symbol
+              ? "outline outline-2 outline-white"
+              : "outline outline-2 outline-[#34383E]"
           }`}
         >
-          <div className={`w-4 h-4 rounded-full bg-white ${selectedToken.symbol === token.symbol ? "" : "opacity-10"}`}></div>
+          <div
+            className={`w-4 h-4 rounded-full bg-white ${
+              selectedToken.symbol === token.symbol ? "" : "opacity-10"
+            }`}
+          ></div>
           <span>{token.symbol}</span>
         </div>
       ))}
