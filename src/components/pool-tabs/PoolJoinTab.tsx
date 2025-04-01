@@ -15,6 +15,7 @@ import Loading from "../low-level/Loading.tsx";
 import Countdown from "react-countdown";
 import { renderCountdownTag } from "../low-level/CountdownRenderer.tsx";
 import { usePolling } from "../../utils/Polling.ts";
+import { HoverInfo } from "../low-level/HoverInfo.tsx";
 
 const PoolJoinTab = ({
   pool,
@@ -196,6 +197,7 @@ const PoolJoinTab = ({
         <div className="flex justify-between">
           {" "}
           <span className="text-xl">YBT Collateral</span>
+          {/* <HoverInfo content="Deposit your Yield Bearing Token(YBT) as collateral, to join the Pool" /> */}
           <Countdown
             renderer={renderCountdownTag}
             date={pool.startTime * 1000}
