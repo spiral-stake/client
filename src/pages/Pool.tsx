@@ -5,7 +5,7 @@ import { useAccount } from "wagmi";
 import Pool from "../contract-hooks/Pool.js";
 import PoolRedeem from "../components/pool-tabs/PoolRedeemTab.js";
 import { getCurrentTimestampInSeconds } from "../utils/time.js";
-import { toastSuccess } from "../utils/toastWrapper.js";
+import { toastInfo, toastSuccess } from "../utils/toastWrapper.js";
 import { Cycle, Position } from "../types/index.js";
 import PoolInfoTab from "../components/PoolInfo.js";
 import PoolJoinTab from "../components/pool-tabs/PoolJoinTab.js";
@@ -19,9 +19,8 @@ import ErrorIconBig from "../assets/icons/errorIconBig.svg";
 import PoolFinalizedTab from "../components/pool-tabs/PoolFinalizedTab.js";
 import PoolPositionTab from "../components/pool-tabs/PoolPositionTab.js";
 import checkBig from "../assets/icons/checkIconBig.svg";
-import Tag from "../components/low-level/Tag.js";
 import CycleGlobe from "../components/low-level/CycleGlobe.js";
-import arrowIcon from "../assets/icons/arrow.svg"
+import arrowIcon from "../assets/icons/arrow.svg";
 
 const PoolPage = ({
   showOverlay,
@@ -33,7 +32,8 @@ const PoolPage = ({
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
+    useState(false);
   const [slider1, setShowSlider1] = useState(true);
 
   // All positions is needed for cycle globe hover effect for diplaying winning positions
@@ -43,7 +43,9 @@ const PoolPage = ({
   const { address } = useAccount();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
-  const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
+  const poolChainId = parseInt(
+    useSearchParams()[0].get("poolChainId") as string
+  );
 
   ////////////////////////
   // Use Effects
@@ -55,7 +57,11 @@ const PoolPage = ({
 
     const initialize = async () => {
       try {
-        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
+        const _pool = await Pool.createInstance(
+          poolAddress,
+          poolChainId,
+          ybtSymbol
+        );
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -78,7 +84,9 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || !allPositions) return;
 
-    const userPositions = allPositions.filter((position) => position.owner === address);
+    const userPositions = allPositions.filter(
+      (position) => position.owner === address
+    );
 
     if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
@@ -135,7 +143,9 @@ const PoolPage = ({
   const updateCurrentCycle = () => {
     if (!pool) return;
 
-    let newCycleCount = !currentCycle ? pool.calcCurrentCycle() : currentCycle.count + 1;
+    let newCycleCount = !currentCycle
+      ? pool.calcCurrentCycle()
+      : currentCycle.count + 1;
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
@@ -146,11 +156,18 @@ const PoolPage = ({
       depositAndBidEndTime,
     });
 
-    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
-    toastSuccess(
-      `Cycle ${newCycleCount} Started`,
-      `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
+    setIsCycleDepositAndBidOpen(
+      getCurrentTimestampInSeconds() < depositAndBidEndTime
     );
+    state !== "ENDED"
+      ? toastSuccess(
+          `Cycle ${newCycleCount} Started`,
+          `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
+        )
+      : toastInfo(
+          "Pool Ended",
+          "Pool has Ended Please collect your yield if any"
+        );
   };
 
   // Will be called by countdown timers to close depositAndBidWindow
@@ -174,7 +191,7 @@ const PoolPage = ({
   };
 
   const setPoolEnded = () => {
-    setState("ENED");
+    setState("ENDED");
   };
 
   ////////////////////////
@@ -295,7 +312,7 @@ const PoolPage = ({
     }
 
     return (
-      <div className="w-full  lg:mb-0 flex flex-col justify-end lg:grid lg:grid-cols-2 lg:w-[764px] mt-24 ml-12 gap-16">
+      <div className="w-full  lg:mb-0 flex flex-col justify-end lg:grid lg:grid-cols-2 lg:w-[764px] lg:mt-24 lg:ml-12 lg:gap-16">
         {" "}
         <div className={`${slider1 ? "flex" : "hidden"} lg:flex`}>
           <WaitTab
@@ -337,7 +354,11 @@ const PoolPage = ({
 
   return pool ? (
     <div className="pt-5 cursor-default">
-      <Link to={"/pools"} className="flex gap-1 text-sm pb-2"><img src={arrowIcon} alt="" /><span>{`Pools / `}</span><span className="text-gray-400">{pool.ybt.symbol}</span></Link>
+      <Link to={"/pools"} className="flex gap-1 text-sm pb-2">
+        <img src={arrowIcon} alt="" />
+        <span>{`Pools / `}</span>
+        <span className="text-gray-400">{pool.ybt.symbol}</span>
+      </Link>
       <div className="flex items-center gap-4 mt-2">
         <TokenData token={pool.ybt} />
         <PoolState
@@ -351,8 +372,18 @@ const PoolPage = ({
       <PoolInfoTab pool={pool} />
 
       <div
-        className={`absolute left-1/2 -translate-x-1/2 w-[1783px] h-[1783px] bg-[linear-gradient(180deg,#01152a_1.93%,#03050d_28.18%)] rounded-full transition-transform duration-1000 flex justify-around items-start`}
+        className={`absolute left-1/2 border-[3px] border-transparent border-b-blue-600 border-l-blue-600 bg-[radial-gradient(circle_at_center,#03050d_40%,#01152a_96%)] ${
+          state === "ENDED" && "rotate-[130deg]"
+        }  ${
+          (state === "WAITING" || state === "DISCARDED") && "rotate-[-30deg]"
+        } ${
+          currentCycle && currentCycle?.count % 2 === 0
+            ? "rotate-[77deg]"
+            : "rotate-[12deg]"
+        }    -translate-x-1/2 w-[1783px] h-[1783px] rounded-full transition-transform duration-1000 flex justify-around items-start`}
       ></div>
+
+      <CycleGlobe currentCycle={currentCycle} pool={pool} state={state} />
 
       <div className="relative w-full flex justify-center items-center min-h-[650px]">
         <div className="min-w-[312px]">{renderPoolTab()}</div>
