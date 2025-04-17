@@ -19,7 +19,8 @@ export interface Ybt {
 export interface PoolInfo {
   ybt: Ybt | undefined;
   ybtExchangeRate: BigNumber | undefined;
-  amountCycle: string;
+  amountCollateral: string;
+  amountCycle: BigNumber;
   cycleDuration: string;
   cycleDurationUnit?: string;
   totalCycles: string;

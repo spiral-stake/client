@@ -217,8 +217,8 @@ const PoolJoinTab = ({
               />
             </div>
             <div className="flex justify-between text-xs font-thin">
-              <span>Approx YBT Collateral</span>
-              <span>~{`${pool.amountCollateralInBase} ${pool.baseToken.symbol}`}</span>
+              <span></span>
+              <span>~{`${displayTokenAmount(pool.amountCollateralInBase, pool.baseToken)}`}</span>
             </div>
           </>
         ) : (

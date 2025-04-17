@@ -25,6 +25,7 @@ import circleIcon from "../assets/icons/circleIcon.svg";
 import logo from "../assets/logo.svg";
 import Loading from "../components/low-level/Loading";
 import CreatePoolInfo from "../components/low-level/CreatePoolInfo";
+import BigNumber from "bignumber.js";
 
 const cycleDurations = ["5 mins", "7 mins", "10 mins"]; // changes on prod
 const cycleDepositAndBidDurations = ["2 mins", "3 mins", "4 mins", "5 mins", "6 mins"];
@@ -42,14 +43,12 @@ function CreatePool({
   const [pool, setPool] = useState<PoolInfo>({
     ybt: undefined,
     ybtExchangeRate: undefined,
-    amountCycle: "",
+    amountCollateral: "",
+    amountCycle: BigNumber(NaN),
     cycleDuration: cycleDurations[0],
-    // cycleDurationUnit: "minutes",
     totalCycles: "",
     startInterval: startIntervals[0],
-    // startIntervalUnit: "minutes",
     cycleDepositAndBidDuration: `${parseInt(cycleDepositAndBidDurations[0])}`,
-    // cycleDepositAndBidDurationUnit: "minutes",
   });
 
   const [actionBtn, setActionBtn] = useState({
@@ -61,12 +60,18 @@ function CreatePool({
   const [api, setApi] = useState("");
 
   const appChainId = useChainId();
-  const { address, chainId } = useAccount();
+  const { chainId } = useAccount();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!ybts.length) return;
     setPool({ ...pool, ybt: ybts[0] });
+
+    const updateYbtExchangeRate = async () => {
+      const _ybtExchangeRate = await new SY(ybts[0].syToken.address).getYbtExchangeRate(ybts[0]);
+      setPool((prevPool) => ({ ...prevPool, ybtExchangeRate: _ybtExchangeRate }));
+    };
+    updateYbtExchangeRate();
   }, [ybts]);
 
   useEffect(() => {
@@ -75,14 +80,21 @@ function CreatePool({
   }, [chainId]);
 
   useEffect(() => {
-    let { amountCycle, totalCycles, cycleDuration, startInterval, cycleDepositAndBidDuration } =
-      pool;
+    let {
+      amountCollateral,
+      amountCycle,
+      totalCycles,
+      cycleDuration,
+      startInterval,
+      cycleDepositAndBidDuration,
+    } = pool;
 
     cycleDuration = parseTime(cycleDuration.split(" ")[0], cycleDuration.split(" ")[1]);
     startInterval = parseTime(startInterval.split(" ")[0], startInterval.split(" ")[1]);
     cycleDepositAndBidDuration = parseTime(cycleDepositAndBidDuration, "mins");
 
     const errors = [
+      { condition: !amountCollateral, text: "Invalid YBT Collateral amount" },
       { condition: !amountCycle, text: "Invalid Cycle Amount" },
       {
         condition: !parseInt(totalCycles) || parseInt(totalCycles) < 2,
@@ -148,11 +160,20 @@ function CreatePool({
     const name = e.target.name;
     const value = e.target.value;
 
+    let _amountCycle = pool.amountCycle;
+    if (pool.ybtExchangeRate && (name === "amountCollateral" || name === "totalCycles")) {
+      _amountCycle = BigNumber(1)
+        .dividedBy(pool.ybtExchangeRate)
+        .multipliedBy(name === "amountCollateral" ? value : pool.amountCollateral)
+        .dividedBy(name === "totalCycles" ? value : pool.totalCycles);
+    }
+
     setPool(
       (prevPool) =>
         ({
           ...prevPool,
           [name]: value,
+          amountCycle: _amountCycle,
         } as typeof pool)
     );
   };
@@ -178,7 +199,7 @@ function CreatePool({
     const poolAddress = await poolFactory.createSpiralPool(
       pool.ybt.syToken,
       pool.ybt.baseToken,
-      pool.amountCycle,
+      pool.amountCycle.toString(),
       pool.totalCycles,
       cycleDuration,
       cycleDepositAndBidDuration,
@@ -200,10 +221,10 @@ function CreatePool({
         <div className="w-full flex flex-col justify-between gap-3 lg:px-10">
           <PageTitle
             title={"Create a Spiral Pool"}
-            subheading={"Create pools to enjoy Liquidity"}
+            subheading={"Create pools to access pooled liquidity while maintaining yield exposure"}
           />
           <InputContainer
-            label="Select Token*"
+            label="Yield-bearing Collateral Token (YBT) *"
             condition=""
             errorMsg="Select a Token first"
             labelIcon={circleIcon}
@@ -215,20 +236,22 @@ function CreatePool({
               />
             }
           />
+
           <InputContainer
-            label="Cycle Deposit*"
+            label="YBT Collateral Amount*"
             condition=""
             errorMsg="This Feild is compulsary"
             labelIcon={collateralIcon}
             inputComponent={
               <Input
-                name={"amountCycle"}
+                name={"amountCollateral"}
                 onChange={handleInputChange}
-                value={pool.amountCycle}
-                inputTokenSymbol={pool.ybt.baseToken.symbol}
+                value={pool.amountCollateral}
+                inputTokenSymbol={pool.ybt.symbol}
               />
             }
           />
+
           <InputContainer
             label="Total Cycles / Participants *"
             condition="(>=2 cycles)"
@@ -238,6 +261,23 @@ function CreatePool({
               <Input name={"totalCycles"} onChange={handleInputChange} value={pool.totalCycles} />
             }
           />
+
+          <InputContainer
+            label="Per-Cycle Contribution *"
+            condition=""
+            errorMsg="This Feild is compulsary"
+            labelIcon={depositIcon}
+            inputComponent={
+              <Input
+                name={"amountCycle"}
+                onChange={handleInputChange}
+                value={pool.amountCycle.toFixed(4) === "NaN" ? "0" : pool.amountCycle.toFixed(4)}
+                inputTokenSymbol={pool.ybt.baseToken.symbol}
+                disabled={true}
+              />
+            }
+          />
+
           <InputContainer
             label="Cycle Duration *"
             condition=""
@@ -252,7 +292,8 @@ function CreatePool({
               />
             }
           />
-          <InputContainer
+
+          {/* <InputContainer
             label="Cycle Deposit and Bid duration *"
             condition=""
             errorMsg=""
@@ -265,8 +306,8 @@ function CreatePool({
                 labels={cycleDepositAndBidDurations}
               />
             }
-          />
-          <InputContainer
+          /> */}
+          {/* <InputContainer
             label="Starting in *"
             condition=""
             errorMsg=""
@@ -279,7 +320,7 @@ function CreatePool({
                 value={pool.startInterval}
               />
             }
-          />
+          /> */}
           <div className="mt-5">
             <ActionBtn
               text={actionBtn.text}

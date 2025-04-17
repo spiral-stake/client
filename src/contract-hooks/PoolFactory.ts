@@ -45,7 +45,7 @@ export default class PoolFactory extends Base {
   /////////////////////////
 
   async getSpiralPoolsForSYToken(syTokenAddress: string) {
-    const pools = await this.read("getSpiralPoolsForSYToken", [syTokenAddress]) as string[];
+    const pools = (await this.read("getSpiralPoolsForSYToken", [syTokenAddress])) as string[];
     return pools.reverse();
   }
 }

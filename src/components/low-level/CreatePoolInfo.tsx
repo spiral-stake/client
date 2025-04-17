@@ -22,7 +22,7 @@ const CreatePoolInfo = ({ poolInfo }: { poolInfo: PoolInfo }) => {
             Cycle Amount
           </div>
           <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-            {poolInfo.amountCycle} {poolInfo.ybt?.baseToken.symbol}
+            {displayTokenAmount(poolInfo.amountCycle)} {poolInfo.ybt?.baseToken.symbol}
           </div>
         </div>
         <div className="self-stretch inline-flex justify-between items-start">
@@ -64,8 +64,7 @@ const CreatePoolInfo = ({ poolInfo }: { poolInfo: PoolInfo }) => {
           Approx collateral
         </div>
         <div className="justify-start text-white text-xs font-normal font-['Outfit']">
-          ~{parseInt(poolInfo.amountCycle) * parseInt(poolInfo.totalCycles)}{" "}
-          {poolInfo.ybt?.baseToken.symbol}
+          {poolInfo.amountCollateral} {poolInfo.ybt?.symbol}
         </div>
       </div>
     </div>

@@ -26,8 +26,8 @@ const fraxtalTestnet: any = defineChain({
   name: "Fraxtal Testnet",
   nativeCurrency: {
     decimals: 18,
-    name: "Frax Ether",
-    symbol: "frxETH",
+    name: "Frax Share",
+    symbol: "FRAX",
   },
   rpcUrls: {
     default: {
