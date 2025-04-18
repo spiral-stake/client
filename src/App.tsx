@@ -19,6 +19,7 @@ import DropdownMenu from "./components/DropdownMenu";
 import Overlay from "./components/low-level/Overlay";
 import CircularProgressClock from "./pages/Test";
 import Invite from "./components/low-level/Invite";
+import InviteOverlay from "./components/low-level/Invite";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
@@ -99,6 +100,8 @@ function App() {
           <Route path="*" element={<Navigate to={"/pools"} />} />
         </Routes>
         <Overlay overlay={overlay} />
+
+        <InviteOverlay />
         <OnboardingOverlay onboarding={onboarding} setOnboarding={setOnboarding} />
       </main>
     </div>

@@ -26,8 +26,8 @@ function OnboardingOverlay({
 
   return (
     onboarding && (
-      <section className="overlay">
-        <div className="overlay-content">
+      <section className="z-10 fixed top-0 left-0 bg-neutral-700 bg-opacity-50 flex justify-center items-end lg:items-center w-[100vw] h-[100vh]">
+        <div className="w-[500px] px-5 py-5 bg-gradient-to-b from-slate-900 to-gray-950 rounded-xl lg:rounded-xl outline outline-1 outline-offset-[-1px] outline-gray-800 inline-flex flex-col justify-start items-center gap-6">
           <h2>Beta Users</h2>
           {!loading ? (
             <>
