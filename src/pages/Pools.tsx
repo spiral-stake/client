@@ -7,6 +7,9 @@ import Loader from "../components/low-level/Loader";
 import YbtDropdown from "../components/low-level/YbtDropdown";
 import tokenIcon from "../assets/icons/GroupDark.svg";
 import PageTitle from "../components/low-level/PageTitle";
+import fraxlogo from "../assets/icons/frax.svg";
+import BtnFull from "../components/low-level/BtnFull";
+import { Link } from "react-router-dom";
 
 const Pools = ({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFactory | undefined }) => {
   const [selectedYbt, setSelectedYbt] = useState<Ybt>();
@@ -37,13 +40,25 @@ const Pools = ({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFactory | 
   };
 
   return (
-    <div className="">
+    <div className="pb-16">
       <div className="py-16">
         <PageTitle
           title={"Spiral Pools"}
           subheading={`Stake your frxETH in fast, transparent pools and earn passive rewards.
 Secure, flexible, and low entry—start with just 0.10 frxETH! `}
         />
+      </div>
+      <div className="flex justify-between items-center mb-8">
+        <div className="flex gap-1 items-center">
+          <img src={fraxlogo} alt="" className="w-5" />
+          <p>Fraxtal</p>
+        </div>
+        <Link to={"/pools/create"}>
+          {" "}
+          <div className="w-[100px]">
+            <BtnFull text="Create" onClick={() => {}} />
+          </div>
+        </Link>
       </div>
       {ybtPoolAddresses ? (
         <div className="h-fit">

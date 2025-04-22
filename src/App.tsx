@@ -20,6 +20,7 @@ import Overlay from "./components/low-level/Overlay";
 import CircularProgressClock from "./pages/Test";
 import Invite from "./components/low-level/Invite";
 import InviteOverlay from "./components/low-level/Invite";
+import Vaults from "./pages/Vaults";
 
 function App() {
   const [ybts, setYbts] = useState<Ybt[]>([]);
@@ -95,7 +96,8 @@ function App() {
           {/* <Route path="/pools" element={<Test />} /> */}
           <Route path={"/pools"} element={<Pools ybts={ybts} poolFactory={poolFactory} />} />
           <Route path={"/marketPlace"} element={<Market />} />
-          <Route path="dashboard" element={<Dashboard />} />
+          <Route path={"/vaults"} element={<Vaults />} />
+          <Route path={"/dashboard"} element={<Dashboard />} />
 
           <Route path="*" element={<Navigate to={"/pools"} />} />
         </Routes>

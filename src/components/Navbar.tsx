@@ -28,14 +28,17 @@ function Navbar({ showDropdown }: { showDropdown: (bool: boolean) => void }) {
             </Link>
 
             <div className="hidden lg:flex justify-start items-center ml-24 gap-10">
+              <Link target="blank" to="https://spiral-stake.gitbook.io/spiral-stake-docs">
+                <div className="cursor-pointer text-center ">Learn</div>
+              </Link>
               <Link to={"/pools"}>
                 <div className="cursor-pointer text-center ">Pools</div>
               </Link>
-              <Link to={"/pools/create"}>
-                <div className="cursor-pointer text-center ">Create</div>
+              <Link to="/vaults">
+                <div className="cursor-pointer text-center ">Vaults</div>
               </Link>
-              <Link target="blank" to="https://spiral-stake.gitbook.io/spiral-stake-docs">
-                <div className="cursor-pointer text-center ">Learn</div>
+              <Link to={"/dashboard"}>
+                <div className="cursor-pointer text-center ">Dashboard</div>
               </Link>
             </div>
           </div>

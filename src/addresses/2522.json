@@ -1,37 +1,127 @@
 {
-  "spiralPoolFactory": "0xD671CA3aC33C6f2954E585f71911D902f53bda89",
-  "spiralPoolRouter": "0x8aE6515AB78b173DDb6d7B85870f25a61DD8AF78",
+  "spiralPoolFactory": "0xDDF241dA881f51340E6F9392F09D98EbabBa0a36",
+  "spiralPoolRouter": "0x8e9c61cE7e7Dd1B396201dE88D276D09E81a519d",
   "ybts": {
     "ezETH": {
-      "address": "0xd3204c0b0c22987332020a585034396295C4aB33",
+      "address": "0xe06d1964F41C88Ec4FA08f907fA6A9ca34e9236d",
       "baseToken": {
-        "address": "0xFBD34b0a55B6F2a2c2C92A7F1aD7ABe38d8221C9",
+        "address": "0xb267dC0c23D7AE8de230Ec7D1fe560E3d3834230",
         "decimals": "18",
-        "name": "Wrapped Frax Ether",
-        "symbol": "wfrxETH"
+        "name": "Frax Ether",
+        "symbol": "frxETH"
       },
       "decimals": "18",
       "name": "Renzo Staked ETH",
       "syToken": {
-        "address": "0x4A609b7C74E046De287134E12F6D347510dF22A6",
+        "address": "0x7Cc17E820423db8f2942A641b8BD7AeaF815428c",
         "decimals": "18",
         "name": "SY Swell swETH",
         "symbol": "SY-swETH"
       },
       "symbol": "ezETH"
     },
-    "sfrxETH": {
-      "address": "0x581E93070C49F2A97B46761AE373Da7d10cFD80C",
+    "sGYD": {
+      "address": "0x6D39500EEf437bD605ecE8A06c84b621024201dD",
       "baseToken": {
-        "address": "0xFBD34b0a55B6F2a2c2C92A7F1aD7ABe38d8221C9",
+        "address": "0x7D6bcE9e3bde35B06788311133D7518Cc83C6FC7",
         "decimals": "18",
-        "name": "Wrapped Frax Ether",
-        "symbol": "wfrxETH"
+        "name": "Gyro Stable",
+        "symbol": "GYD"
+      },
+      "decimals": "18",
+      "name": "Staked Gyro Stable",
+      "syToken": {
+        "address": "0x664BA72cf3fF00Dea6bCE5c42E67036A81FaccA7",
+        "decimals": "18",
+        "name": "SY - Staked Gyro Stable",
+        "symbol": "SY-sGYD"
+      },
+      "symbol": "sGYD"
+    },
+    "sUSDC": {
+      "address": "0x63801f7e4110b428F4BAe76e832a6eE0Bc33d4d5",
+      "baseToken": {
+        "address": "0x0596ebc28a906063eBa0e678b16c1bCde00FADEa",
+        "decimals": "18",
+        "name": "USD Coin",
+        "symbol": "USDC"
+      },
+      "decimals": "18",
+      "name": "Syrup USDC",
+      "syToken": {
+        "address": "0x0873Af4E31A1B886FEc3541a32C5c0D446836e9B",
+        "decimals": "18",
+        "name": "SY - Syrup USDC",
+        "symbol": "SY-sUSDC"
+      },
+      "symbol": "sUSDC"
+    },
+    "sUSDL": {
+      "address": "0x68876DF7425BdD8CD85a60bDe0d3b491C0560Cb1",
+      "baseToken": {
+        "address": "0x1DA51014Dd7014a898f05f2f02731f95ffc1bA7d",
+        "decimals": "18",
+        "name": "USDL",
+        "symbol": "USDL"
+      },
+      "decimals": "18",
+      "name": "Coinshift USDL",
+      "syToken": {
+        "address": "0x59523937b356FB085bd195c51Fec9363A70611b1",
+        "decimals": "18",
+        "name": "SY - Coinshift USDL",
+        "symbol": "SY-sUSDL"
+      },
+      "symbol": "sUSDL"
+    },
+    "sUSDe": {
+      "address": "0x43bb22D5dAE4B51729fAf0aAbb273Ba39621433F",
+      "baseToken": {
+        "address": "0x07aE8A42e9E4DD21B303Ba098BFd38D42D773cdD",
+        "decimals": "18",
+        "name": "USD ethena",
+        "symbol": "USDe"
+      },
+      "decimals": "18",
+      "name": "Staked USDe",
+      "syToken": {
+        "address": "0x37305277d5Fc13ED306A6f2323bBf092b5383328",
+        "decimals": "18",
+        "name": "SY - Staked USDe",
+        "symbol": "SY-sUSDe"
+      },
+      "symbol": "sUSDe"
+    },
+    "sUSDf": {
+      "address": "0x6A84006c2B13AA0E0f923A36a2Ad262085400c8e",
+      "baseToken": {
+        "address": "0x0C605F3ed719563A2e61b72F090E20B883389045",
+        "decimals": "18",
+        "name": "USD Falcon",
+        "symbol": "USDf"
+      },
+      "decimals": "18",
+      "name": "Staked USDf",
+      "syToken": {
+        "address": "0x2f462f15dF23afBC70ceA2e74ABCa24D0b5B97b8",
+        "decimals": "18",
+        "name": "SY - Staked USDf",
+        "symbol": "SY-sUSDf"
+      },
+      "symbol": "sUSDf"
+    },
+    "sfrxETH": {
+      "address": "0xf2E5bEA79433122f12a017bc67D8c478351FAb75",
+      "baseToken": {
+        "address": "0xb267dC0c23D7AE8de230Ec7D1fe560E3d3834230",
+        "decimals": "18",
+        "name": "Frax Ether",
+        "symbol": "frxETH"
       },
       "decimals": "18",
       "name": "Staked Frax Ether",
       "syToken": {
-        "address": "0xE57D89947049f4c3998C6D819Ef518970FF43e05",
+        "address": "0x9b3eeCf171903b254B409E7954743a2eed8Ff9b4",
         "decimals": "18",
         "name": "SY Staked Frax Ether",
         "symbol": "SY-sfrxETH"
@@ -39,9 +129,9 @@
       "symbol": "sfrxETH"
     },
     "sfrxUSD": {
-      "address": "0x5CF80CCcde8bfC431Ab2FBa1911232Fcae8dB2c3",
+      "address": "0xb95793A4e0e129Ea5880B53f795fdE5CbA3f1a85",
       "baseToken": {
-        "address": "0xFee94e0EA2CE089Ce087FbDd0770460DCb0A4fe4",
+        "address": "0x14CF157B95716c9A7f399bf61E10e4CCe51348cC",
         "decimals": "18",
         "name": "Frax USD",
         "symbol": "frxUSD"
@@ -49,7 +139,7 @@
       "decimals": "18",
       "name": "Staked Frax USD",
       "syToken": {
-        "address": "0x73BDFb8e828005dD11eE1b3b155df854086E1bCb",
+        "address": "0xe68e3f01819B7b42D81A5420a830040cD4D09552",
         "decimals": "18",
         "name": "SY - Staked Frax USD",
         "symbol": "SY-sfrxUSD"

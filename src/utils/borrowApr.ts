@@ -2,31 +2,30 @@ import BigNumber from "bignumber.js";
 import Pool from "../contract-hooks/Pool";
 import { Cycle } from "../types";
 
-function calculateSimpleBorrowAPR(pool: Pool, bidAmount: BigNumber, currentCycle: Cycle) {
-  // Calculate the net borrowed amount (win amount minus winner's own contribution)
-  const contributedSoFar = pool.amountCycle * currentCycle.count;
-  const netBorrowed = bidAmount - contributedSoFar;
-
-  // Calculate the repayment amount (remaining required deposits)
+function calculateBidAmountFromAPR(pool: Pool, APR: BigNumber, currentCycle: Cycle) {
   const remainingCycles = pool.totalCycles - currentCycle.count;
-  const totalRepayment = remainingCycles * pool.amountCycle;
+  const remainingCycleDeposits = pool.amountCycle.multipliedBy(remainingCycles);
 
-  // Calculate the interest (what they pay beyond what they borrowed)
-  const interest = totalRepayment - netBorrowed;
+  const cycleDuration = pool.cycleDuration; // In seconds
+  const secondsInYear = new BigNumber(31536000); // 365 days in seconds
+  const periodicRate = APR.dividedBy(secondsInYear).multipliedBy(cycleDuration);
 
-  // If interest is negative or zero, there's no effective borrowing cost
-  if (interest <= 0) return 0;
+  // Calculate the interest for each remaining cycle
+  let totalInterest = new BigNumber(0);
+  let outstandingPrincipal = remainingCycleDeposits;
 
-  // Calculate the average loan duration in months
-  // For simplicity, we'll use the midpoint of the remaining cycles
-  const avgLoanDurationMonths = (remainingCycles * cycleDurationMonths) / 2;
+  // For each cycle, we calculate interest on the reducing balance
+  for (let i = 0; i < remainingCycles; i++) {
+    // Calculate interest for this cycle on the current outstanding principal
+    const cycleInterest = outstandingPrincipal.multipliedBy(periodicRate);
+    totalInterest = totalInterest.plus(cycleInterest);
 
-  // Calculate the simple interest rate
-  const simpleInterestRate = interest / netBorrowed;
+    // Reduce the outstanding principal for the next cycle
+    outstandingPrincipal = outstandingPrincipal.minus(pool.amountCycle);
+  }
 
-  // Annualize the rate (convert from the loan period to annual)
-  const annualizedRate = (simpleInterestRate * 12) / avgLoanDurationMonths;
+  // The bid amount is the total interest that will be paid
+  const bidAmount = totalInterest;
 
-  // Return as percentage
-  return annualizedRate * 100;
+  return bidAmount;
 }

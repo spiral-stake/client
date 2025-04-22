@@ -11,7 +11,7 @@ const SelectToken = ({
   selectedToken: Ybt | Token | ERC20;
 }) => {
   return (
-    <div className="w-fit gap-3 flex flex-row p-1  text-xs rounded-md justify-evenly">
+    <div className="w-fit flex flex-row p-1 text-xs rounded-md gap-3 flex-wrap">
       {tokens.map((token) => (
         <div
           onClick={() => handleTokenChange(token.symbol)}
