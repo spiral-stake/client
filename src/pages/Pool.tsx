@@ -32,8 +32,7 @@ const PoolPage = ({
   const [state, setState] = useState<string>();
   const [cyclesFinalized, setCyclesFinalized] = useState(0);
   const [currentCycle, setCurrentCycle] = useState<Cycle>();
-  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] =
-    useState(false);
+  const [isCycleDepositAndBidOpen, setIsCycleDepositAndBidOpen] = useState(false);
   const [slider1, setShowSlider1] = useState(true);
 
   // All positions is needed for cycle globe hover effect for diplaying winning positions
@@ -43,9 +42,7 @@ const PoolPage = ({
   const { address } = useAccount();
   const { address: poolAddress } = useParams();
   const ybtSymbol = useSearchParams()[0].get("ybt") as string;
-  const poolChainId = parseInt(
-    useSearchParams()[0].get("poolChainId") as string
-  );
+  const poolChainId = parseInt(useSearchParams()[0].get("poolChainId") as string);
 
   ////////////////////////
   // Use Effects
@@ -57,11 +54,7 @@ const PoolPage = ({
 
     const initialize = async () => {
       try {
-        const _pool = await Pool.createInstance(
-          poolAddress,
-          poolChainId,
-          ybtSymbol
-        );
+        const _pool = await Pool.createInstance(poolAddress, poolChainId, ybtSymbol);
 
         setPool(_pool);
         setState(_pool.calcPoolState(_pool.allPositions.length));
@@ -84,9 +77,7 @@ const PoolPage = ({
   useEffect(() => {
     if (!address || !allPositions) return;
 
-    const userPositions = allPositions.filter(
-      (position) => position.owner === address
-    );
+    const userPositions = allPositions.filter((position) => position.owner === address);
 
     if (!userPositions.length) return setPosition(undefined);
     setPosition(userPositions[0]);
@@ -143,9 +134,7 @@ const PoolPage = ({
   const updateCurrentCycle = () => {
     if (!pool) return;
 
-    let newCycleCount = !currentCycle
-      ? pool.calcCurrentCycle()
-      : currentCycle.count + 1;
+    let newCycleCount = !currentCycle ? pool.calcCurrentCycle() : currentCycle.count + 1;
 
     const { startTime, endTime } = pool.calcCycleStartAndEndTime(newCycleCount);
     const depositAndBidEndTime = pool.calcDepositAndBidEndTime(newCycleCount);
@@ -156,18 +145,13 @@ const PoolPage = ({
       depositAndBidEndTime,
     });
 
-    setIsCycleDepositAndBidOpen(
-      getCurrentTimestampInSeconds() < depositAndBidEndTime
-    );
+    setIsCycleDepositAndBidOpen(getCurrentTimestampInSeconds() < depositAndBidEndTime);
     state !== "ENDED"
       ? toastSuccess(
           `Cycle ${newCycleCount} Started`,
           `Cycle ${newCycleCount} has started, Please make cycle Deposits and Bid`
         )
-      : toastInfo(
-          "Pool Ended",
-          "Pool has Ended Please collect your yield if any"
-        );
+      : toastInfo("Pool Ended", "Pool has Ended Please collect your yield if any");
   };
 
   // Will be called by countdown timers to close depositAndBidWindow
@@ -374,16 +358,12 @@ const PoolPage = ({
       <div
         className={`absolute left-1/2 border-[3px] border-transparent border-b-blue-600 border-l-blue-600 bg-[radial-gradient(circle_at_center,#03050d_40%,#01152a_96%)] ${
           state === "ENDED" && "rotate-[130deg]"
-        }  ${
-          (state === "WAITING" || state === "DISCARDED") && "rotate-[-30deg]"
-        } ${
-          currentCycle && currentCycle?.count % 2 === 0
-            ? "rotate-[77deg]"
-            : "rotate-[12deg]"
+        }  ${(state === "WAITING" || state === "DISCARDED") && "rotate-[-30deg]"} ${
+          currentCycle && currentCycle?.count % 2 === 0 ? "rotate-[77deg]" : "rotate-[12deg]"
         }    -translate-x-1/2 w-[1783px] h-[1783px] rounded-full transition-transform duration-1000 flex justify-around items-start`}
       ></div>
 
-      <CycleGlobe currentCycle={currentCycle} pool={pool} state={state} />
+      {/* <CycleGlobe currentCycle={currentCycle} pool={pool} state={state} /> */}
 
       <div className="relative w-full flex justify-center items-center min-h-[650px]">
         <div className="min-w-[312px]">{renderPoolTab()}</div>

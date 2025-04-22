@@ -69,7 +69,7 @@ const arbitrumTestnet: any = defineChain({
   },
   testnet: true,
   logo: "/logo/arb-logo.png",
-  api: "https://api.spiralstake.xyz", // Needs to change at production
+  api: "https://api.spiralstake.xyz",
   onboard: {
     amountNative: "0.001",
   },

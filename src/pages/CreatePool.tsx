@@ -28,8 +28,8 @@ import CreatePoolInfo from "../components/low-level/CreatePoolInfo";
 import BigNumber from "bignumber.js";
 
 const cycleDurations = ["5 mins", "7 mins", "10 mins"]; // changes on prod
-const cycleDepositAndBidDurations = ["2 mins", "3 mins", "4 mins", "5 mins", "6 mins"];
-const startIntervals = ["5 mins", "7 mins", "10 mins"]; // changes on prod
+const cycleDepositAndBidDurations = ["3 mins", "4 mins", "5 mins", "6 mins", "7 mins"];
+const startIntervals = ["5 mins", "7 mins", "10 mins"]; // Needs to change to 5 min instead of 1 min
 
 function CreatePool({
   ybts,

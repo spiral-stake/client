@@ -44,8 +44,7 @@ const Pools = ({ ybts, poolFactory }: { ybts: Ybt[]; poolFactory: PoolFactory | 
       <div className="py-16">
         <PageTitle
           title={"Spiral Pools"}
-          subheading={`Stake your frxETH in fast, transparent pools and earn passive rewards.
-Secure, flexible, and low entry—start with just 0.10 frxETH! `}
+          subheading={`Free up liquidity locked in staked stablecoins without foregoing protocol points & rewards`}
         />
       </div>
       <div className="flex justify-between items-center mb-8">

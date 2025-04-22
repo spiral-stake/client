@@ -8,6 +8,8 @@ const Input = ({
   disabled,
   autoFocus,
   inputTokenSymbol,
+  type,
+  step,
 }: {
   name: string;
   placeholder?: string;
@@ -16,6 +18,8 @@ const Input = ({
   disabled?: boolean;
   autoFocus?: boolean;
   inputTokenSymbol?: string;
+  type?: string;
+  step?: string;
 }) => {
   return (
     <div className="w-full px-3 py-2.5 rounded outline outline-1 outline-offset-[-1px] outline-[#34383E] outline-opacity-20 inline-flex justify-start items-center gap-2 overflow-hidden">
@@ -24,6 +28,7 @@ const Input = ({
           <TextLoading width={21} />
         ) : (
           <input
+            type={type}
             autoFocus={autoFocus}
             value={value}
             onChange={onChange}
